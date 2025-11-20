@@ -11,7 +11,6 @@ module.exports = {
       fontFamily: {
         sans: ['var(--font-open-sans)', 'sans-serif'],
         mono: ['var(--font-roboto-mono)', 'monospace'],
-        sansation: ['var(--font-sansation)', 'sans-serif'],
         montez: ['var(--font-montez)', 'cursive'],
         jura: ['var(--font-jura)', 'sans-serif'],
         clash: ['var(--font-clash)', 'sans-serif'],

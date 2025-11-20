@@ -50,7 +50,7 @@ export default function Constellation({fullData}) {
   }, [fullData]);
 
   return (
-    <div className="w-full h-screen min-h-screen flex flex-row overflow-hidden relative">
+    <div className="w-full h-screen min-h-screen flex flex-row  relative">
    
       <Filter />
       
