@@ -1,10 +1,10 @@
 // Airtable Configuration
 export const AIRTABLE_CONFIG = {
   //Airtable token from environment variables
-  apiKey: process.env.VITE_AIRTABLE_API_KEY,
+  apiKey: process.env.AIRTABLE_API_KEY,
   
   // Base ID from environment variables
-  baseId: process.env.VITE_AIRTABLE_BASE_ID,
+  baseId: process.env.AIRTABLE_BASE_ID,
   
   // Default table name 
   defaultTable:'Dream Palaces',

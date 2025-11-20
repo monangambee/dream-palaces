@@ -8,7 +8,6 @@ export const metadata = {
 import {
   Open_Sans,
   Roboto_Mono,
-  Sansation,
   Moirai_One,
   Jura,
   Fascinate_Inline,
@@ -68,13 +67,6 @@ const robotoMono = Roboto_Mono({
   variable: "--font-roboto-mono",
 });
 
-const sansation = Sansation({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-sansation",
-  weight: "400",
-});
-
 const jura = Jura({
   subsets: ["latin"],
   display: "swap",
@@ -86,7 +78,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${openSans.variable} ${robotoMono.variable} ${sansation.variable} ${moirai.variable} ${jura.variable} ${clash.variable} ${FascinateInline.variable} ${chillax.variable} ${basis.variable} font-sans`}
+      className={`${openSans.variable} ${robotoMono.variable} ${moirai.variable} ${jura.variable} ${clash.variable} ${FascinateInline.variable} ${chillax.variable} ${basis.variable} font-sans`}
     >
       <body>
         <nav className="w-screen flex justify-center items-center font-chillax bg-background  border-b-[0.5px] border-primary p-4 text-primary">
