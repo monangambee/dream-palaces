@@ -1,0 +1,65 @@
+
+/* @import "tailwindcss"; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background-color: black;
+  /* background: var(--color-primary); */
+  /* overflow: hidden; */
+}
+
+select, option {
+   appearance: none;
+  -webkit-appearance: none; /* For WebKit browsers */
+  -moz-appearance: none;  
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+
+@theme inline {
+  /* --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-outfit: var(--font-outfit); */
+
+  --color-primary: #FFD700;
+}
+
+.canvas {
+    /* pointer-events: none; */
+    /* position: absolute !important; */
+    /* top: 0px;
+    left: 0px; */
+    width: 100vw;
+    height: 100vh;
+  } 
+
+/* #__next {
+  width: 100%;
+  height: 100vh;
+} */
