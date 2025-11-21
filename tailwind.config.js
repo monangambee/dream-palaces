@@ -14,10 +14,9 @@ module.exports = {
         montez: ['var(--font-montez)', 'cursive'],
         jura: ['var(--font-jura)', 'sans-serif'],
         clash: ['var(--font-clash)', 'sans-serif'],
-        chillax: ['var(--font-chillax)', 'sans-serif'],
+        frontage3D: ['var(--font-frontage3D)', 'sans-serif'],
         basis: ['var(--font-basis)', 'sans-serif'],
-        moirai: ['var(--font-moirai)', 'serif'],
-        fascinate: ['var(--font-fascinate)', 'cursive'],
+
       },
       colors: {
         primary: '#FDF9ED', // Example primary color

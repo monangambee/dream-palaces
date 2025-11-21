@@ -22,62 +22,7 @@ import tunnel from "tunnel-rat";
 
 gsap.registerPlugin(useGSAP);
 
-// const ConstellationBackground = () => {
-//   const radii = [
-//     1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90,
-//     95, 100,
-//   ];
-//   const radialSegments = 16;
-//   const radialLength = 100;
 
-//   // Create circle geometries
-//   const circleGeometries = useMemo(() => {
-//     return radii.map((radius) => {
-//       const segments = 128;
-//       const geometry = new THREE.BufferGeometry();
-//       const vertices = [];
-//       for (let i = 0; i <= segments; i++) {
-//         const theta = (i / segments) * Math.PI * 2;
-//         vertices.push(Math.cos(theta) * radius, Math.sin(theta) * radius, 0);
-//       }
-//       geometry.setAttribute(
-//         "position",
-//         new THREE.Float32BufferAttribute(vertices, 3)
-//       );
-//       return geometry;
-//     });
-//   }, []);
-
-//   // Create radial line geometries
-//   const radialGeometries = useMemo(() => {
-//     return Array.from({ length: radialSegments }, (_, i) => {
-//       const theta = (i / radialSegments) * Math.PI * 2;
-//       const x = Math.cos(theta) * radialLength;
-//       const y = Math.sin(theta) * radialLength;
-
-//       return new THREE.BufferGeometry().setFromPoints([
-//         new THREE.Vector3(0, 0, 0),
-//         new THREE.Vector3(x, y, 0),
-//       ]);
-//     });
-//   }, []);
-
-//   return (
-//     <group>
-//       {circleGeometries.map((geometry, index) => (
-//         <line key={`circle-${index}`} geometry={geometry}>
-//           <lineBasicMaterial color={0x444466} transparent opacity={0.6} />
-//         </line>
-//       ))}
-
-//       {radialGeometries.map((geometry, index) => (
-//         <line key={`radial-${index}`} geometry={geometry}>
-//           <lineBasicMaterial color={0x444466} transparent opacity={0.4} />
-//         </line>
-//       ))}
-//     </group>
-//   );
-// };
 
 const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
 
@@ -111,40 +56,6 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
     setAnimateParticles(animateParticles);
   }, [setAnimateParticles]);
 
-  // const [hoveredIndex, setHoveredIndex] = useState(null);
-
-  // const handlePointerOut = (event) => {
-  //   if (event.object === points.current) {
-  //     const pointIndex = event.index;
-  //     setHoveredIndex(null);
-
-  //     // Scale back down only this specific particle
-  //     gsap.to(scales, {
-  //       [pointIndex]: 1.0, // Original scale
-  //       duration: 0.3,
-  //       ease: "power2.out",
-  //       onUpdate: () => {
-  //         points.current.geometry.attributes.aScale.needsUpdate = true;
-  //       }
-  //     });
-  //   }
-  // };
-
-  // const handlePointerOver = () => {
-  //   gsap.to(points.current.material.uniforms.uSize, {
-  //     value: 20.0,
-  //     duration: 0.3,
-  //     ease: "power2.out"
-  //   });
-  // };
-
-  // const handlePointerOut = () => {
-  //   gsap.to(points.current.material.uniforms.uSize, {
-  //     value: 8.0,
-  //     duration: 0.3,
-  //     ease: "power2.out"
-  //   });
-  // };
 
   // Handle click on particles
   const handleClick = (e) => {
@@ -210,52 +121,8 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
 
   const radius = 70; // Much larger radius for better spread
 
-  // const count = 100;
-  //  const count = data.length
-  const countryColorMap = useMemo(() => {
-    const countries = new Set();
-    originalData.forEach((cinema) => {
-      countries.add(cinema.fields?.Country || "Unknown");
-    });
 
-    // Convert to array and create color map
-    const countryArray = Array.from(countries);
-    // console.log("Countries in data:", countryArray);
-    // console.log("Total countries:", countryArray.length);
-
-    // Define your color palette
-    const colorPalette = [
-      [0.53, 0.81, 0.92], // Blue
-      [0.0, 1.0, 0.0], // Green
-      [1.0, 0.0, 0.0], // Red
-
-      [1.0, 1.0, 0.0], // Yellow
-      [1.0, 0.0, 1.0], // Magenta
-      [0.0, 1.0, 1.0], // Cyan
-      [1.0, 0.5, 0.0], // Orange
-      [0.5, 0.0, 1.0], // Purple
-      [1.0, 0.0, 0.5], // Pink
-      [0.5, 1.0, 0.0], // Lime
-      [0.0, 0.5, 1.0], // Sky blue
-      [1.0, 0.8, 0.0], // Gold
-      [0.8, 0.0, 0.8], // Dark magenta
-      [0.0, 0.8, 0.8], // Teal
-      [0.8, 0.5, 0.0], // Brown-orange
-      [0.5, 0.8, 0.0], // Yellow-green
-      [0.0, 0.8, 0.5], // Sea green
-      [0.8, 0.0, 0.5], // Deep pink
-      [0.5, 0.0, 0.8], // Indigo
-      [0.6, 0.6, 0.6], // Gray
-    ];
-
-    // Dynamically create country color map
-    const colorMap = {};
-    countryArray.forEach((country, index) => {
-      colorMap[country] = colorPalette[index % colorPalette.length];
-    });
-
-    return colorMap;
-  }, [originalData]);
+  
 
   // Create a set of featured cinema IDs for quick lookup
   const featuredCinemas = useMemo(() => {
@@ -289,9 +156,8 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
       const fields = cinema.fields;
       const country = fields?.Country || "Unknown";
 
-      // Get color from the dynamic map
-      const [r, g, b] = countryColorMap[country] || [0.5, 0.5, 0.5];
-      colors.set([r, g, b], i * 3);
+     
+      
 
       groups[i] = groupIndex; // All particles in this system belong to the same group
 
@@ -328,14 +194,8 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
   useFrame((state) => {
     const { clock } = state;
     const gl = state.gl;
-    gl.setClearColor('#000000ff', 1);
+    gl.setClearColor('#000000', 1);
 
-
-
-  
-
-    // gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    
 
     gl.toneMapping = THREE.ACESFilmicToneMapping;
     gl.outputColorSpace = THREE.SRGBColorSpace;
@@ -346,21 +206,7 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
   });
 
   const lineGeometry = useMemo(() => {
-    // const lineColors = [];
-    // const linePositions = [];
-    // // const maxDistance = 5.0;
-
-    // for (let i = 0; i < count - 1; i++) {
-    //   const x = positions[i * 3];
-    //   const y = positions[i * 3 + 1];
-    //   const z = positions[i * 3 + 2];
-
-    //   // const x2 = positions[(i + 1) * 3];
-    //   // const y2 = positions[(i + 1) * 3 + 1];
-    //   // const z2 = positions[(i + 1) * 3 + 2];
-
-    //   linePositions.push(x, y, z);
-    // }
+  
 
     return new THREE.BufferGeometry().setAttribute(
       "position",
@@ -376,14 +222,11 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
     gsap.fromTo(
       camera.position,
       { z: 10 },
-      { z: 70, duration: 4, ease: "power2.out" }
+      { z: 150, duration: 4, ease: "power2.out" }
     );
     // return null;
   }, [points.current]);
 
-  // useLayoutEffect(() => {
-  //   setAnimateParticles(animateParticles);
-  // }, [animateParticles, setAnimateParticles])
 
   const pointsGeometryRef = useRef();
 
@@ -408,13 +251,7 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
         ref={points}
         onPointerDown={handleClick}
         className="cursor-pointer"
-        // setIndex={null}
-        // onClick={() => handleClickRef.current}
-
-        // onPointerEnter={handlePointerOver}
-        // onPointerLeave={handlePointerOut}
-        // onPointerOver={handlePointerOver}
-        // onPointerOut={handlePointerOut}
+      
       >
         <bufferGeometry ref={pointsGeometryRef} key={positions.length}>
           <bufferAttribute
@@ -472,11 +309,11 @@ export default function Scene({ fullData }) {
   // Initialize with data
   useEffect(() => {
     if (fullData && fullData.length > 0) {
-      console.log(
-        "📊 Initializing with full data from server:",
-        fullData.length,
-        "records"
-      );
+      // console.log(
+      //   " Initializing with full data:",
+      //   fullData.length,
+      //   "records"
+      // );
 
       setCount(fullData.length);
       setData(fullData);
@@ -503,29 +340,14 @@ export default function Scene({ fullData }) {
     }
   }, [fullData]);
 
-  // useEffect(() => {
-  //   if (airtableData) {
-  //     const initialFilters = {};
-
-  //     Object.keys(airtableData).forEach((field) => {
-  //       initialFilters[field] = "all";
-  //     });
-  //     setFilters(initialFilters);
-  //   }
-  // }, [airtableData]);
+  
 
   const sizes = {
     width: window.innerWidth,
     height: window.innerHeight,
   };
 
-  useFrame(({ gl, scene, camera }) => {
-    // console.log(camera.position.z)
-    // gl.setClearColor(0x000000, 1);
-    // if (planeRef.current) {
-    //   planeRef.current.scale.set(window.innerWidth, window.innerHeight, 1);
-    // }
-  });
+ 
 
   const planeRef = useRef();
 
@@ -535,15 +357,15 @@ export default function Scene({ fullData }) {
           near={0.1}
           far={1000}
           makeDefault
-          position={[0, 0, 10]}
+          position={[0, 0, 50]}
           left={sizes.width / -2}
           right={sizes.width / 2}
           top={sizes.height / 2}
           bottom={sizes.height / -2}
         /> */}
-      <ambientLight intensity={1} />
+      {/* <ambientLight intensity={1} /> */}
 
-      {/* <ConstellationBackground /> */}
+     
 
       {filteredData && (
         <>
@@ -553,16 +375,14 @@ export default function Scene({ fullData }) {
             count={filteredData.length}
             groupType="all"
             groupIndex={7}
-            // offset={{ x: 0, y: 0, z: 0 }}
-
-            // setAnimateParticles={setAnimateParticles}
+        
           />
         </>
       )}
 
       <OrbitControls
         enableRotate={false}
-        maxDistance={70}
+        maxDistance={150}
         minDistance={10}
         // minZoom={10}
       />

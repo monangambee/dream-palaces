@@ -1,11 +1,31 @@
-import React, { useState, useMemo } from "react";
-import { AIRTABLE_CONFIG } from "../config/airtable";
+import React, { useState, useMemo, useEffect } from "react";
+
 import { useStore } from "../utils/useStore";
 
 
 const Filter = ({}) => {
   const { data, filters, clearFilters, updateFilters } = useStore();
-  const [isOpen, setIsOpen] = useState(true);
+  
+  // Check if mobile on initial load
+  const [isMobile, setIsMobile] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // Start closed by default
+  
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768; // md breakpoint
+      setIsMobile(mobile);
+      // Only set isOpen to true on desktop if not already set by user interaction
+      if (!mobile && !isOpen) {
+        setIsOpen(true);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   if (!data) return null;
 
   // Compute date extent from data for slider
@@ -84,17 +104,23 @@ const Filter = ({}) => {
   return (
     <div
       className={`flex flex-col font-basis gap-4 ${
-        isOpen ? "w-1/6" : "w-16"
-      } h-[100vh] border-r-[0.5px] font-basis border-primary justify-start overflow-hidden items-center bg-background z-50 p-4 transition-all duration-100 ease-in-out`}
+        isOpen 
+          ? isMobile ? "w-full" : "w-1/6" 
+          : isMobile ? "w-12" : "w-16"
+      } h-[100vh] border-r-[0.5px] font-basis border-primary justify-start overflow-hidden items-center bg-background z-50 p-4 transition-all duration-300 ease-in-out ${
+        isMobile && isOpen ? "fixed inset-0 z-50" : ""
+      }`}
       pointerEvents="auto"
     >
       {/* Toggle Button */}
       <button
         onClick={toggleFilter}
-        className="text-primary text-sm mb-2 transition-colors duration-200 self-end"
-        title={isOpen ? "Collapse Filter" : "Expand Filter"}
+        className={`text-primary mb-2 transition-colors duration-200 ${
+          isOpen ? "self-end text-sm" : "self-center text-lg"
+        }`}
+        title={isOpen ? "Close Filter" : "Open Filter"}
       >
-        {isOpen ? "◀" : "▶"}
+        {isOpen ? (isMobile ? "✕" : "◀") : (isMobile ? "☰" : "▶")}
       </button>
 
       {isOpen && (
@@ -111,7 +137,7 @@ const Filter = ({}) => {
               max={dateExtent.max + 1}
               value={selectedYear}
               onChange={(e) => handleYearChange(e.target.value)}
-              className="w-full"
+              className="w-full h-2  rounded-lg appearance-none cursor-pointer slider-black"
             />
           </div>
           <div className="flex flex-col w-full h-full">

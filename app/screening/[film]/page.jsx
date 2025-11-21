@@ -39,7 +39,7 @@ export default function ScreeningPage() {
     return (
       <div className="w-screen h-screen flex flex-col items-center justify-center bg-background text-primary">
         <h1 className="text-2xl font-basis mb-4">Loading film...</h1>
-        <p className="font-basis text-sm">Playback ID: {playbackId}</p>
+        {/* <p className="font-basis text-sm">Playback ID: {playbackId}</p> */}
       </div>
     );
   }

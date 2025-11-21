@@ -2,7 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { Image, ScrollControls, Scroll, useScroll, AdaptiveDpr, Bvh } from '@react-three/drei'
+import { Image, ScrollControls, Scroll, useScroll, AdaptiveDpr, Bvh, Html } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import {useStore} from '../../src/utils/useStore'
 
@@ -63,8 +63,8 @@ const Images = () => {
           <Scroll>
      
     {muxAssets.map((asset, index) => (
-        asset && <Image 
-            key={asset.id || index}
+        asset && <group key={asset.id || index}>
+        <Image 
             url={asset.thumbnail} 
             position={[index * 5, 0, 0]}
             scale={[4, 3, 1]}
@@ -73,6 +73,11 @@ const Images = () => {
             onPointerOut={() => setHovered(null)}
             grayscale={hovered === index ? 0 : 1}
         />
+        <Html position={[index * 5, -2, 0]}>
+          <h1>{asset.title}</h1>
+
+        </Html>
+        </group> 
     ))}
 
      {/* }) */}

@@ -3,6 +3,7 @@ import React, { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { useFrame, useThree } from '@react-three/fiber'
 import { Preload, useTexture, AdaptiveDpr, Bvh } from '@react-three/drei'
+import { useRouter } from 'next/navigation'
 import * as THREE from 'three'
 import { useMemo, useRef, useState, useEffect } from 'react'
 
@@ -45,6 +46,12 @@ export function EarthScene() {
   const earthRef = useRef();
   const atmosphereRef = useRef();
   const { gl } = useThree();
+  const router = useRouter();
+
+  // Handle click to navigate to map page
+  const handleEarthClick = () => {
+    router.push('/map');
+  };
 
   // Preload textures with proper caching
   const [day, night, specular, star] = useTexture([
@@ -142,7 +149,14 @@ export function EarthScene() {
 
   return (
     <>
-      <mesh ref={earthRef} geometry={SPHERE_GEOMETRY} material={earthMaterial} />
+      <mesh 
+        ref={earthRef} 
+        geometry={SPHERE_GEOMETRY} 
+        material={earthMaterial}
+        onClick={handleEarthClick}
+        onPointerOver={() => document.body.style.cursor = 'pointer'}
+        onPointerOut={() => document.body.style.cursor = 'default'}
+      />
       <mesh ref={atmosphereRef} geometry={SPHERE_GEOMETRY} material={atmosphereMaterial} scale={1.015} />
       <primitive object={particles} />
     </>
