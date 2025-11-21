@@ -2,7 +2,7 @@
   "name": "planar-choreography",
   "version": "1.0.0",
   "scripts": {
-    "dev": "next dev --turbopack & npx next-video sync -w",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

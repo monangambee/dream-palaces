@@ -222,7 +222,7 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
     gsap.fromTo(
       camera.position,
       { z: 10 },
-      { z: 150, duration: 4, ease: "power2.out" }
+      { z: 90, duration: 4, ease: "power2.out" }
     );
     // return null;
   }, [points.current]);
@@ -382,7 +382,7 @@ export default function Scene({ fullData }) {
 
       <OrbitControls
         enableRotate={false}
-        maxDistance={150}
+        maxDistance={100}
         minDistance={10}
         // minZoom={10}
       />
