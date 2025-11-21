@@ -75,7 +75,7 @@ const Hero = ({ fullData }) => {
       {imageUrls.map((url, index) => {
         const position = getRandomPosition(index);
         return (
-          <Image key={index} src={url} alt={`Cinema ${index}`}  width={200} height={200} 
+          <Image key={index} src={url} alt={`Cinema ${index}`}  width={250} height={250} 
           // loader={<div className='h-full w-full bg-slate-400'></div>} 
           style={{
             left: position.left,

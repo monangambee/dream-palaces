@@ -39,9 +39,9 @@ const moirai = Moirai_One({
   weight: "400",
 });
 
-const chillax = localFont({
-  src: "../public/fonts/Chillax-Regular.woff",
-  variable: "--font-chillax",
+const frontage3D = localFont({
+  src: "../public/fonts/FrontageProTest-3D.otf",
+  variable: "--font-frontage3D",
   display: "swap",
   style: "normal",
 });
@@ -78,10 +78,10 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${openSans.variable} ${robotoMono.variable} ${moirai.variable} ${jura.variable} ${clash.variable} ${FascinateInline.variable} ${chillax.variable} ${basis.variable} font-sans`}
+      className={`${openSans.variable} ${robotoMono.variable} ${moirai.variable} ${jura.variable}   ${frontage3D.variable} ${basis.variable} font-sans`}
     >
       <body>
-        <nav className="w-screen flex justify-center items-center font-chillax bg-background  border-b-[0.5px] border-primary p-4 text-primary">
+        <nav className="w-screen flex justify-center items-center font-frontage3D bg-background border-b-[0.5px]  border-primary p-4 text-primary">
           <Link href="/" className="cursor-pointer p-4 text-5xl">
             Dream Palaces
           </Link>
@@ -89,32 +89,36 @@ export default function RootLayout({ children }) {
 
         {children}
 
-        <footer className="w-screen h-[10vh] flex flex-col md:flex-row justify-center items-center font-basis  bg-background  border-t-[0.5px] border-primary p-4 text-primary gap-2 text-xs">
+        <footer className="w-screen  lg:h-[10vh] flex flex-row md:flex-row justify-center items-center font-basis  bg-background  border-t-[0.5px] border-primary p-4 text-primary gap-2 text-xs">
+          <div className="flex w-[80%] p-8 justify-between flex-col md:flex-row items-start h-full">
+
           <p>© 2025 Dream Palaces</p>
           <p className="hidden md:block">|</p>
           <p>
-            <Link className="underline" href="/">
+            <Link className="underline hidden md:block hover:text-yellow-400" href="/">
               Home
             </Link>
           </p>
           <p className="hidden md:block">|</p>
           <p>
-            <Link className="underline" href="/constellation">
+            <Link className="underline hover:text-yellow-400 hidden md:block" href="/constellation">
               Constellation
             </Link>
           </p>
           <p className="hidden md:block">|</p>
           <p>
-            <Link href="/map" className="underline">
+            <Link href="/map" className="underline hover:text-yellow-400 hidden md:block">
               Map
             </Link>
           </p>
           <p className="hidden md:block">|</p>
           <p>
-            <Link href="/screening/S02mJ9OS4IrPAM7Wqchn3q2Q9L4xPpDRUSAHgOswaATw" className="underline">
+            <Link href="/screening/NiUSiqPpmtsqaBeSmSDhbItV72hIBaH7TdpIpudDDbo" className="underline hidden md:block">
               Screening Room
             </Link>
           </p>
+          </div>
+
         </footer>
       </body>
     </html>
