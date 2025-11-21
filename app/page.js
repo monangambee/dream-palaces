@@ -8,7 +8,7 @@ import HomeScene from "./components/HomeScene";
 import { Suspense } from "react";
 
 // Enable static generation with revalidation
-export const revalidate = 3600 * 2; // Revalidate every 2 hours
+export const revalidate = 7200; // Revalidate every 2 hours (3600 * 2)
 
 export default async function HomePage() {
 
