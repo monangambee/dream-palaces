@@ -9,7 +9,7 @@ const CinemaInfo = () => {
 
 
   return (
-    <div className="fixed bottom-10 text-primary right-5 z-50 bg-background bg-opacity-90  p-8 w-[30vw] max-h-[50vh]  overflow-y-scroll no-scrollbar  border-primary border-[0.5px] rounded-xl shadow-2xl font-basis ">
+    <div className="fixed bottom-10 text-primary right-5 z-50 bg-background bg-opacity-90  p-8 max-w-[40vh] lg:w-[30vw] max-h-[50vh]  overflow-y-scroll no-scrollbar  border-primary border-[0.5px] rounded-xl shadow-2xl font-basis ">
       <div className="font-bold  mb-3 ">{selectedCinema.fields.Name}</div>
       <div className="text-xs mb-2 ">
         {selectedCinema.fields.City}, {selectedCinema.fields.Country}

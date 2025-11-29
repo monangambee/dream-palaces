@@ -4,9 +4,11 @@ varying vec3 vColor;
 varying float vScale;
 uniform float uTime;
 uniform float uSize;
+uniform sampler2D uTexture;
 
 void main() {
 
+    vec4 particleTexture = texture2D(uTexture, gl_PointCoord);
     //circluar mask 
     vec2 center = vec2(0.5, 0.5);
     vec2 uv = gl_PointCoord;
@@ -39,7 +41,8 @@ void main() {
 
 // vec3 color = mix(vec3(0.0), vColor, strength);
 
-    gl_FragColor = vec4(vec3(strength * vColor), 1.0);
+    // gl_FragColor = vec4(vec3(strength * vColor), 1.0);
+    gl_FragColor = particleTexture;
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
 }

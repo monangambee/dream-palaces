@@ -17,6 +17,17 @@ const SPHERE_GEOMETRY = new THREE.SphereGeometry(2, 64, 64);
 const SUN_SPHERICAL = new THREE.Spherical(1, Math.PI * 0.5, 0.5);
 const SUN_DIRECTION = new THREE.Vector3();
 
+// Preload textures - only on client side
+if (typeof window !== 'undefined') {
+  const textureLoader = new THREE.TextureLoader();
+  const TEXTURE_PATHS = [
+    '/earth/surface5.jpg',
+    '/earth/specularClouds.jpg',
+    '/earth/star_04.png'
+  ];
+  TEXTURE_PATHS.forEach(path => textureLoader.load(path));
+}
+
 // Create particles once
 const createParticles = (starTexture) => {
   const count = 2000;
@@ -166,14 +177,17 @@ export function EarthScene() {
 const HomeScene = () => {
   return (
     <Canvas className='border-[0.5px] h-1/2'>
-          <AdaptiveDpr pixelated />
-              <Bvh firstHitOnly></Bvh>
-      <Suspense fallback={null}>
-      <EarthScene />
-      {/* <OrbitControls /> */}
-      <Preload all />
+      <AdaptiveDpr pixelated />
+      <Bvh firstHitOnly />
+      <Suspense fallback={
+        <mesh>
+          <sphereGeometry args={[2, 32, 32]} />
+          <meshBasicMaterial color="#1a1a1a" wireframe />
+        </mesh>
+      }>
+        <EarthScene />
+        <Preload all />
       </Suspense>
-     
     </Canvas>
   );
 };

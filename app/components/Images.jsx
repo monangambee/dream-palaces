@@ -87,7 +87,7 @@ const Images = () => {
 
           <Scroll html>
             <div className='flex text-[white] items-center gap-3'>
-               <p className='text-[5rem] font-basis text-[white] z-10'>Screening Room</p>
+               <p className='text-[2rem] font-basis text-[white] z-10 p-8'>Featured Films</p>
 
                 {/* <span className="material-symbols-outlined text-[5rem] font-bold">
                  arrow_forward
