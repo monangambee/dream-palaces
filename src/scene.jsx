@@ -7,7 +7,7 @@ import React, {
   useLayoutEffect,
   use,
 } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { OrbitControls, OrthographicCamera } from "@react-three/drei";
 import * as THREE from "three";
 import fragment from "./shaders/fragment.glsl";
@@ -26,12 +26,14 @@ gsap.registerPlugin(useGSAP);
 
 const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
 
+  const particleTexture = useLoader(THREE.TextureLoader, "/particle/star_08.png");
+
   
   const points = useRef();
   const particlesRef = useRef();
 
   useThree((state) => {
-    state.raycaster.params.Points.threshold = 5; // Much more precise - only detect when actually close to particles
+    state.raycaster.params.Points.threshold = 1; // only detect when actually close to particles
 
     state.raycaster.near = 0; // start checking just in front of the camera
     // state.raycaster.far = 150;
@@ -115,11 +117,13 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
       uResolution: {
         value: new THREE.Vector2(window.innerWidth, window.innerHeight),
       },
-      uDevicePixelRatio: { value: window.devicePixelRatio }
+      uDevicePixelRatio: { value: window.devicePixelRatio },
+      uTexture: { value: particleTexture }
+
     };
   }, []);
 
-  const radius = 70; // Much larger radius for better spread
+  const radius = 200; // Much larger radius for better spread
 
 
   
@@ -202,6 +206,7 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
 
     points.current.material.uniforms.uTime.value = clock.elapsedTime;
     points.current.material.uniforms.uDevicePixelRatio.value = window.devicePixelRatio 
+    points.current.material.uniforms.uTexture.value = particleTexture;
 
   });
 
@@ -222,7 +227,7 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
     gsap.fromTo(
       camera.position,
       { z: 10 },
-      { z: 90, duration: 4, ease: "power2.out" }
+      { z: 50, duration: 4, ease: "power2.out" }
     );
     // return null;
   }, [points.current]);
@@ -250,8 +255,8 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
       <points
         ref={points}
         onPointerDown={handleClick}
-        className="cursor-pointer"
-      
+        onPointerOver={() => document.body.style.cursor = 'pointer'}
+        onPointerOut={() => document.body.style.cursor = 'default'}
       >
         <bufferGeometry ref={pointsGeometryRef} key={positions.length}>
           <bufferAttribute
@@ -382,7 +387,7 @@ export default function Scene({ fullData }) {
 
       <OrbitControls
         enableRotate={false}
-        maxDistance={100}
+        maxDistance={200}
         minDistance={10}
         // minZoom={10}
       />

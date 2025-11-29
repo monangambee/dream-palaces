@@ -75,15 +75,21 @@ const Hero = ({ fullData }) => {
       {imageUrls.map((url, index) => {
         const position = getRandomPosition(index);
         return (
-          <Image key={index} src={url} alt={`Cinema ${index}`}  width={250} height={250} 
-          // loader={<div className='h-full w-full bg-slate-400'></div>} 
-          style={{
+          <Image 
+            key={index} 
+            src={url} 
+            alt={`Cinema ${index}`}  
+            width={300} 
+            height={300}
+            sizes="(max-width: 640px) 150px, (max-width: 1024px) 100px, (max-width: 1536px) 200px, 200px"
+            // loader={<div className='h-full w-full bg-slate-400'></div>} 
+            style={{
             left: position.left,
             top: position.top,
             transform: 'translate(-50%, -50%)',
             // zIndex: index + 1, // Ensure proper stacking
           }}
-          className={`p-8 aspect-square object-cover absolute border-primary border-[0.5px] left-[${position.left}] top-[${position.top}]`}/>
+          className={`p-4 sm:p-6 md:p-8 w-[150px] h-[150px] sm:w-[100px] sm:h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] object-cover absolute border-primary border-[0.5px]`}/>
         );
       })}
     </>

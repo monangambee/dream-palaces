@@ -46,7 +46,7 @@ export default function ScreeningPage() {
 
   return (
     <div className="w-screen h-screen flex flex-col items-center font-basis gap-4 justify-center bg-background text-primary overflow-hidden relative">
-      <Link href="/screening" className="absolute top-4 left-4  text-sm z-10">← Back to Select Film </Link>
+      <Link href="/screening" className="absolute top-4 left-4  text-sm z-10">← Featured films </Link>
       <h1 className="text-2xl mb-6">
         {/* {currentAsset.originalPath?.split('/').pop()?.replace('.mp4', '') || 'Video'} */}
 

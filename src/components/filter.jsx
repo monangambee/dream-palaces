@@ -125,7 +125,11 @@ const Filter = ({}) => {
 
       {isOpen && (
         <>
+          <p className="text-yellow-400 text-xs text-center">
+            Pan around to explore more then click on a cinema to view details.
+          </p>
           <h2 className="text-primary text-xs text-center">Filter cinemas</h2>
+          
           {/* Year slider */}
           <div className="mb-4 w-full">
             <div className="text-primary text-xs mb-1 text-center">
@@ -176,6 +180,8 @@ const Filter = ({}) => {
               </div>
             ))}
           </div>
+
+        
 
           <button
             className=" mt-4 bg-slate-900 bg-opacity-50 border-primary border-[0.5px] text-primary text-xs px-4 py-2 rounded pointer"
