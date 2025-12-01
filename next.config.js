@@ -22,7 +22,27 @@ const nextConfig = {
   },
   // Optimize images
   images: {
-    unoptimized: true
+    unoptimized: false,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'image.mux.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'v5.airtableusercontent.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'dl.airtable.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
   },
   // Fix lockfile warning
   outputFileTracingRoot: __dirname
