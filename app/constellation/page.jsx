@@ -13,7 +13,7 @@ export default async function ConstellationPage() {
 
   try {
     // Skip API calls in development to avoid wasting API quota
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV !== 'development') {
       console.log('Development mode: Using empty data, client will handle caching');
       fullData = [];
     } else {
