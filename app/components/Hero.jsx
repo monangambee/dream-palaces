@@ -8,6 +8,7 @@ import Link from 'next/link';
 const Hero = ({ fullData }) => {
 
       const [cachedData, setCachedData] = useState(null);
+      const [allUrls, setAllUrls] = useState([]);
 
       const imageUrls = useStore((state) => state.imageUrls);
       const setImageUrls = useStore((state) => state.setImageUrls);
@@ -47,6 +48,8 @@ const Hero = ({ fullData }) => {
       .map(cinema => cinema.fields.Images[0].url)
       .filter(Boolean); // Remove any falsy URLs
 
+    setAllUrls(urls);
+
     // Random selection
     const shuffled = [...urls].sort(() => 0.5 - Math.random());
     const selectedUrls = shuffled.slice(0, 4);
@@ -54,6 +57,13 @@ const Hero = ({ fullData }) => {
     setImageUrls(selectedUrls);
     // console.log('Selected URLs:', selectedUrls.length);
   }, [fullData])
+
+  const handleShuffle = () => {
+    if (allUrls.length === 0) return;
+    const shuffled = [...allUrls].sort(() => 0.5 - Math.random());
+    const selectedUrls = shuffled.slice(0, 4);
+    setImageUrls(selectedUrls);
+  }
 
 
     // Function to generate consistent random position based on index
@@ -80,9 +90,9 @@ const Hero = ({ fullData }) => {
 
   return (
     <div className='relative w-full h-full min-h-[80vh] flex items-center justify-center'>
-      <Link href="/" className='font-frontage border-[0.5px]  flex items-center px-8 py-4 hover:bg-yellow-400 hover:text-black'>
+      <button onClick={handleShuffle} className='font-frontage border-[0.5px]  flex items-center px-8 py-4 hover:bg-yellow-400 hover:text-black'>
         Shuffle
-      </Link>
+      </button>
       {imageUrls.map((url, index) => {
         return (
           <div key={index} className={`absolute ${positions[index]} w-[100px] h-[100px] sm:w-[80px] sm:h-[80px] md:w-[120px] md:h-[120px] lg:w-[180px] lg:h-[180px] xl:w-[300px] xl:h-[300px]`}>
