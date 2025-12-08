@@ -16,6 +16,9 @@ module.exports = {
         clash: ['var(--font-clash)', 'sans-serif'],
         frontage3D: ['var(--font-frontage3D)', 'sans-serif'],
         basis: ['var(--font-basis)', 'sans-serif'],
+        marqueeMoon: ['var(--font-marqueMoon)', 'sans-serif'],
+        neon: ['var(--font-neon)', 'sans-serif'],
+        frontage: ['var(--font-frontage)', 'sans-serif'],
 
       },
       colors: {
