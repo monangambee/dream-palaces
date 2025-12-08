@@ -25,22 +25,30 @@ export default async function HomePage() {
       console.log('Fetching Airtable data at build time...');
       fullData = await fetchAirtableDataProgressive(AIRTABLE_CONFIG.defaultTable);
     }
-
-    // Fetch screening room gif 
-    try {
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-      const muxResponse = await fetch(`${baseUrl}/api/mux-assets`);
-      const muxData = await muxResponse.json();
-      if (muxData.success && muxData.assets.length > 0) {
-        const firstAsset = muxData.assets[0];
-        screeningGif = `https://image.mux.com/${firstAsset.playbackId}/animated.gif?width=400&fps=15`;
-      }
-    } catch (muxErr) {
-      console.error("Error fetching Mux assets:", muxErr);
-    }
   } catch (err) {
     console.error("Error fetching Airtable data:", err);
     error = err.message;
+  }
+
+  // Fetch screening room gif 
+  try {
+    const Mux = require('@mux/mux-node').default;
+    const mux = new Mux({
+      tokenId: process.env.MUX_TOKEN_ID,
+      tokenSecret: process.env.MUX_TOKEN_SECRET,
+    });
+    
+    const response = await mux.video.assets.list({ limit: 1 });
+    const assets = response.data || [];
+    
+    if (assets.length > 0) {
+      const firstAsset = assets[0];
+      if (firstAsset.playback_ids && firstAsset.playback_ids.length > 0) {
+        screeningGif = `https://image.mux.com/${firstAsset.playback_ids[0].id}/animated.gif?width=400&fps=15`;
+      }
+    }
+  } catch (muxErr) {
+    console.error("Error fetching Mux assets:", muxErr);
   }
 
   const modes = [
