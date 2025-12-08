@@ -1,5 +1,5 @@
-import { fetchAirtableDataProgressive } from '../../../src/utils/data';
-import { AIRTABLE_CONFIG } from '../../../src/config/airtable';
+import { fetchAirtableDataProgressive } from '../../src/utils/data';
+import { AIRTABLE_CONFIG } from '../../src/config/airtable';
 
 export async function GET() {
   // Set cache headers for better performance
