@@ -47,6 +47,29 @@ const frontage3D = localFont({
   style: "normal",
 });
 
+const frontage = localFont({
+  src: "../public/fonts/FrontageProTest.otf",
+  variable: "--font-frontage",
+  display: "swap",
+  style: "normal",
+});
+
+const marqueeMoon = localFont({
+  src: "../public/fonts/Marquee Moon.otf",
+  variable: "--font-marqueMoon",
+  display: "swap",
+  style: "normal",
+});
+
+const neon = localFont({
+  src: "../public/fonts/Neon Light.otf",
+  variable: "--font-neon",
+  display: "swap",
+  style: "normal",
+});
+
+
+
 const basis = localFont({
   src: "../public/fonts/BasisGrotesqueMonoPro-Regular.woff",
   variable: "--font-basis",
@@ -79,7 +102,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${openSans.variable} ${robotoMono.variable} ${moirai.variable} ${jura.variable}   ${frontage3D.variable} ${basis.variable} font-sans`}
+      className={`${openSans.variable} ${robotoMono.variable} ${moirai.variable} ${jura.variable}   ${frontage3D.variable} ${basis.variable} ${marqueeMoon.variable} ${neon.variable} ${frontage.variable} font-sans`}
     >
       <body>
         <LayoutWrapper>

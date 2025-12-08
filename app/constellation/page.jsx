@@ -1,6 +1,6 @@
 import Constellation from "../components/Constellation";
-import { fetchAirtableDataProgressive } from "../../src/utils/data";
-import { AIRTABLE_CONFIG } from '../../src/config/airtable';
+import { fetchAirtableDataProgressive } from "../src/utils/data";
+import { AIRTABLE_CONFIG } from '../src/config/airtable';
 
 
 
