@@ -57,6 +57,9 @@ const Filter = ({}) => {
       }
       updateFilters(field, value);
     }
+    // Close cinema info when filter changes
+    const { clearSelectedCinema } = useStore.getState();
+    clearSelectedCinema();
   };
 
   const handleYearChange = (value) => {
@@ -68,6 +71,9 @@ const Filter = ({}) => {
     } else {
       updateFilters('selectedYear', year);
     }
+    // Close cinema info when year filter changes
+    const { clearSelectedCinema } = useStore.getState();
+    clearSelectedCinema();
   };
 
   // Get values for each field with country-city dependency
@@ -113,7 +119,7 @@ const Filter = ({}) => {
       pointerEvents="auto"
     >
       {/* Toggle Button */}
-      <button
+      {/* <button
         onClick={toggleFilter}
         className={`text-primary mb-2 transition-colors duration-200 ${
           isOpen ? "self-end text-sm" : "self-center text-lg"
@@ -121,14 +127,14 @@ const Filter = ({}) => {
         title={isOpen ? "Close Filter" : "Open Filter"}
       >
         {isOpen ? (isMobile ? "✕" : "◀") : (isMobile ? "☰" : "▶")}
-      </button>
+      </button> */}
 
       {isOpen && (
         <>
-          <p className="text-yellow-400 text-xs text-center">
+          <p className="text-yellow-400 text-xs text-center pb-8 pt-4">
             Pan around to explore more then click on a cinema to view details.
           </p>
-          <h2 className="text-primary text-xs text-center">Filter cinemas</h2>
+          <h2 className="text-primary text-xs text-center pb-4">Filter cinemas</h2>
           
           {/* Year slider */}
           <div className="mb-4 w-full">
@@ -158,7 +164,7 @@ const Filter = ({}) => {
                   className={`p-2 m-2 cursor-pointer border-primary border-[0.5px] w-full h-full text-xs text-center ${
                     field === "City" && isCityDisabled
                       ? "bg-gray-600 text-gray-400 cursor-not-allowed opacity-50"
-                      : "bg-primary bg-opacity-20 text-primary hover:bg-primary hover:text-black"
+                      : "bg-black bg-opacity-20 text-primary hover:bg-primary hover:text-black"
                   }`}
                   value={filters[field] || "all"}
                   onChange={(e) => handleFilterChange(field, e.target.value)}
@@ -187,7 +193,7 @@ const Filter = ({}) => {
             className=" mt-4 bg-slate-900 bg-opacity-50 border-primary border-[0.5px] text-primary text-xs px-4 py-2 rounded pointer"
             onClick={() => handleFilterChange("clear", "all")}
           >
-            Clear Filters
+            Reset
           </button>
         </>
       )}

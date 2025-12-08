@@ -4,7 +4,20 @@ import { useRouter } from 'next/navigation'
 
 import { Image, ScrollControls, Scroll, useScroll, AdaptiveDpr, Bvh, Html } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import {useStore} from '../../src/utils/useStore'
+import {useStore} from '../src/utils/useStore'
+
+const getGoogleDriveImageUrl = (url) => {
+  if (!url || !url.includes('drive.google.com')) return url
+  
+  const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || 
+                      url.match(/id=([a-zA-Z0-9_-]+)/)
+  
+  if (fileIdMatch && fileIdMatch[1]) {
+    return `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`
+  }
+  
+  return url
+}
 
 const Images = () => {
     const router = useRouter()
@@ -65,7 +78,7 @@ const Images = () => {
     {muxAssets.map((asset, index) => (
         asset && <group key={asset.id || index}>
         <Image 
-            url={asset.thumbnail} 
+            url={getGoogleDriveImageUrl(asset.thumbnail)} 
             position={[index * 5, 0, 0]}
             scale={[4, 3, 1]}
             onClick={() => handleImageClick(index)}

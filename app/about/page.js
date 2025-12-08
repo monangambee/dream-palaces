@@ -1,16 +1,16 @@
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white p-8">
+    <div className="min-h-screen font-basis  text-white p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-6">About Planar Choreography</h1>
+        <h1 className="text-4xl font-bold mb-6">About Dream palaces</h1>
         
         <div className="space-y-6">
           <section>
             <h2 className="text-2xl font-semibold mb-3">Project Overview</h2>
             <p className="text-gray-300 leading-relaxed">
-              Planar Choreography is an interactive 3D visualization of cinema data, 
+              Dream palaces is an interactive 3D visualization of cinema data, 
               built with Next.js, Three.js, and React Three Fiber. The application 
-              displays cinema information in an immersive 3D environment.
+              displays cinema information.
             </p>
           </section>
           

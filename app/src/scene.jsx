@@ -33,7 +33,7 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
   const particlesRef = useRef();
 
   useThree((state) => {
-    state.raycaster.params.Points.threshold = 1; // only detect when actually close to particles
+    state.raycaster.params.Points.threshold = 15; // only detect when actually close to particles
 
     state.raycaster.near = 0; // start checking just in front of the camera
     // state.raycaster.far = 150;
@@ -47,7 +47,7 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
       points.current.material.uniforms.uPosition,
       { value: 0.0 },
       {
-        value: 8.0,
+        value: 15.0,
         duration: 3,
         ease:"sine.inOut",
       }
@@ -109,7 +109,7 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
         value: 0.0,
       },
       uSize: {
-        value: 10.0,
+        value: 15.0,
       },
       uPosition: {
         value: 0.0,
@@ -226,8 +226,8 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
 
     gsap.fromTo(
       camera.position,
-      { z: 10 },
-      { z: 50, duration: 4, ease: "power2.out" }
+      { z: 200 },
+      { z: 100, duration: 3, ease: "power2.out" }
     );
     // return null;
   }, [points.current]);
@@ -389,7 +389,11 @@ export default function Scene({ fullData }) {
         enableRotate={false}
         maxDistance={200}
         minDistance={10}
-        // minZoom={10}
+        mouseButtons={{
+          LEFT: THREE.MOUSE.PAN,
+          MIDDLE: THREE.MOUSE.DOLLY,
+          RIGHT: THREE.MOUSE.ROTATE
+        }}
       />
     </>
   );

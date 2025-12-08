@@ -5,14 +5,14 @@ import dynamic from 'next/dynamic';
 import { use, useEffect, useState } from 'react';
 import { AdaptiveDpr, Bvh } from "@react-three/drei";
 import * as THREE from 'three'
-import { useStore } from "../../src/utils/useStore";
+import { useStore } from "../src/utils/useStore";
 import tunnel from "tunnel-rat";
 
 
 // Dynamically import components that use React hooks to avoid SSR issues
-const Scene = dynamic(() => import('../../src/scene'), { ssr: false });
-const Filter = dynamic(() => import('../../src/components/filter'), { ssr: false });
-const CinemaInfo = dynamic(() => import('../../src/components/CinemaInfo'), { ssr: false });
+const Scene = dynamic(() => import('../src/scene'), { ssr: false });
+const Filter = dynamic(() => import('../src/components/filter'), { ssr: false });
+const CinemaInfo = dynamic(() => import('../src/components/CinemaInfo'), { ssr: false });
 
 
 

@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
-import { useStore } from '../../src/utils/useStore';
+import { useStore } from '../src/utils/useStore';
+import Link from 'next/link';
 
 const Hero = ({ fullData }) => {
 
@@ -48,7 +49,7 @@ const Hero = ({ fullData }) => {
 
     // Random selection
     const shuffled = [...urls].sort(() => 0.5 - Math.random());
-    const selectedUrls = shuffled.slice(0, 5);
+    const selectedUrls = shuffled.slice(0, 4);
 
     setImageUrls(selectedUrls);
     // console.log('Selected URLs:', selectedUrls.length);
@@ -56,43 +57,47 @@ const Hero = ({ fullData }) => {
 
 
     // Function to generate consistent random position based on index
-  const getRandomPosition = (index) => {
-    const seed = index * 1439; // Use index as seed for consistent positioning
-    const randomX = (seed * 9301 + 49297) % 233280 / 233280; // Pseudo-random 0-1
-    const randomY = (seed * 7919 + 12345) % 233280 / 233280; // Different calculation for Y
+  // const getRandomPosition = (index) => {
+  //   const seed = index * 1439; // Use index as seed for consistent positioning
+  //   const randomX = (seed * 9301 + 49297) % 233280 / 233280; // Pseudo-random 0-1
+  //   const randomY = (seed * 7919 + 12345) % 233280 / 233280; // Different calculation for Y
     
-    return {
-      left: `${randomX * 100 -5}%`, // 10-90% from left
-      top: `${randomY * 80+ 10}%`   // 10-90% from top
-    };
-  };
+  //   return {
+  //     left: `${randomX * 100 -5}%`, // 10-90% from left
+  //     top: `${randomY * 80+ 10}%`   // 10-90% from top
+  //   };
+  // };
   
 
 
 
+  const positions = [
+    'top-8 left-1/2 -translate-x-1/2',      // Top center with gap
+    'bottom-8 left-1/2 -translate-x-1/2',   // Bottom center with gap
+    'left-8 top-1/2 -translate-y-1/2',      // Left center with gap
+    'right-8 top-1/2 -translate-y-1/2'      // Right center with gap
+  ]
+
   return (
-    <>
+    <div className='relative w-full h-full min-h-[80vh] flex items-center justify-center'>
+      <Link href="/" className='font-frontage border-[0.5px]  flex items-center px-8 py-4 hover:bg-yellow-400 hover:text-black'>
+        Shuffle
+      </Link>
       {imageUrls.map((url, index) => {
-        const position = getRandomPosition(index);
         return (
-          <Image 
-            key={index} 
-            src={url} 
-            alt={`Cinema ${index}`}  
-            width={300} 
-            height={300}
-            sizes="(max-width: 640px) 150px, (max-width: 1024px) 100px, (max-width: 1536px) 200px, 200px"
-            // loader={<div className='h-full w-full bg-slate-400'></div>} 
-            style={{
-            left: position.left,
-            top: position.top,
-            transform: 'translate(-50%, -50%)',
-            // zIndex: index + 1, // Ensure proper stacking
-          }}
-          className={`p-4 sm:p-6 md:p-8 w-[150px] h-[150px] sm:w-[100px] sm:h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] object-cover absolute border-primary border-[0.5px]`}/>
+          <div key={index} className={`absolute ${positions[index]} w-[100px] h-[100px] sm:w-[80px] sm:h-[80px] md:w-[120px] md:h-[120px] lg:w-[180px] lg:h-[180px] xl:w-[300px] xl:h-[300px]`}>
+            <Image 
+            // unoptimized
+              src={url} 
+              alt={`Cinema ${index}`}  
+              fill
+              sizes="(max-width: 640px) 100px, (max-width: 768px) 80px, (max-width: 1024px) 120px, (max-width: 1280px) 180px, 300px"
+              className="object-cover border-primary border-[0.5px] p-4"
+            />
+          </div>
         );
       })}
-    </>
+    </div>
   )
 }
 
