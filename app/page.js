@@ -33,9 +33,9 @@ export default async function HomePage() {
   // Fetch screening room thumbnail and first film slug from Vimeo
   let firstFilmSlug = '';
   try {
-    const response = await fetch('http://localhost:3000/api/vimeo-assets', {
-      cache: 'no-store'
-    });
+   const response = await fetch('/api/vimeo-assets', { 
+  next: { revalidate: 3600 }
+})
     const data = await response.json();
     
     if (data.success && data.assets && data.assets.length > 0) {
