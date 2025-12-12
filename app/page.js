@@ -33,9 +33,10 @@ export default async function HomePage() {
   // Fetch screening room thumbnail and first film slug from Vimeo
   let firstFilmSlug = '';
   try {
-   const response = await fetch('/api/vimeo-assets', { 
-  next: { revalidate: 3600 }
-})
+    const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+    const response = await fetch(`${baseUrl}/api/vimeo-assets`, { 
+      next: { revalidate: 3600 }
+    })
     const data = await response.json();
     
     if (data.success && data.assets && data.assets.length > 0) {
