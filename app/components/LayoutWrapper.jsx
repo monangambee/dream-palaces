@@ -11,7 +11,7 @@ export default function LayoutWrapper({ children }) {
   return (
     <>
       {!isViewingFilm && (
-        <nav className="w-screen flex flex-col justify-center items-center font-marqueeMoon bg-background border-b-[0.5px] border-primary p-4 text-primary">
+        <nav className="w-screen flex flex-col justify-center items-center font-marqueeMoon bg-background  border-primary p-4 text-primary">
           <Link href="/" className="cursor-pointer p-4 text-xl md:text-7xl">
             Dream Palaces
           </Link>

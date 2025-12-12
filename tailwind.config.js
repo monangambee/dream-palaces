@@ -19,7 +19,7 @@ module.exports = {
         marqueeMoon: ['var(--font-marqueMoon)', 'sans-serif'],
         neon: ['var(--font-neon)', 'sans-serif'],
         frontage: ['var(--font-frontage)', 'sans-serif'],
-
+        primary:['var(--font-jura)', 'sans-serif'],
       },
       colors: {
         primary: '#FDF9ED', // Example primary color

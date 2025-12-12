@@ -30,25 +30,21 @@ export default async function HomePage() {
     error = err.message;
   }
 
-  // Fetch screening room gif 
+  // Fetch screening room thumbnail and first film slug from Vimeo
+  let firstFilmSlug = '';
   try {
-    const Mux = require('@mux/mux-node').default;
-    const mux = new Mux({
-      tokenId: process.env.MUX_TOKEN_ID,
-      tokenSecret: process.env.MUX_TOKEN_SECRET,
+    const response = await fetch('http://localhost:3000/api/vimeo-assets', {
+      cache: 'no-store'
     });
+    const data = await response.json();
     
-    const response = await mux.video.assets.list({ limit: 1 });
-    const assets = response.data || [];
-    
-    if (assets.length > 0) {
-      const firstAsset = assets[0];
-      if (firstAsset.playback_ids && firstAsset.playback_ids.length > 0) {
-        screeningGif = `https://image.mux.com/${firstAsset.playback_ids[0].id}/animated.gif?width=400&fps=15`;
-      }
+    if (data.success && data.assets && data.assets.length > 0) {
+      const firstVideo = data.assets[0];
+      screeningGif = firstVideo.thumbnail;
+      firstFilmSlug = firstVideo.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
     }
-  } catch (muxErr) {
-    console.error("Error fetching Mux assets:", muxErr);
+  } catch (vimeoErr) {
+    console.error("Error fetching Vimeo videos:", vimeoErr);
   }
 
   const modes = [
@@ -70,7 +66,7 @@ export default async function HomePage() {
       name: "SCREENING ROOM",
       description:
         "Use your mobile device to experience movies from a virtual screening room.",
-      link: "/screening/NiUSiqPpmtsqaBeSmSDhbItV72hIBaH7TdpIpudDDbo",
+      link: `/screening/${firstFilmSlug || 'default'}`,
       image: screeningGif,
     },
   ];

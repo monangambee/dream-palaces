@@ -1,138 +1,59 @@
 'use client'
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { Image, ScrollControls, Scroll, useScroll, AdaptiveDpr, Bvh, Html } from '@react-three/drei'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import {useStore} from '../src/utils/useStore'
-
-const getGoogleDriveImageUrl = (url) => {
-  if (!url || !url.includes('drive.google.com')) return url
-  
-  const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || 
-                      url.match(/id=([a-zA-Z0-9_-]+)/)
-  
-  if (fileIdMatch && fileIdMatch[1]) {
-    return `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`
-  }
-  
-  return url
-}
-
-const Images = () => {
-    const router = useRouter()
-    const { width } = useThree((state) => state.viewport)
-    const w = width < 10 ? 1.5 / 3 : 1 / 3
-
-    const [hovered, setHovered] = useState(null)
-    const [muxAssets, setMuxAssets] = useState([])
-
-    // Load Mux assets from API
-    useEffect(() => {
-        const loadAssets = async () => {
-            try {
-                const response = await fetch('/api/mux-assets');
-                const data = await response.json();
-                
-                if (data.success) {
-                    setMuxAssets(data.assets);
-                } else {
-                    console.error('Failed to load assets:', data.error);
-                }
-            } catch (error) {
-                console.error('Error loading assets:', error);
-            }
-        };
-        
-        loadAssets();
-    }, []);
-
-    const handleImageClick = (index) => {
-        // Navigate to the film page with the playback ID
-        const asset = muxAssets[index];
-        if (asset) {
-            router.push(`/screening/${asset.playbackId}`);
-        }
-    }
-
-    // Don't render anything if no assets loaded yet
-    if (!muxAssets || muxAssets.length === 0) {
-        return null;
-    }
-
-    // useFrame((state, delta) =>{
-    //     state.gl.setClearColor('black')
-
-    //     //scale hovered
-      
-    // })
-
-  return (
-    <>
-    {/* <Canvas> */}
-
-    {/* <OrbitControls/> */}
-    <ScrollControls  horizontal damping={1} pages={muxAssets.length} distance={1}>
-          <Scroll>
-     
-    {muxAssets.map((asset, index) => (
-        asset && <group key={asset.id || index}>
-        <Image 
-            url={getGoogleDriveImageUrl(asset.thumbnail)} 
-            position={[index * 5, 0, 0]}
-            scale={[4, 3, 1]}
-            onClick={() => handleImageClick(index)}
-            onPointerOver={() => setHovered(index)}
-            onPointerOut={() => setHovered(null)}
-            grayscale={hovered === index ? 0 : 1}
-        />
-        <Html position={[index * 5, -2, 0]}>
-          <h1>{asset.title}</h1>
-
-        </Html>
-        </group> 
-    ))}
-
-     {/* }) */}
-        
-    {/* } */}
-          </Scroll>
-
-          <Scroll html>
-            <div className='flex text-[white] items-center gap-3'>
-               <p className='text-[2rem] font-basis text-[white] z-10 p-8'>Featured Films</p>
-
-                {/* <span className="material-symbols-outlined text-[5rem] font-bold">
-                 arrow_forward
-                </span> */}
-            </div>
-
-          </Scroll>
-
-    </ScrollControls>
-       
-    {/* </Canvas> */}
-    
-    </>
-  )
-}
-
 const ImagesExport = () => {
+  const router = useRouter()
+  const [vimeoAssets, setVimeoAssets] = useState([])
+
+  useEffect(() => {
+    const loadAssets = async () => {
+      try {
+        const response = await fetch('/api/vimeo-assets')
+        const data = await response.json()
+        
+        if (data.success) {
+          setVimeoAssets(data.assets)
+        } else {
+          console.error('Failed to load assets:', data.error)
+        }
+      } catch (error) {
+        console.error('Error loading assets:', error)
+      }
+    }
+    
+    loadAssets()
+  }, [])
+
+  const handleImageClick = (asset) => {
+    const titleSlug = asset.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+    router.push(`/screening/${titleSlug}`)
+  }
+
+  if (!vimeoAssets || vimeoAssets.length === 0) {
+    return <p className="text-sm text-gray-400">Loading films...</p>
+  }
+
   return (
-    <Canvas 
-      className="w-full h-full z-10"
-      style={{ 
-        position: 'fixed',
-        top: '10vh',
-        left: 0,
-        width: '100vw',
-        height: '80vh'
-      }}
-    >
-      <AdaptiveDpr pixelated />
-      <Bvh firstHitOnly></Bvh>
-        <Images />
-    </Canvas>
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 w-full">
+      {vimeoAssets.map((asset) => (
+        <div 
+          key={asset.id}
+          onClick={() => handleImageClick(asset)}
+          className="group cursor-pointer border border-primary hover:border-yellow-400 transition-colors p-2"
+        >
+          <img 
+            src={asset.thumbnail}
+            alt={asset.title}
+            className="w-full aspect-video object-cover grayscale group-hover:grayscale-0 transition-all"
+          />
+          <p className="text-xs mt-2 text-center truncate">{asset.title}</p>
+        </div>
+      ))}
+    </div>
   )
 }
 

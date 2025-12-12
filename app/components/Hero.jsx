@@ -95,7 +95,7 @@ const Hero = ({ fullData }) => {
       </button>
       {imageUrls.map((url, index) => {
         return (
-          <div key={index} className={`absolute ${positions[index]} w-[100px] h-[100px] sm:w-[80px] sm:h-[80px] md:w-[120px] md:h-[120px] lg:w-[180px] lg:h-[180px] xl:w-[300px] xl:h-[300px]`}>
+          <div key={index} className={`absolute ${positions[index]} w-[100px] h-[100px] sm:w-[80px] sm:h-[80px] md:w-[120px] md:h-[120px] lg:w-[180px] lg:h-[180px] xl:w-[250px] xl:h-[250px]`}>
             <Image 
             // unoptimized
               src={url} 

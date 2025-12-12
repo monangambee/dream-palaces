@@ -1,89 +1,65 @@
-'use client'
+"use client";
 import Image from "next/image";
 import { useStore } from "../../src/utils/useStore";
 import { useParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
-import MuxPlayer from "@mux/mux-player-react";
 import Link from "next/link";
+import ImagesExport from "../../components/Images";
 
 export default function ScreeningPage() {
-  const params = useParams()
-  const playbackId = params.film // This is the playback ID
+  const params = useParams();
+  const filmSlug = params.film; // This is the title slug
   const [currentAsset, setCurrentAsset] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [showButton, setShowButton] = useState(false);
+  const [showReadMore, setShowReadMore] = useState(false);
+  const [showArchive, setShowArchive] = useState(false);
 
-  const playerRef = useRef(null);
+  const iframeRef = useRef(null);
   const timeoutRef = useRef(null);
 
   // Load assets from API and find the matching one
   useEffect(() => {
     const loadAsset = async () => {
       try {
-        const response = await fetch('/api/mux-assets');
+        const response = await fetch("/api/vimeo-assets");
         const data = await response.json();
-        
+
         if (data.success) {
-          const asset = data.assets.find(a => a.playbackId === playbackId);
+          // Try to find by slug first, then fall back to video ID
+          let asset = data.assets.find((a) => {
+            if (!a.title) return false;
+            const assetSlug = a.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+            return assetSlug === filmSlug;
+          });
+          
+          // If not found by slug, try video ID
+          if (!asset) {
+            asset = data.assets.find((a) => a.id === filmSlug);
+          }
+          
           setCurrentAsset(asset);
         } else {
-          console.error('Failed to load assets:', data.error);
+          console.error("Failed to load assets:", data.error);
         }
       } catch (error) {
-        console.error('Error loading assets:', error);
+        console.error("Error loading assets:", error);
       } finally {
         setLoading(false);
       }
     };
 
     loadAsset();
-  }, [playbackId]);
+  }, [filmSlug]);
 
-  const handlePlay = () => {
-    setIsPlaying(true)
-    setShowButton(false)
-    if (playerRef.current) {
-      playerRef.current.requestFullscreen?.() || 
-      playerRef.current.webkitRequestFullscreen?.() ||
-      playerRef.current.mozRequestFullScreen?.() ||
-      playerRef.current.msRequestFullscreen?.()
-    }
-  }
 
-  const handlePause = () => {
-    setIsPlaying(false)
-  }
-
-  const togglePlay = () => {
-    if (playerRef.current) {
-      if (isPlaying) {
-        playerRef.current.pause()
-      } else {
-        playerRef.current.play()
-      }
-    }
-  }
-
-  const handleMouseMove = () => {
-    setShowButton(true)
-    
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current)
-    }
-    
-    timeoutRef.current = setTimeout(() => {
-      setShowButton(false)
-    }, 1000)
-  }
 
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
+        clearTimeout(timeoutRef.current);
       }
-    }
-  }, [])
+    };
+  }, []);
 
   if (loading || !currentAsset) {
     return (
@@ -96,55 +72,50 @@ export default function ScreeningPage() {
 
   return (
     <div className="w-screen h-screen flex flex-col items-center font-basis justify-center bg-background text-primary overflow-hidden relative">
-      <Link href="/screening" className="absolute top-4 left-4 text-sm z-10">← Featured films </Link>
-      
-      <div 
-        className="w-full h-full flex items-center justify-center p-4 md:p-8 relative"
-        onMouseMove={handleMouseMove}
-        onMouseLeave={() => setShowButton(false)}
-      >
-        <MuxPlayer
-          ref={playerRef}
-          playbackId={currentAsset.playbackId}
-          poster={`https://image.mux.com/${currentAsset.playbackId}/animated.gif?width=640&fps=15`}
-          controls
-          streamType="on-demand"
+      <div className="w-full h-full flex items-center justify-center p-4 md:p-8 relative">
+        <iframe
+          ref={iframeRef}
+          src={`https://player.vimeo.com/video/${currentAsset.id}?title=0&byline=0&portrait=0`}
           className="w-full max-w-7xl aspect-video rounded-lg"
-          primaryColor="white"
-          accentColor="black"
-          onPlay={handlePlay}
-          onPause={handlePause}
-          onEnded={handlePause}
-          metadata={{
-            videoTitle: 'film'
-          }}
-          style={{
-            "--play-button": "none",
-            "--seek-backward-button": "none",
-            "--seek-forward-button": "none",
-            "--playback-rate-button": "none"
-          }}
+          frameBorder="0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowFullScreen
         />
-        
-        {showButton && (
-          <button 
-            onClick={togglePlay}
-            className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors pointer-events-auto"
-          >
-            <div className="w-50 h-50 rounded-full 
-           flex items-center justify-center text-5xl transition-all hover:scale-110">
-              {isPlaying ? '⏸' : '▶'}
-            </div>
-          </button>
+      </div>
+
+      <div className="w-[50%] px-4 md:px-8 pb-4">
+        <h1 className="pb-4">{`${currentAsset.title}, ${currentAsset.year}`}</h1>
+        <button
+          onClick={() => setShowReadMore(!showReadMore)}
+          className="text-primary hover:text-yellow-400 transition-colors flex items-center gap-2"
+        >
+          Read more {showReadMore ? "^" : "⌄"}
+        </button>
+        {showReadMore && (
+          <div className="mt-4 p-4  rounded text-base ">
+          
+            {currentAsset.description && (
+              <div className="pt-2">
+                <span className="text-yellow-400">Description:</span>
+                <p className="mt-1">{currentAsset.description}</p>
+              </div>
+            )}
+          </div>
         )}
       </div>
-      <div className="text-center max-w-2xl">
-        {/* <p className="text-xs mb-2">
-          <strong>Asset ID:</strong> {currentAsset.id}
-        </p>
-        <p className="text-xs">
-          <strong>File:</strong> {currentAsset.originalPath}
-        </p> */}
+
+      <div className="w-[50%] px-4 md:px-8 pb-8">
+        <button
+          onClick={() => setShowArchive(!showArchive)}
+          className="text-primary hover:text-yellow-400 transition-colors flex items-center gap-2"
+        >
+          Archive {showArchive ? "^" : "⌄"}
+        </button>
+        {showArchive && (
+          <div className="mt-4">
+            <ImagesExport />
+          </div>
+        )}
       </div>
     </div>
   );
