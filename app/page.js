@@ -6,6 +6,7 @@ import Image from "next/image";
 import Hero from "./components/Hero";
 import HomeScene from "./components/HomeScene";
 import { Suspense } from "react";
+import { Vimeo } from 'vimeo';
 
 // Enable static generation with revalidation
 export const revalidate = 3600; // Revalidate every hour
@@ -33,19 +34,30 @@ export default async function HomePage() {
   // Fetch screening room thumbnail and first film slug from Vimeo
   let firstFilmSlug = '';
   try {
-    const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
-    const response = await fetch(`${baseUrl}/api/vimeo-assets`, { 
-      next: { revalidate: 3600 }
+    const client = new Vimeo(
+      process.env.VIMEO_CLIENT_ID,
+      process.env.VIMEO_CLIENT_SECRET,
+      process.env.VIMEO_ACCESS_TOKEN
+    )
+
+    const videos = await new Promise((resolve, reject) => {
+      client.request({
+        method: 'GET',
+        path: '/me/videos',
+        query: { per_page: 1, fields: 'uri,name,pictures' }
+      }, (error, body) => {
+        if (error) reject(error)
+        else resolve(body)
+      })
     })
-    const data = await response.json();
-    
-    if (data.success && data.assets && data.assets.length > 0) {
-      const firstVideo = data.assets[0];
-      screeningGif = firstVideo.thumbnail;
-      firstFilmSlug = firstVideo.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+    if (videos.data && videos.data.length > 0) {
+      const firstVideo = videos.data[0]
+      screeningGif = firstVideo.pictures?.sizes?.[firstVideo.pictures.sizes.length - 1]?.link || ''
+      firstFilmSlug = firstVideo.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
     }
   } catch (vimeoErr) {
-    console.error("Error fetching Vimeo videos:", vimeoErr);
+    console.error('Error fetching Vimeo videos:', vimeoErr)
   }
 
   const modes = [
