@@ -113,7 +113,7 @@ const Filter = ({}) => {
         isOpen 
           ? isMobile ? "w-full" : "w-1/6" 
           : isMobile ? "w-12" : "w-16"
-      } h-[100vh] border-r-[0.5px] font-basis border-primary justify-start overflow-hidden items-center bg-background z-50 p-4 transition-all duration-300 ease-in-out ${
+      } h-[100vh]  font-basis border-primary justify-start overflow-hidden items-center bg-background z-50 p-4 transition-all duration-300 ease-in-out ${
         isMobile && isOpen ? "fixed inset-0 z-50" : ""
       }`}
       pointerEvents="auto"
@@ -132,7 +132,7 @@ const Filter = ({}) => {
       {isOpen && (
         <>
           <p className="text-yellow-400 text-xs text-center pb-8 pt-4">
-            Pan around to explore more then click on a cinema to view details.
+            Pan around to explore then click on a cinema to view details.
           </p>
           <h2 className="text-primary text-xs text-center pb-4">Filter cinemas</h2>
           

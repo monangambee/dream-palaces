@@ -48,17 +48,49 @@ export async function GET() {
     if (process.env.MUX_TOKEN_ID && process.env.MUX_TOKEN_SECRET) {
       try {
         const response = await client.video.assets.list({ limit: 100 });
-        muxAssets = response.data
-          .filter(asset => asset.status === 'ready' && asset.playback_ids?.length > 0)
-          .map(asset => ({
-            id: asset.id,
-            playbackId: asset.playback_ids[0].id,
-            thumbnail: `https://image.mux.com/${asset.playback_ids[0].id}/thumbnail.webp`,
-            status: asset.status,
-            createdAt: asset.created_at,
-            duration: asset.duration,
-            aspectRatio: asset.aspect_ratio
-          }));
+        
+        muxAssets = await Promise.all(
+          response.data
+            .filter(asset => asset.status === 'ready' && asset.playback_ids?.length > 0)
+            .map(async (asset) => {
+              // Parse passthrough for custom metadata
+              let customMetadata = {};
+              if (asset.passthrough) {
+                try {
+                  customMetadata = JSON.parse(asset.passthrough);
+                  console.log('Passthrough data for', asset.id, ':', customMetadata);
+                } catch (e) {
+                  console.warn('Failed to parse passthrough:', e);
+                }
+              } else {
+                console.log('No passthrough data for', asset.id);
+              }
+              
+              // Fetch detailed asset info to get the title
+              let detailedAsset = asset;
+              try {
+                detailedAsset = await client.video.assets.retrieve(asset.id);
+                console.log('Detailed asset fields for', asset.id, ':', JSON.stringify(detailedAsset, null, 2));
+              } catch (e) {
+                console.warn('Failed to fetch detailed asset:', e);
+              }
+              
+              return {
+                id: asset.id,
+                playbackId: asset.playback_ids[0].id,
+                thumbnail: `https://image.mux.com/${asset.playback_ids[0].id}/thumbnail.webp`,
+                status: asset.status,
+                createdAt: asset.created_at,
+                duration: asset.duration,
+                aspectRatio: asset.aspect_ratio,
+                title: customMetadata.title || detailedAsset.video_title || detailedAsset.master?.name || 'Untitled',
+                description: customMetadata.description || detailedAsset.video_description || '',
+                year: customMetadata.year || '',
+                filmmaker: customMetadata.filmmaker || '',
+                country: customMetadata.country || ''
+              };
+            })
+        );
       } catch (error) {
         console.warn('Failed to fetch from Mux API:', error.message);
       }

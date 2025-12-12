@@ -33,7 +33,7 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
   const particlesRef = useRef();
 
   useThree((state) => {
-    state.raycaster.params.Points.threshold = 15; // only detect when actually close to particles
+    state.raycaster.params.Points.threshold = 10; // only detect when actually close to particles
 
     state.raycaster.near = 0; // start checking just in front of the camera
     // state.raycaster.far = 150;
@@ -47,7 +47,7 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
       points.current.material.uniforms.uPosition,
       { value: 0.0 },
       {
-        value: 15.0,
+        value: 20.0,
         duration: 3,
         ease:"sine.inOut",
       }
@@ -109,7 +109,7 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
         value: 0.0,
       },
       uSize: {
-        value: 15.0,
+        value: 20.0,
       },
       uPosition: {
         value: 0.0,
@@ -186,10 +186,11 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
 
       let x = distance * Math.sin(theta) * Math.cos(phi);
       let y = distance * Math.sin(theta) * Math.sin(phi) + 10;
+      // let z = distance * Math.cos(theta);
       let z = 0;
 
       // add the 3 values to the attribute array for every loop
-      positions.set([x, y, z], i * 3);
+      positions.set([x, y, 0], i * 3);
     }
 
     return { positions, groups, scales, colors };

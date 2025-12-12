@@ -11,9 +11,9 @@ const CinemaInfo = () => {
 
 
   return (
-    <div className="fixed flex flex-col gap-2 bottom-10 text-primary right-5 z-50 bg-background bg-opacity-90  p-8 max-w-[40vh] lg:max-w-[30vw] min-w-[20vw] max-h-[50vh]  overflow-y-scroll no-scrollbar  border-primary border-[0.5px] rounded-xl shadow-2xl font-basis ">
-      <div className="font-bold  mb-3 ">{selectedCinema.fields.Name}</div>
-      <div className="text-xs mb-2 ">
+    <div className="fixed flex flex-col gap-2 bottom-10 text-primary right-5 z-50 bg-background bg-opacity-90  p-8 max-w-[50vw] lg:max-w-[50vw] min-w-[20vw] max-h-[50vh]  overflow-y-scroll no-scrollbar  border-primary border-[0.5px] shadow-2xl font-basis ">
+      <div className="font-bold text-lg  mb-3 ">{selectedCinema.fields.Name}</div>
+      <div className="text-base mb-2 ">
         {selectedCinema.fields.City}, {selectedCinema.fields.Country}
       </div>
       <div className=" mb-2 text-xs">
@@ -28,25 +28,26 @@ const CinemaInfo = () => {
           <Image
             src={selectedCinema.fields.Images[0].url}
             alt={selectedCinema.fields.Name}
-            width={200}
-            height={200}
+            width={300}
+            height={300}
             className="object-cover mb-2"
             // onError={() => setImageError(true)}
           />
         }
       <p>{selectedCinema.fields["Image Credits"]}</p>
-      <audio src={selectedCinema.fields["Sound Links"]}/>
-      <p>{selectedCinema.fields["Sound Credits"]}</p>
-      <div className="text-xs font-primary prose prose-invert prose-sm max-w-none">
+
+      {/* <audio src={selectedCinema.fields["Sound Links"]}/> */}
+      {/* <p>{selectedCinema.fields["Sound Credits"]}</p> */}
+      <div className="text-base font-primary prose prose-invert prose-sm max-w-none">
         <ReactMarkdown>{selectedCinema.fields["Website description"]}</ReactMarkdown>
       </div>
-      <h3 className="text-xs font-bold pt-4">Additional resources </h3>
-      <div className="text-xs font-primary">
+      <h3 className="text-base font-bold pt-4">Additional resources </h3>
+      <div className="text-xs font-primary underline">
         <ReactMarkdown>{selectedCinema.fields["Additional resources"]}</ReactMarkdown>
       </div>
       <button
         onClick={clearSelectedCinema}
-        className="absolute top-2 right-2 text-gray-400 hover:text-white text-xl"
+        className="absolute top-2 right-2 text-gray-400 hover:text-white text-2xl"
       >
         ×
       </button>

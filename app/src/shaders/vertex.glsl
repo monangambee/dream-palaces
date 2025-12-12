@@ -102,7 +102,7 @@ void main() {
 
     // Apply random positioning to the original position
   vec3 newPosition = position + randomOffset;
-    // newPosition.z = 0.0;
+  newPosition.z = 0.0;
 
   vec4 modelPosition = modelMatrix * vec4(newPosition, 1.0);
   vec4 viewPosition = viewMatrix * modelPosition;
