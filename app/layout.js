@@ -6,11 +6,11 @@ export const metadata = {
 };
 
 import {
-  Open_Sans,
-  Roboto_Mono,
-  Moirai_One,
-  Jura,
-  Fascinate_Inline,
+  // Open_Sans,
+  // Roboto_Mono,
+  // Moirai_One,
+  // Jura,
+  // Fascinate_Inline,
 } from "next/font/google";
 
 import localFont from "next/font/local";
@@ -26,19 +26,7 @@ const clash = localFont({
   // weight: '200',
 });
 
-const FascinateInline = Fascinate_Inline({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-fascinate",
-  weight: "400",
-});
 
-const moirai = Moirai_One({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-moirai",
-  weight: "400",
-});
 
 const frontage3D = localFont({
   src: "../public/fonts/FrontageProTest-3D.otf",
@@ -77,32 +65,12 @@ const basis = localFont({
   style: "normal",
 });
 
-const openSans = Open_Sans({
-  subsets: ["latin"],
-  display: "swap",
-  //👇 Add variable to our object
-  variable: "--font-opensans",
-});
-
-//👇 Configure the object for our second font
-const robotoMono = Roboto_Mono({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-roboto-mono",
-});
-
-const jura = Jura({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-jura",
-  weight: "400",
-});
 
 export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${openSans.variable} ${robotoMono.variable} ${moirai.variable} ${jura.variable}   ${frontage3D.variable} ${basis.variable} ${marqueeMoon.variable} ${neon.variable} ${frontage.variable} font-sans`}
+      className={`${frontage3D.variable} ${basis.variable} ${marqueeMoon.variable} ${neon.variable} ${frontage.variable} font-sans`}
     >
       <body>
         <LayoutWrapper>
