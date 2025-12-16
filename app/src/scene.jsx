@@ -4,33 +4,31 @@ import React, {
   useEffect,
   useState,
   useCallback,
-  useLayoutEffect,
-  use,
 } from "react";
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
-import { OrbitControls, OrthographicCamera } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import fragment from "./shaders/fragment.glsl";
 import vertex from "./shaders/vertex.glsl";
 import lineFragment from "./shaders/lineFragment.glsl";
 import { analyzeAirtableData } from "./utils/d3Analysis";
 import { useStore } from "./utils/useStore";
-import { seededRandom } from "three/src/math/MathUtils.js";
+// import { seededRandom } from "three/src/math/MathUtils.js";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import tunnel from "tunnel-rat";
+
 
 gsap.registerPlugin(useGSAP);
 
 
 
-const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
+const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
 
   const particleTexture = useLoader(THREE.TextureLoader, "/particle/star_08.png");
 
   
   const points = useRef();
-  const particlesRef = useRef();
+  // const particlesRef = useRef();
 
   useThree((state) => {
     state.raycaster.params.Points.threshold = 10; // only detect when actually close to particles
@@ -59,47 +57,15 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
   }, [setAnimateParticles]);
 
 
-  // Handle click on particles
+  // Handle click on particles - raycaster threshold handles which particles are clickable
   const handleClick = (e) => {
     e.stopPropagation();
     
-    // Get ALL intersections and sort by distance (closest first)
-    const intersections = e.intersections || [e];
+    const pointIndex = e.index;
+    const cinema = originalData[pointIndex];
     
-    // Sort intersections by distance (closest to camera first)
-    intersections.sort((a, b) => a.distance - b.distance);
-    
-    // Look for the closest intersection that's actually clickable
-    let selectedIntersection = null;
-    
-    // First, try to find a featured cinema among the closest intersections
-    const closeThreshold = intersections[0]?.distance + 2; // Allow small distance variation
-    const closeIntersections = intersections.filter(int => int.distance <= closeThreshold);
-    
-    // Among close intersections, prefer featured cinemas
-    for (const intersection of closeIntersections) {
-      const pointIndex = intersection.index;
-      const cinema = originalData[pointIndex];
-      const isFeatured = featuredCinemas.has(cinema.id);
-      
-      if (isFeatured) {
-        selectedIntersection = intersection;
-        break;
-      }
-    }
-    
-    // If no featured cinema found among close intersections, use the closest one
-    if (!selectedIntersection) {
-      selectedIntersection = intersections[0];
-    }
-    
-    if (selectedIntersection) {
-      const pointIndex = selectedIntersection.index;
-      const cinema = originalData[pointIndex];
-      
-      if (cinema && cinema.id) {
-        setSelectedCinema(cinema);
-      }
+    if (cinema && cinema.id) {
+      setSelectedCinema(cinema);
     }
   };
 
@@ -109,7 +75,7 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
         value: 0.0,
       },
       uSize: {
-        value: 20.0,
+        value: 10.0,
       },
       uPosition: {
         value: 0.0,
@@ -123,7 +89,7 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
     };
   }, []);
 
-  const radius = 200; // Much larger radius for better spread
+  const radius = 300; // Very wide radius for maximum spread
 
 
   
@@ -157,8 +123,8 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
 
     for (let i = 0; i < count; i++) {
       const cinema = originalData[i];
-      const fields = cinema.fields;
-      const country = fields?.Country || "Unknown";
+      // const fields = cinema.fields;
+      // const country = fields?.Country || "Unknown";
 
      
       
@@ -166,7 +132,13 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
       groups[i] = groupIndex; // All particles in this system belong to the same group
 
       // Use cinema ID as seed for consistent random values
-      const seed = cinema.id ? cinema.id.charCodeAt(0) + i : i;
+      // const seed = cinema.id ? cinema.id.charCodeAt(0) + i : i;
+      let seed = i;
+if (cinema.id) {
+  for (let j = 0; j < cinema.id.length; j++) {
+    seed += cinema.id.charCodeAt(j) * (j + 1);
+  }
+}
       
       // Check if this cinema is featured using the same method as featuredCinemas Set
       const isFeatured = featuredCinemas.has(cinema.id);
@@ -175,18 +147,19 @@ const CustomGeometryParticles = ({ data, count, originalData, groupIndex }) => {
         scales[i] = 5.0; // Large scale for featured cinemas
         colors.set([1.0, 0.84, 0.0], i * 3); // Gold color for featured cinemas
       } else {
-        scales[i] = seededRandom(seed + 4) * 1.5 + 1.0; // Random scale for non-featured cinemas (1.0 to 2.5)
+       // Random scale for non-featured cinemas (1.0 to 2.5)
+       scales[i] = Math.random() * 1.5 + 1.0; 
         colors.set([1.0,1.0,1.0], i * 3); // Default color for non-featured cinemas
       }
     
       // Use simple random positioning (vertex shader will add Perlin noise)
+      // Use sqrt distribution for uniform spread across 2D area (not clustered at center)
+      // Use seeded random for consistent, deterministic positioning
       const distance = Math.sqrt(seededRandom(seed + 1)) * radius;
-      const theta = seededRandom(seed + 2) * 360;
-      const phi = seededRandom(seed + 3) * 360;
+      const angle = seededRandom(seed + 2) * Math.PI * 2; // Full circle in radians
 
-      let x = distance * Math.sin(theta) * Math.cos(phi);
-      let y = distance * Math.sin(theta) * Math.sin(phi) + 10;
-      // let z = distance * Math.cos(theta);
+      let x = distance * Math.cos(angle);
+      let y = distance * Math.sin(angle) + 10;
       let z = 0;
 
       // add the 3 values to the attribute array for every loop
@@ -348,14 +321,10 @@ export default function Scene({ fullData }) {
 
   
 
-  const sizes = {
-    width: window.innerWidth,
-    height: window.innerHeight,
-  };
-
+  
  
 
-  const planeRef = useRef();
+
 
   return (
     <>

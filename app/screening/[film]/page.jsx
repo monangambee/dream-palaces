@@ -71,13 +71,33 @@ export default function ScreeningPage() {
   }
 
   return (
-    <div className="w-screen h-screen flex flex-col items-center font-basis justify-center bg-background text-primary overflow-hidden relative">
+    <div className="w-screen h-full flex flex-col items-center font-basis justify-center bg-background text-primary relative">
+        {!isPlaying && (
+      <div 
+        className="absolute inset-0 cursor-pointer z-10"
+        onClick={() => setIsPlaying(true)}
+      >
+        <img 
+          src={"https://videoapi-muybridge.vimeocdn.com/animated-thumbnails/image/80a07399-fe48-44e3-bd49-4ba7078dbdd9.gif?ClientID=sulu&Date=1765867514&Signature=e1557bf4d4aa218ddee0f285632a50d63449e492"} 
+          alt="Video thumbnail"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <button className="bg-white/80 rounded-full p-4 hover:bg-white transition">
+            <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    )}
       <div className="w-full h-full flex items-center justify-center p-4 md:p-8 relative">
         <iframe
+
           ref={iframeRef}
           src={`https://player.vimeo.com/video/${currentAsset.id}?title=0&byline=0&portrait=0`}
           className="w-full max-w-7xl aspect-video rounded-lg"
-          frameBorder="0"
+         
           allow="autoplay; fullscreen; picture-in-picture"
           allowFullScreen
         />
