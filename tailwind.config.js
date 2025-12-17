@@ -20,6 +20,7 @@ module.exports = {
         neon: ['var(--font-neon)', 'sans-serif'],
         frontage: ['var(--font-frontage)', 'sans-serif'],
         primary:['var(--font-jura)', 'sans-serif'],
+        avenir: ['var(--font-avenir)', 'sans-serif'],
       },
       colors: {
         primary: '#FDF9ED', // Example primary color

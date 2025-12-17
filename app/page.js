@@ -1,5 +1,5 @@
-import { fetchAirtableDataProgressive } from "./src/utils/data";
-import { AIRTABLE_CONFIG } from "./src/config/airtable";
+import { fetchAirtableDataProgressive } from "./utils/data";
+import { AIRTABLE_CONFIG } from "./config/airtable";
 import Constellation from "./components/Constellation";
 import Link from "next/link";
 import Image from "next/image";
@@ -18,12 +18,9 @@ export default async function HomePage() {
   let screeningGif = "";
 
   try {
-    // Skip API calls in development to avoid wasting API quota
     if (process.env.NODE_ENV === 'development') {
-      console.log('Development mode: Using empty data, client will handle caching');
       fullData = [];
     } else {
-      console.log('Fetching Airtable data at build time...');
       fullData = await fetchAirtableDataProgressive(AIRTABLE_CONFIG.defaultTable);
     }
   } catch (err) {
@@ -73,7 +70,7 @@ export default async function HomePage() {
       description:
         "Navigate a map showcasing the geographical distribution of cinemas across Africa and the diaspora. Zoom in to discover detailed information about each location.",
       link: "/map",
-      image: "/map.png",
+      image: "/map.webp",
     },
     {
       name: "SCREENING ROOM",
@@ -105,7 +102,7 @@ export default async function HomePage() {
           WELCOME TO DREAM PALACES
         </h1> */}
           </div>
-               <p className="w-2/3 h-1/2 text-xs xl:text-sm flex flex-col items-start font-light font-basis border-[0.5px]  border-primary p-8">
+               <p className="w-2/3 h-1/2 text-xs xl:text-base flex flex-col items-start font-light font-avenir  border-[0.5px]  border-primary p-8">
               Dream Palaces explores the architectural, geographical, and
               cultural histories of Black cinema spaces across six countries in
               Africa and the diaspora. Initiated by an emotional encounter with
@@ -127,7 +124,7 @@ export default async function HomePage() {
             </p>
         </div>
 
-        <div className="w-[100%] bg-background font-basis flex  flex-col gap-4  md:p-8 items-center justify-center">
+        <div className="w-[100%] bg-background font-avenir flex  flex-col gap-4  md:p-8 items-center justify-center">
           <p className=" text-yellow-400 pt-8">[ Choose your experience ]</p>
 
           <div className="flex flex-col gap-8 w-[90%] sm:w-[70%] items-between justify-start py-8 ">

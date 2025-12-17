@@ -27,6 +27,15 @@ const clash = localFont({
 });
 
 
+const avenir = localFont({
+  src: "../public/fonts/AvenirLTProRoman.otf",
+  variable: "--font-avenir",
+  display: "swap",
+  style: "",
+  subsets: ["latin"],
+  // weight: '200',
+});
+
 
 const frontage3D = localFont({
   src: "../public/fonts/FrontageProTest-3D.otf",
@@ -70,7 +79,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${frontage3D.variable} ${basis.variable} ${marqueeMoon.variable} ${neon.variable} ${frontage.variable} font-sans`}
+      className={`${frontage3D.variable} ${basis.variable} ${marqueeMoon.variable} ${neon.variable} ${frontage.variable} ${avenir.variable} font-sans`}
     >
       <body>
         <LayoutWrapper>

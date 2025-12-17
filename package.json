@@ -19,6 +19,8 @@
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.4.2",
     "@tailwindcss/postcss": "^4.1.18",
+    "@u-wave/react-vimeo": "^0.9.12",
+    "@vimeo/player": "^2.30.1",
     "airtable": "^0.12.2",
     "d3": "^7.9.0",
     "glsl-rotate": "^2.0.1",
