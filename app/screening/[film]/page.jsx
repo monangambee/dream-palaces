@@ -93,13 +93,6 @@ export default function ScreeningPage() {
     
     playerInstance.on('pause', () => {
       setIsPlaying(false);
-      // Exit fullscreen when paused
-      if (document.fullscreenElement) {
-        document.exitFullscreen().catch(() => {
-          // Silently handle fullscreen exit errors
-        });
-        setIsFullscreen(false);
-      }
     });
 
     playerInstance.on('timeupdate', (data) => {
@@ -135,6 +128,41 @@ export default function ScreeningPage() {
     setTimeout(() => setIsSeeking(false), 100);
   };
 
+  // Cross-browser fullscreen helpers
+  const getFullscreenElement = () => {
+    return document.fullscreenElement || 
+           document.webkitFullscreenElement || 
+           document.mozFullScreenElement || 
+           document.msFullscreenElement || 
+           null;
+  };
+
+  const requestFullscreen = async (element) => {
+    if (element.requestFullscreen) {
+      return element.requestFullscreen();
+    } else if (element.webkitRequestFullscreen) {
+      return element.webkitRequestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+      return element.mozRequestFullScreen();
+    } else if (element.msRequestFullscreen) {
+      return element.msRequestFullscreen();
+    }
+    throw new Error('Fullscreen API not supported');
+  };
+
+  const exitFullscreen = async () => {
+    if (document.exitFullscreen) {
+      return document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      return document.webkitExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      return document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+      return document.msExitFullscreen();
+    }
+    throw new Error('Fullscreen API not supported');
+  };
+
   // Handle custom play/pause
   const handlePlayPause = async () => {
     if (!player) return;
@@ -144,9 +172,9 @@ export default function ScreeningPage() {
     } else {
       try {
         // Enter fullscreen first, then play
-        if (!document.fullscreenElement && videoContainerRef.current) {
+        if (!getFullscreenElement() && videoContainerRef.current) {
           try {
-            await videoContainerRef.current.requestFullscreen();
+            await requestFullscreen(videoContainerRef.current);
             setIsFullscreen(true);
           } catch (error) {
             console.log('Fullscreen not available:', error);
@@ -165,23 +193,23 @@ export default function ScreeningPage() {
     if (!videoContainerRef.current) return;
     
     try {
-      if (document.fullscreenElement) {
-        await document.exitFullscreen();
+      const isCurrentlyFullscreen = !!getFullscreenElement();
+      
+      if (isCurrentlyFullscreen) {
+        await exitFullscreen();
         setIsFullscreen(false);
       } else {
-        await videoContainerRef.current.requestFullscreen();
+        await requestFullscreen(videoContainerRef.current);
         setIsFullscreen(true);
       }
     } catch (error) {
-      // Handle fullscreen errors gracefully
-      console.log('Fullscreen error:', error);
+      console.error('Fullscreen error:', error);
     }
   };
 
-  // Listen for fullscreen changes and handle mouse movement
   useEffect(() => {
     const handleFullscreenChange = () => {
-      const nowFullscreen = !!document.fullscreenElement;
+      const nowFullscreen = !!getFullscreenElement();
       setIsFullscreen(nowFullscreen);
       if (nowFullscreen) {
         setShowControls(true);
@@ -202,11 +230,18 @@ export default function ScreeningPage() {
       }
     };
 
+    // Listen to all browser-specific fullscreen events
     document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
     document.addEventListener('mousemove', handleMouseMove);
     
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
       document.removeEventListener('mousemove', handleMouseMove);
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -224,7 +259,7 @@ export default function ScreeningPage() {
   }
 
   return (
-    <div className="w-screen h-full flex flex-col items-center font-basis justify-center bg-background text-primary relative">
+    <div className="w-full min-h-full flex flex-col items-center font-basis justify-center bg-background text-primary relative py-8">
         {/* {!isPlaying && (
       <div 
         className="absolute inset-0 cursor-pointer z-10"
@@ -246,7 +281,7 @@ export default function ScreeningPage() {
     )} */}
       <div 
         ref={videoContainerRef}
-        className="w-full max-w-7xl flex items-center justify-center p-4 md:p-8 relative group"
+        className="w-full max-w-7xl h-full flex items-center justify-center p-4 md:p-8 relative group"
       >
         <Vimeo 
           className="w-full aspect-video rounded-lg"
@@ -267,9 +302,9 @@ export default function ScreeningPage() {
 
         {/* Custom Controls Overlay */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-          {!isPlaying && (  
+          {/* {!isPlaying && (  
             <Image alt="Fannie's Film" src='/thumbnails/FANNIE’S FILM.gif' fill className=" absolute inset-0 w-full h-full object-cover z-1"></Image>
-          )}
+          )} */}
           {/* Center Play/Pause Button */}
           <button
             onClick={handlePlayPause}
