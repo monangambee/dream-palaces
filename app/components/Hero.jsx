@@ -9,9 +9,7 @@ const Hero = ({ fullData }) => {
   // const [cachedData, setCachedData] = useState(null);
   const [allUrls, setAllUrls] = useState([]);
 
-  // const imageUrls = useStore((state) => state.imageUrls);
-  // const setImageUrls = useStore((state) => state.setImageUrls);
-
+ 
    const [imageUrls, setImageUrls] = useState([]);
 
    const urls = [
@@ -97,25 +95,27 @@ const Hero = ({ fullData }) => {
   // };
 
   const positions = [
-    "top-8 left-1/2 -translate-x-1/2", // Top center with gap
-    "bottom-8 left-1/2 -translate-x-1/2", // Bottom center with gap
-    "left-8 top-1/2 -translate-y-1/2", // Left center with gap
-    "right-8 top-1/2 -translate-y-1/2", // Right center with gap
+    "sm:top-8 sm:left-1/2 sm:-translate-x-1/2", // Top center with gap
+    "sm:bottom-8 sm:left-1/2 sm:-translate-x-1/2", // Bottom center with gap
+    "sm:left-8 sm:top-1/2 sm:-translate-y-1/2", // Left center with gap
+    "sm:right-8 sm:top-1/2 sm:-translate-y-1/2", // Right center with gap
   ];
 
   return (
-    <div className="relative w-full h-full min-h-[80vh] flex items-center justify-center">
+    <div className="relative gap-8 w-full h-full min-h-screen flex flex-col items-center justify-center">
       <button
         onClick={handleShuffle}
-        className="font-frontage border-[0.5px]  flex items-center px-8 py-4 hover:bg-yellow-400 hover:text-black"
+        className="font-frontage border-[0.5px] text-xs sm:text-sm  flex items-center px-8 py-4 hover:bg-yellow-400 hover:text-black"
       >
         Shuffle
       </button>
+      <div className="columns-2 gap-y-8 overflow-auto">
+
       {imageUrls.map((url, index) => {
         return (
           <div
             key={index}
-            className={`absolute ${positions[index]} w-[100px] h-[100px] sm:w-[80px] sm:h-[80px] md:w-[120px] md:h-[120px] lg:w-[180px] lg:h-[180px] xl:w-[250px] xl:h-[250px]`}
+            className={`sm:absolute relative ${positions[index]} w-[100px] h-[100px] sm:w-[80px] sm:h-[80px] md:w-[120px] md:h-[120px] lg:w-[180px] lg:h-[180px] xl:w-[250px] xl:h-[250px]`}
           >
             <Image
               // unoptimized
@@ -123,11 +123,14 @@ const Hero = ({ fullData }) => {
               alt={`Cinema ${index}`}
               fill
               sizes="(max-width: 640px) 100px, (max-width: 768px) 80px, (max-width: 1024px) 120px, (max-width: 1280px) 180px, 300px"
-              className="object-cover border-primary border-[0.5px] p-4"
+              className=" border-primary border-[0.5px] p-4"
             />
           </div>
+          
         );
       })}
+      </div>
+
     </div>
   );
 };
