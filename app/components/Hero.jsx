@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useStore } from "../src/utils/useStore";
+import { useStore } from "../utils/useStore";
 import Link from "next/link";
 
 const Hero = ({ fullData }) => {

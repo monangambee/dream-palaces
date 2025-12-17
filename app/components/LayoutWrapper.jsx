@@ -5,19 +5,17 @@ import Link from 'next/link'
 export default function LayoutWrapper({ children }) {
   const pathname = usePathname()
   
-  // Hide header and footer when viewing a specific film (path pattern: /screening/[film])
+  // Hide footer when viewing a specific film (path pattern: /screening/[film])
   const isViewingFilm = pathname?.startsWith('/screening/') && pathname.split('/').length === 3 && pathname.split('/')[2] !== ''
   
   return (
     <>
-      {!isViewingFilm && (
-        <nav className="w-screen flex flex-col justify-center items-center font-marqueeMoon bg-background  border-primary p-4 text-primary">
-          <Link href="/" className="cursor-pointer p-4 text-xl md:text-7xl">
-            Dream Palaces
-          </Link>
-          <p className='font-frontage'>Black cinema Spaces</p>
-        </nav>
-      )}
+      <nav className="w-screen flex flex-col justify-center items-center font-marqueeMoon bg-background  border-primary p-4 text-primary">
+        <Link href="/" className="cursor-pointer p-4 text-xl md:text-7xl">
+          Dream Palaces
+        </Link>
+        <p className='font-frontage'>Black cinema Spaces</p>
+      </nav>
 
       {children}
 
