@@ -132,7 +132,7 @@ const Filter = ({}) => {
       {isOpen && (
         <>
           <p className="text-yellow-400 text-xs text-center pb-8 pt-4">
-            Pan around and zoom in to explore then click on a cinema to view details.
+            Pan around and zoom in and out to explore then click on a cinema to view details.
           </p>
           <h2 className="text-primary text-xs text-center pb-4">Filter cinemas</h2>
           

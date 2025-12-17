@@ -84,7 +84,7 @@ export default async function HomePage() {
   return (
     <Suspense>
       <div className="w-screen flex flex-col items-center relative bg-background">
-        <div className="lg:w-[70%] h-full flex text-primary flex-col  justify-start items-center bg-background relative bg-contain p-4 sm:p-10">
+        <div className="lg:w-[70%] w-full h-full flex text-primary flex-col  justify-start items-center bg-background relative bg-contain p-4 sm:p-10">
           {/* Add this gradient overlay */}
           {/* <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black opacity-100 pointer-events-none"></div> */}
           {/* <div className="absolute inset-0 backdrop-blur-sm pointer-events-none"></div> */}
@@ -92,7 +92,7 @@ export default async function HomePage() {
             {/* <HomeScene /> */}
           </div>
 
-          <div className="w-full h-full hidden lg:flex flex-row items-center justify-center p-4 relative gap-4 ">
+          <div className="w-full h-full  lg:flex flex-row items-center justify-center p-4 relative gap-4 ">
             {/* <h1 className="font-frontage3D text-4xl"> Black Cinema Spaces</h1> */}
             <Hero fullData={fullData} />
        
@@ -102,7 +102,7 @@ export default async function HomePage() {
           WELCOME TO DREAM PALACES
         </h1> */}
           </div>
-               <p className="w-2/3 h-1/2 text-xs xl:text-base flex flex-col items-start font-light font-avenir  border-[0.5px]  border-primary p-8">
+               <p className="sm:w-full h-1/2 text-xs sm:text-base xl:text-xl flex flex-col items-start font-light font-avenir  sm:border-[0.5px]  border-primary p-2 sm:p-8">
               Dream Palaces explores the architectural, geographical, and
               cultural histories of Black cinema spaces across six countries in
               Africa and the diaspora. Initiated by an emotional encounter with
@@ -131,7 +131,7 @@ export default async function HomePage() {
             {modes.map((mode, index) => (
               <Link key={index} href={mode.link}>
                 <div className="w-full h-[10vh] flex items-center font-frontage relative border-[0.5px] p-4 sm:p-8 transition-all duration-200 ease-in-out hover:border-yellow-400 group">
-                  <p className="font-bold text-primary text-xl">{mode.name}</p>
+                  <p className="font-bold text-primary sm:text-sm xl:text-xl">{mode.name}</p>
                   {mode.image && (
                     <div className="absolute right-1/4 top-1/2 -translate-y-1/2 w-[250px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                       <img 
