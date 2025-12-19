@@ -105,7 +105,7 @@ const Hero = ({ fullData }) => {
     <div className="relative gap-8 w-full h-full min-h-screen flex flex-col items-center justify-center">
       <button
         onClick={handleShuffle}
-        className="font-frontage border-[0.5px] text-xs sm:text-sm  flex items-center px-8 py-4 hover:bg-yellow-400 hover:text-black"
+        className="font-frontage border-[0.5px] text-xs  flex items-center px-8 py-4 hover:bg-yellow-400 hover:text-black"
       >
         Shuffle
       </button>
@@ -115,7 +115,7 @@ const Hero = ({ fullData }) => {
         return (
           <div
             key={index}
-            className={`sm:absolute relative ${positions[index]} w-[100px] h-[100px] sm:w-[80px] sm:h-[80px] md:w-[120px] md:h-[120px] lg:w-[180px] lg:h-[180px] xl:w-[250px] xl:h-[250px]`}
+            className={`sm:absolute relative ${positions[index]} w-[100px] h-[100px] sm:w-[80px] sm:h-[80px] md:w-[120px] md:h-[120px] lg:w-[180px] lg:h-[180px] xl:w-[200px] xl:h-[200px]`}
           >
             <Image
               // unoptimized
