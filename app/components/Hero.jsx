@@ -82,40 +82,37 @@ const Hero = ({ fullData }) => {
     setImageUrls(selectedUrls);
   };
 
-  // Function to generate consistent random position based on index
-  // const getRandomPosition = (index) => {
-  //   const seed = index * 1439; // Use index as seed for consistent positioning
-  //   const randomX = (seed * 9301 + 49297) % 233280 / 233280; // Pseudo-random 0-1
-  //   const randomY = (seed * 7919 + 12345) % 233280 / 233280; // Different calculation for Y
-
-  //   return {
-  //     left: `${randomX * 100 -5}%`, // 10-90% from left
-  //     top: `${randomY * 80+ 10}%`   // 10-90% from top
-  //   };
-  // };
-
-  const positions = [
-    "sm:top-8 sm:left-1/2 sm:-translate-x-1/2", // Top center with gap
-    "sm:bottom-8 sm:left-1/2 sm:-translate-x-1/2", // Bottom center with gap
-    "sm:left-8 sm:top-1/2 sm:-translate-y-1/2", // Left center with gap
-    "sm:right-8 sm:top-1/2 sm:-translate-y-1/2", // Right center with gap
-  ];
+  const getRandomPosition = (index) => {
+    const seed = index * 1439;
+    const randomOffset = (seed * 9301 + 49297) % 233280 / 233280;
+    
+    const positions = [
+      { top: `${randomOffset * 10 }%`, left: '50%', transform: 'translateX(-50%)' },
+      { bottom: `${randomOffset * 10 }%`, left: '50%', transform: 'translateX(-50%)' },
+      { top: '50%', left: `${randomOffset * 20 - 10 }%`, transform: 'translateY(-50%)' },
+      { top: '50%', right: `${randomOffset * 20 - 5 }%`, transform: 'translateY(-50%)' },
+    ];
+    
+    return positions[index % 4];
+  };
 
   return (
-    <div className="relative gap-8 w-full h-full min-h-screen flex flex-col items-center justify-center">
+    <div className="relative max-w-screen w-full  min-h-screen xl:max-h-[80vh]  max-h-[50vh] flex flex-col  items-center justify-center">
       <button
         onClick={handleShuffle}
-        className="font-frontage border-[0.5px] text-xs  flex items-center px-8 py-4 hover:bg-yellow-400 hover:text-black"
+        className="font-frontage border-[0.5px] text-xs absolute bottom-[50%] left-1/2 z-10 flex items-center px-8 py-4 hover:bg-yellow-400 hover:text-black"
       >
-        Shuffle
+       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="M560-160v-80h104L537-367l57-57 126 126v-102h80v240H560Zm-344 0-56-56 504-504H560v-80h240v240h-80v-104L216-160Zm151-377L160-744l56-56 207 207-56 56Z"/></svg>
       </button>
-      <div className="columns-2 gap-y-8 overflow-auto">
+      {/* <div className="grid  grid-cols-2 gap-4  p-4  sm:w-full sm:h-full min-h-screen"> */}
 
       {imageUrls.map((url, index) => {
+        const position = getRandomPosition(index);
         return (
           <div
             key={index}
-            className={`sm:absolute relative ${positions[index]} w-[100px] h-[100px] sm:w-[80px] sm:h-[80px] md:w-[120px] md:h-[120px] lg:w-[180px] lg:h-[180px] xl:w-[200px] xl:h-[200px]`}
+            className="relative h-full w-full sm:absolute sm:w-[30%] sm:h-[30%]"
+            style={position}
           >
             <Image
               // unoptimized
@@ -123,13 +120,13 @@ const Hero = ({ fullData }) => {
               alt={`Cinema ${index}`}
               fill
               sizes="(max-width: 640px) 100px, (max-width: 768px) 80px, (max-width: 1024px) 120px, (max-width: 1280px) 180px, 300px"
-              className=" border-primary border-[0.5px] p-4"
+              className=" border-primary border-[0.5px] p-4 object-contain aspect-square"
             />
           </div>
           
         );
       })}
-      </div>
+      {/* </div> */}
 
     </div>
   );
