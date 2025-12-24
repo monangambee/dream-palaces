@@ -26,11 +26,9 @@ const getCache = () => {
 };
 
 export default function Constellation({ fullData }) {
-  const { setData, clearSelectedCinema } = useStore();
+  const { setData } = useStore();
   const [data, setDataState] = useState(null);
   const hasFetchedRef = useRef(false);
-
-  useEffect(() => () => clearSelectedCinema(), [clearSelectedCinema]);
 
   useEffect(() => {
     const loadData = async () => {

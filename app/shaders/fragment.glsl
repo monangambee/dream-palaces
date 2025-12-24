@@ -13,7 +13,7 @@ void main() {
     // Featured cinemas have scales from 5.0 to 8.8 (Math.max(5.0, baseScale + 1.0))
     // Non-featured cinemas have scales from 0.7 to 7.8 (baseScale)
     // Using threshold of 4.5 to distinguish between them
-    bool isFeatured = vScale > 4.5;
+    bool isFeatured = vScale > 5.0;
     
     // Select texture based on featured status
     vec4 particleTexture;
@@ -38,21 +38,21 @@ void main() {
       // PULSE EFFECT FOR FEATURED CINEMAS
     // Detect if this is a featured cinema (large scale)
 
-    if(vScale >= 3.0) {
-        // Create pulsing effect
-        float pulse = sin(uTime * 4.0) * 0.3 + 0.7; // Oscillates between 0.4 and 1.0
-        strength *= pulse;
+    // if(vScale >= 1.0) {
+    //     // Create pulsing effect
+    //     float pulse = sin(uTime * 4.0) * 0.3 + 0.7; // Oscillates between 0.4 and 1.0
+    //     strength *= pulse;
 
-        // Optional: Add color enhancement for featured cinemas
-        // You can uncomment this for extra glow effect
-        // strength += pulse * 0.2;
-    }
+    //     // Optional: Add color enhancement for featured cinemas
+    //     // You can uncomment this for extra glow effect
+    //     // strength += pulse * 0.2;
+    // }
 
     // Apply color tint to the particle texture
     // Featured cinemas will be yellow (vColor = [1.0, 0.84, 0.0])
     // Regular cinemas will be white (vColor = [1.0, 1.0, 1.0])
-    vec3 tintedColor = particleTexture.rgb * vColor;
-    gl_FragColor = vec4(tintedColor, particleTexture.a);
+    vec3 tintedColor = particleTexture.rgb;
+    gl_FragColor = vec4(particleTexture);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
 }
