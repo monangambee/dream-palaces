@@ -239,7 +239,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
       const baseScale = baseRichnessScale *  randomMultiplier ;
       
       if (isFeatured) {
-        scales[i] = baseScale + 5; // Featured cinemas are always larger, but respect richness
+        scales[i] = 5.0 * baseScale; // Fixed size for featured cinemas (maintains constant size regardless of zoom)
         colors.set([1.0, 0.84, 0.0], i * 3); // Gold color for featured cinemas
       } else {
         scales[i] = baseScale; // Scale = data richness * random multiplier
