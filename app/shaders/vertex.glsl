@@ -101,7 +101,7 @@ void main() {
   vec3 randomOffset = vec3(noiseX, noiseY, noiseZ) * uPosition;
 
     // Apply random positioning to the original position
-  vec3 newPosition = position + randomOffset;
+  vec3 newPosition = position + randomOffset * 2.0;
   newPosition.z = 0.0;
 
   vec4 modelPosition = modelMatrix * vec4(newPosition, 1.0);
@@ -110,11 +110,9 @@ void main() {
 
   gl_Position = projectedPosition;
 
-  // Calculate distance-based scaling - particles get bigger when camera is closer
-  float distanceScale = 100.0 / -viewPosition.z;
-  gl_PointSize = uSize * aScale * uDevicePixelRatio * distanceScale;
-
-    // gl_PointSize = 20.0;
+  // Scale particles only based on data richness (aScale attribute)
+  // No camera distance scaling - particles maintain constant size regardless of zoom
+  gl_PointSize = uSize  * uDevicePixelRatio * 2.0;
 
   vUv = uv;
   vColor = color;

@@ -9,7 +9,7 @@ import { Suspense } from "react";
 import { Vimeo } from 'vimeo';
 
 // Enable static generation with revalidation
-export const revalidate = 3600; // Revalidate every hour
+// export const revalidate = 3600; // Revalidate every hour
 
 export default async function HomePage() {
   // Server-side data fetching
@@ -64,6 +64,7 @@ export default async function HomePage() {
         "Explore a constellation of over 1000 cinemas, each representing a unique story and history. Click on individual cinemas to uncover their narratives.",
       link: "/constellation",
       image: "/constellation.gif",
+      accentColor: "#FFD700",
     },
     {
       name: "MAP",
@@ -71,6 +72,7 @@ export default async function HomePage() {
         "Navigate a map showcasing the geographical distribution of cinemas across Africa and the diaspora. Zoom in to discover detailed information about each location.",
       link: "/map",
       image: "/map.webp",
+      accentColor: "#007bff", //blue
     },
     {
       name: "SCREENING ROOM",
@@ -78,6 +80,7 @@ export default async function HomePage() {
         "Use your mobile device to experience movies from a virtual screening room.",
       link: `/screening/${firstFilmSlug || 'default'}`,
       image: screeningGif,
+      accentColor: "#C4B0EC",
     },
   ];
 
@@ -102,7 +105,7 @@ export default async function HomePage() {
           WELCOME TO DREAM PALACES
         </h1> */}
           </div>
-               <p className="sm:w-full h-1/2 text-xs sm:text-base xl:text-xl flex flex-col items-start font-light font-avenir  sm:border-[0.5px]  border-primary p-2 sm:p-8">
+               <p className="sm:w-full h-1/2 text-xs sm:text-base xl:text-xl flex flex-col items-start font-light font-avenir   border-primary p-2 sm:p-8">
               Dream Palaces explores the architectural, geographical, and
               cultural histories of Black cinema spaces across six countries in
               Africa and the diaspora. Initiated by an emotional encounter with
@@ -130,8 +133,11 @@ export default async function HomePage() {
           <div className="flex flex-col gap-8 w-[90%] sm:w-[70%] items-between justify-start py-8 ">
             {modes.map((mode, index) => (
               <Link key={index} href={mode.link}>
-                <div className="w-full h-[10vh] flex items-center font-frontage relative border-[0.5px] p-4 sm:p-8 transition-all duration-200 ease-in-out hover:border-yellow-400 group">
-                  <p className="font-bold text-primary sm:text-sm xl:text-xl">{mode.name}</p>
+                <div 
+                  className="w-full h-[10vh] flex items-center justify-center font-frontage relative border-[0.5px] p-4 sm:p-8 transition-all duration-200 ease-in-out hover:border-[var(--accent-color)] group"
+                  style={{ '--accent-color': mode.accentColor }}
+                >
+                  <p className="font-bold text-primary  sm:text-sm xl:text-xl">{mode.name}</p>
                   {mode.image && (
                     <div className="absolute right-1/4 top-1/2 -translate-y-1/2 w-[250px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                       <img 

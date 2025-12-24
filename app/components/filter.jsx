@@ -113,21 +113,26 @@ const Filter = ({}) => {
         isOpen 
           ? isMobile ? "w-full" : "w-1/6" 
           : isMobile ? "w-12" : "w-16"
-      } h-[100vh]  font-basis border-primary justify-start overflow-hidden items-center bg-background z-50 p-4 transition-all duration-300 ease-in-out ${
-        isMobile && isOpen ? "fixed inset-0 z-50" : ""
+      } h-[100vh] font-basis border-primary justify-start overflow-hidden items-center bg-background z-50 p-4 transition-all duration-300 ease-in-out ${
+        isMobile && isOpen 
+          ? "fixed inset-0 z-50" 
+          : isMobile 
+            ? "absolute left-0 top-0" 
+            : "absolute left-0 top-0"
       }`}
       pointerEvents="auto"
     >
       {/* Toggle Button */}
-      {/* <button
+      <button
         onClick={toggleFilter}
-        className={`text-primary mb-2 transition-colors duration-200 ${
+        className={`text-primary mb-2 transition-colors duration-200 z-50 ${
           isOpen ? "self-end text-sm" : "self-center text-lg"
         }`}
         title={isOpen ? "Close Filter" : "Open Filter"}
+        aria-label={isOpen ? "Close Filter" : "Open Filter"}
       >
         {isOpen ? (isMobile ? "✕" : "◀") : (isMobile ? "☰" : "▶")}
-      </button> */}
+      </button>
 
       {isOpen && (
         <>
@@ -190,7 +195,7 @@ const Filter = ({}) => {
         
 
           <button
-            className=" mt-4 bg-slate-900 bg-opacity-50 border-primary border-[0.5px] text-primary text-xs px-4 py-2 rounded pointer"
+            className=" mt-4 bg-black hover:bg-primary hover:text-black bg-opacity-50 border-primary border-[0.5px] transition-all duration-200 ease-in-out text-primary text-xs px-8 py-4  pointer"
             onClick={() => handleFilterChange("clear", "all")}
           >
             Reset

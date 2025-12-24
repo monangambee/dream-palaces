@@ -259,7 +259,7 @@ export default function ScreeningPage() {
   }
 
   return (
-    <div className="w-full min-h-full flex flex-col items-center font-basis justify-center bg-background text-primary relative py-8">
+    <div className="w-screen h-full flex flex-col items-center font-basis justify-center bg-background text-primary relative">
         {/* {!isPlaying && (
       <div 
         className="absolute inset-0 cursor-pointer z-10"

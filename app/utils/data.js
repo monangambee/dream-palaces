@@ -1,64 +1,53 @@
-import Airtable from 'airtable';
-import { AIRTABLE_CONFIG } from '../config/airtable';
+const API_ENDPOINT = 'https://dreampalacemapapp.onrender.com/api/record.json';
 
-const base = new Airtable({ apiKey: AIRTABLE_CONFIG.apiKey }).base(AIRTABLE_CONFIG.baseId);
-
-export const fetchAirtableData = async (tableName = AIRTABLE_CONFIG.defaultTable, pageSize = 100) => {
+export const fetchAirtableData = async (tableName = null, pageSize = null) => {
   try {
-    const records = [];
-    await base(tableName).select({
-      view: 'Grid view',
-      pageSize
-    }).eachPage((pageRecords, fetchNextPage) => {
-      pageRecords.forEach(record => {
-        records.push({ id: record.id, fields: record.fields });
-      });
-      fetchNextPage();
-    });
+    const response = await fetch(API_ENDPOINT);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const records = await response.json();
+    
+    // Ensure the data is in the expected format: array of { id, fields }
+    if (!Array.isArray(records)) {
+      throw new Error('Expected array of records from API');
+    }
+    
     return records;
   } catch (error) {
-    console.error('Error fetching Airtable data:', error);
+    console.error('Error fetching data from API:', error);
     return [];
   }
 };
 
-export const fetchAirtableDataProgressive = async (tableName = AIRTABLE_CONFIG.defaultTable, onProgress) => {
+export const fetchAirtableDataProgressive = async (tableName = null, onProgress) => {
   try {
-    const records = [];
-    let pageCount = 0;
-    let totalRecords = 0;
-    
+    // Notify progress start
     if (onProgress) {
       onProgress({ loaded: 0, total: 1000, page: 0, isComplete: false });
     }
     
-    await base(tableName).select({
-      view: 'Grid view',
-      pageSize: 50
-    }).eachPage((pageRecords, fetchNextPage) => {
-      pageRecords.forEach(record => {
-        records.push({ id: record.id, fields: record.fields });
-      });
-      pageCount++;
-      totalRecords = Math.max(totalRecords, records.length + 50);
-      
-      if (onProgress) {
-        onProgress({
-          loaded: records.length,
-          total: totalRecords,
-          page: pageCount,
-          isComplete: false
-        });
-      }
-      
-      fetchNextPage();
-    });
+    const response = await fetch(API_ENDPOINT);
     
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const records = await response.json();
+    
+    // Ensure the data is in the expected format: array of { id, fields }
+    if (!Array.isArray(records)) {
+      throw new Error('Expected array of records from API');
+    }
+    
+    // Notify progress complete
     if (onProgress) {
       onProgress({
         loaded: records.length,
         total: records.length,
-        page: pageCount,
+        page: 1,
         isComplete: true
       });
     }
@@ -66,6 +55,15 @@ export const fetchAirtableDataProgressive = async (tableName = AIRTABLE_CONFIG.d
     return records;
   } catch (error) {
     console.error('Error in progressive loading:', error);
+    if (onProgress) {
+      onProgress({
+        loaded: 0,
+        total: 0,
+        page: 0,
+        isComplete: true,
+        error: error.message
+      });
+    }
     return [];
   }
 };

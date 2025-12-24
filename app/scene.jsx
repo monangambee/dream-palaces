@@ -22,9 +22,10 @@ gsap.registerPlugin(useGSAP);
 
 
 
-const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
+const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForNormalization }) => {
 
   const particleTexture = useLoader(THREE.TextureLoader, "/particle/star_04.png");
+  const goldenTexture = useLoader(THREE.TextureLoader, "/particle/starGolden.png");
 
   
   const points = useRef();
@@ -59,7 +60,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
       points.current.material.uniforms.uPosition,
       { value: 0.0 },
       {
-        value: 20.0,
+        value: 8.0, // Reduced from 20.0 to prevent particles from overlapping
         duration: 3,
         ease:"sine.inOut",
       }
@@ -93,32 +94,32 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
     const dpr = typeof window !== 'undefined' ? window.devicePixelRatio : 1;
     return {
       uTime: { value: 0.0 },
-      uSize: { value: 15.0 },
+      uSize: { value: 20.0 },
       uPosition: { value: 0.0 },
       uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
       uDevicePixelRatio: { value: dpr },
-      uTexture: { value: particleTexture }
+      uTexture: { value: particleTexture },
+      uGoldenTexture: { value: goldenTexture }
     };
-  }, [particleTexture]);
+  }, [particleTexture, goldenTexture]);
 
   // Calculate dynamic radius based on particle count
-  // Fewer particles = smaller radius (more concentrated, appear larger)
-  // More particles = larger radius (more spread out)
+  // Increased radius to prevent particles from touching
+  // Accounts for particle sizes (up to 5.0 scale) and ensures minimum spacing
   const radius = useMemo(() => {
-    if (!data || data.length === 0 || count === 0) return 300;
+    if (!data || data.length === 0 || count === 0) return 400;
     
     const totalCount = data.length;
     const filteredCount = count;
     const ratio = filteredCount / totalCount; // 0 to 1
     
-    // Base radius when all particles visible
-    const baseRadius = 300;
-    // Minimum radius when very few particles (more concentrated)
-    const minRadius = 100;
-    // Maximum radius when many particles
-    const maxRadius = 300;
+    // Significantly increased radius to ensure particles don't touch
+    // Minimum radius when very few particles
+    const minRadius = 200;
+    // Maximum radius when many particles - scale with count to maintain spacing
+    const maxRadius = Math.max(300, Math.sqrt(filteredCount) * 15); // Scale with sqrt of count
     
-    // Scale radius linearly based on ratio
+    // Scale radius linearly based on ratio, but ensure minimum spacing
     // When ratio is low (few particles), use smaller radius
     // When ratio is high (many particles), use larger radius
     const dynamicRadius = minRadius + (maxRadius - minRadius) * ratio;
@@ -130,18 +131,54 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
   
 
   // Create a set of featured cinema IDs for quick lookup
+  // Only cinemas with featured = true should be yellow
   const featuredCinemas = useMemo(() => {
-    const preparedData = analyzeAirtableData(originalData);
     const featured = new Set();
     
-    if (preparedData?.Feature?.[1]?.[1]) {
-      preparedData.Feature[1][1].forEach((cinema) => {
-        featured.add(cinema.id);
+    if (originalData && originalData.length > 0) {
+      originalData.forEach((cinema) => {
+        // Check if featured field is true (case-insensitive check)
+        const featuredValue = cinema.fields?.featured || cinema.fields?.Featured;
+        if (featuredValue === true || featuredValue === 'true' || featuredValue === 'True') {
+          featured.add(cinema.id);
+        }
       });
     }
     
     return featured;
   }, [originalData]);
+
+  // Calculate data richness score for a cinema record
+  const calculateDataRichness = useCallback((cinema) => {
+    if (!cinema?.fields) return 0;
+    
+    const fields = cinema.fields;
+    let score = 0;
+    
+    // Basic fields (1 point each)
+    if (fields.Name) score += 1;
+    if (fields.City) score += 1;
+    if (fields.Country) score += 1;
+    if (fields.Creation) score += 1;
+    if (fields.Closure) score += 1;
+    if (fields.Condition) score += 1;
+    
+    // Rich content fields (weighted more heavily)
+    if (fields.Images && Array.isArray(fields.Images) && fields.Images.length > 0) {
+      score += 2; // Images are valuable
+    }
+    if (fields["Website description"] && fields["Website description"].trim().length > 0) {
+      score += 2; // Description adds significant value
+    }
+    if (fields["Additional resources"] && fields["Additional resources"].trim().length > 0) {
+      score += 2; // Additional resources are valuable
+    }
+    if (fields["Image Credits"]) score += 1;
+    if (fields["Sound Links"]) score += 1;
+    if (fields["Sound Credits"]) score += 1;
+    
+    return score;
+  }, []);
 
   const { positions, groups, scales, colors } = useMemo(() => {
    
@@ -150,59 +187,101 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
     const scales = new Float32Array(count);
     const colors = new Float32Array(count * 3);
 
+    // Normalize based on FULL dataset (all cinemas) for consistent scaling
+    // This ensures particles maintain their size relationship regardless of filters
+    const normalizationData = fullDataForNormalization || originalData || [];
+    const allRichnessScores = normalizationData.map(cinema => calculateDataRichness(cinema));
+    const minRichness = Math.min(...allRichnessScores);
+    const maxRichness = Math.max(...allRichnessScores);
+    const richnessRange = maxRichness - minRichness || 1; // Avoid division by zero
+
+    // Calculate richness scores for the current (filtered) data
+    const richnessScores = originalData.map(cinema => calculateDataRichness(cinema));
+
     // Simple seeded random function
     const seededRandom = (seed) => {
       const x = Math.sin(seed) * 10000;
       return x - Math.floor(x);
     };
 
+    // Minimum distance between particles (in world units)
+    // Increased to ensure particles don't touch, accounting for max particle size
+    const minDistance = 15.0; // Minimum spacing between particle centers
+    const placedPositions = []; // Track placed positions for collision detection
+    
     for (let i = 0; i < count; i++) {
       const cinema = originalData[i];
-      // const fields = cinema.fields;
-      // const country = fields?.Country || "Unknown";
-
-     
-      
 
       groups[i] = groupIndex; // All particles in this system belong to the same group
 
       // Use cinema ID as seed for consistent random values
-      // const seed = cinema.id ? cinema.id.charCodeAt(0) + i : i;
       let seed = i;
-if (cinema.id) {
-  for (let j = 0; j < cinema.id.length; j++) {
-    seed += cinema.id.charCodeAt(j) * (j + 1);
-  }
-}
+      if (cinema.id) {
+        for (let j = 0; j < cinema.id.length; j++) {
+          seed += cinema.id.charCodeAt(j) * (j + 1);
+        }
+      }
       
-      // Check if this cinema is featured using the same method as featuredCinemas Set
+      // Check if this cinema is featured
       const isFeatured = featuredCinemas.has(cinema.id);
       
+      // Calculate data richness and normalize to scale range
+      const richness = richnessScores[i];
+      const normalizedRichness = (richness - minRichness) / richnessRange; // 0 to 1
+      
+      // Map richness to base scale: min 1.0, max 4.0
+      // More information = larger particle base
+      const baseRichnessScale = 1.0 + (normalizedRichness * 5.0); // Range: 1.0 to 4.0
+      
+      // Add random multiplier (0.7 to 1.3) using seeded random for consistency
+      // This ensures particles have variation while maintaining deterministic results
+      const randomMultiplier = 0.7 + (seededRandom(seed + 100) * 0.6); // Range: 0.7 to 1.3
+      const baseScale = baseRichnessScale *  randomMultiplier ;
+      
       if (isFeatured) {
-        scales[i] = 5.0; // Large scale for featured cinemas
+        scales[i] = baseScale + 5; // Featured cinemas are always larger, but respect richness
         colors.set([1.0, 0.84, 0.0], i * 3); // Gold color for featured cinemas
       } else {
-       // Random scale for non-featured cinemas (1.0 to 2.5)
-       scales[i] = Math.random() * 1.5 + 1.0; 
-        colors.set([1.0,1.0,1.0], i * 3); // Default color for non-featured cinemas
+        scales[i] = baseScale; // Scale = data richness * random multiplier
+        colors.set([1.0, 1.0, 1.0], i * 3); // Default color for non-featured cinemas
       }
     
-      // Use simple random positioning (vertex shader will add Perlin noise)
       // Use sqrt distribution for uniform spread across 2D area (not clustered at center)
       // Use seeded random for consistent, deterministic positioning
-      const distance = Math.sqrt(seededRandom(seed + 1)) * radius;
-      const angle = seededRandom(seed + 2) * Math.PI * 2; // Full circle in radians
-
-      let x = distance * Math.cos(angle);
-      let y = distance * Math.sin(angle) + 10;
-      let z = 0;
-
+      // Try multiple times to find a position that doesn't overlap
+      let x, y, z = 0;
+      let attempts = 0;
+      const maxAttempts = 50;
+      let validPosition = false;
+      
+      while (!validPosition && attempts < maxAttempts) {
+        const distance = Math.sqrt(seededRandom(seed + 1 + attempts)) * radius;
+        const angle = seededRandom(seed + 2 + attempts) * Math.PI * 2; // Full circle in radians
+        
+        x = distance * Math.cos(angle);
+        y = distance * Math.sin(angle) + 10;
+        
+        // Check if this position is far enough from all previously placed particles
+        validPosition = placedPositions.every(placed => {
+          const dx = x - placed.x;
+          const dy = y - placed.y;
+          const distanceToPlaced = Math.sqrt(dx * dx + dy * dy);
+          return distanceToPlaced >= minDistance;
+        });
+        
+        attempts++;
+      }
+      
+      // If we couldn't find a valid position after max attempts, use the last attempted position
+      // This ensures all particles are placed even if the area is crowded
+      placedPositions.push({ x, y });
+      
       // add the 3 values to the attribute array for every loop
-      positions.set([x, y, 0], i * 3);
+      positions.set([x, y, z], i * 3);
     }
 
     return { positions, groups, scales, colors };
-  }, [count, groupIndex, originalData, featuredCinemas, radius]);
+  }, [count, groupIndex, originalData, featuredCinemas, radius, calculateDataRichness, fullDataForNormalization]);
 
   useFrame((state) => {
     if (!points.current?.material) return;
@@ -221,7 +300,7 @@ if (cinema.id) {
 
     gsap.fromTo(
       camera.position,
-      { z: 300 },
+      { z: 400 },
       { z: 100, duration: 2, ease: "power2.out" }
     );
     // return null;
@@ -297,6 +376,7 @@ export default function Scene({ fullData }) {
     setData, 
     setFilters,
     filteredData,
+    data: storeData,
     setLoading,
     setProgress,
   
@@ -368,6 +448,7 @@ export default function Scene({ fullData }) {
           <CustomGeometryParticles
             data={filteredData}
             originalData={filteredData}
+            fullDataForNormalization={fullData || storeData}
             count={filteredData.length}
             groupType="all"
             groupIndex={7}
@@ -379,7 +460,7 @@ export default function Scene({ fullData }) {
       <OrbitControls
         enableRotate={false}
         panSpeed={1.2}
-        maxDistance={210}
+        maxDistance={400}
         minDistance={10}
         mouseButtons={{
           LEFT: THREE.MOUSE.PAN,
