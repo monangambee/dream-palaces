@@ -259,7 +259,7 @@ export default function ScreeningPage() {
   }
 
   return (
-    <div className="w-screen h-full flex flex-col items-center font-basis justify-center bg-background text-primary relative">
+    <div className="w-screen min-h-[calc(100vh-200px)] flex flex-col items-center font-basis justify-center bg-background text-primary relative py-8">
         {/* {!isPlaying && (
       <div 
         className="absolute inset-0 cursor-pointer z-10"
@@ -281,7 +281,7 @@ export default function ScreeningPage() {
     )} */}
       <div 
         ref={videoContainerRef}
-        className="w-full max-w-7xl h-full flex items-center justify-center p-4 md:p-8 relative group"
+        className="w-full max-w-7xl flex items-center justify-center p-4 md:p-8 group"
       >
         <Vimeo 
           className="w-full aspect-video rounded-lg"
