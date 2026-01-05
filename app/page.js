@@ -1,12 +1,11 @@
 import { fetchAirtableDataProgressive } from "./utils/data";
 import { AIRTABLE_CONFIG } from "./config/airtable";
+import { getFirstFilmSlug } from "./utils/vimeo";
 import Constellation from "./components/Constellation";
 import Link from "next/link";
 import Image from "next/image";
 import Hero from "./components/Hero";
-import HomeScene from "./components/HomeScene";
 import { Suspense } from "react";
-import { Vimeo } from 'vimeo';
 
 // Enable static generation with revalidation
 // export const revalidate = 3600; // Revalidate every hour
@@ -15,7 +14,6 @@ export default async function HomePage() {
   // Server-side data fetching
   let fullData = [];
   let error = null;
-  let screeningGif = "";
 
   try {
     if (process.env.NODE_ENV === 'development') {
@@ -28,34 +26,7 @@ export default async function HomePage() {
     error = err.message;
   }
 
-  // Fetch screening room thumbnail and first film slug from Vimeo
-  let firstFilmSlug = '';
-  try {
-    const client = new Vimeo(
-      process.env.VIMEO_CLIENT_ID,
-      process.env.VIMEO_CLIENT_SECRET,
-      process.env.VIMEO_ACCESS_TOKEN
-    )
-
-    const videos = await new Promise((resolve, reject) => {
-      client.request({
-        method: 'GET',
-        path: '/me/videos',
-        query: { per_page: 1, fields: 'uri,name,pictures' }
-      }, (error, body) => {
-        if (error) reject(error)
-        else resolve(body)
-      })
-    })
-
-    if (videos.data && videos.data.length > 0) {
-      const firstVideo = videos.data[0]
-      screeningGif = firstVideo.pictures?.sizes?.[firstVideo.pictures.sizes.length - 1]?.link || ''
-      firstFilmSlug = firstVideo.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
-    }
-  } catch (vimeoErr) {
-    console.error('Error fetching Vimeo videos:', vimeoErr)
-  }
+  const { slug: firstFilmSlug, thumbnail: screeningGif } = await getFirstFilmSlug();
 
   const modes = [
     {

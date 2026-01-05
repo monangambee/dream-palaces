@@ -17,21 +17,21 @@ void main() {
     
     // Select texture based on featured status
     vec4 particleTexture;
-    if (isFeatured) {
-        particleTexture = texture2D(uGoldenTexture, gl_PointCoord);
-    } else {
+    // if (isFeatured) {
+    //     particleTexture = texture2D(uGoldenTexture, gl_PointCoord);
+    // } else {
         particleTexture = texture2D(uTexture, gl_PointCoord);
-    }
+    // }
     //circluar mask 
     vec2 center = vec2(0.5, 0.5);
     vec2 uv = gl_PointCoord;
     float distanceToCenter = length(uv - 0.5);
     float alpha = 0.05 / distanceToCenter - 0.1;
 
-    float strength = distance(gl_PointCoord, vec2(0.5));
+    // float strength = distance(gl_PointCoord, vec2(0.5));
     // strength = step(0.5, strength);
-    strength = 1.0 - strength * 2.0;
-    strength = pow(strength, uSize);
+    // strength = 1.0 - strength * 2.0;
+    // strength = pow(strength, uSize);
 
     // strength = strength * 0.4;
 
@@ -51,7 +51,7 @@ void main() {
     // Apply color tint to the particle texture
     // Featured cinemas will be yellow (vColor = [1.0, 0.84, 0.0])
     // Regular cinemas will be white (vColor = [1.0, 1.0, 1.0])
-    vec3 tintedColor = particleTexture.rgb;
+    // vec3 tintedColor = particleTexture.rgb;
     gl_FragColor = vec4(particleTexture);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>

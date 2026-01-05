@@ -40,8 +40,8 @@ export const fetchAirtableDataProgressive = async (tableName = null, onProgress)
     // Ensure the data is in the expected format: array of { id, fields }
     if (!Array.isArray(records)) {
       throw new Error('Expected array of records from API');
-    }
-    
+      }
+      
     // Notify progress complete
     if (onProgress) {
       onProgress({

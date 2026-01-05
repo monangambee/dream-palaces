@@ -115,9 +115,9 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
     
     // Significantly increased radius to ensure particles don't touch
     // Minimum radius when very few particles
-    const minRadius = 200;
+    const minRadius = 100;
     // Maximum radius when many particles - scale with count to maintain spacing
-    const maxRadius = Math.max(300, Math.sqrt(filteredCount) * 15); // Scale with sqrt of count
+    const maxRadius = Math.max(200, Math.sqrt(filteredCount) * 15); // Scale with sqrt of count
     
     // Scale radius linearly based on ratio, but ensure minimum spacing
     // When ratio is low (few particles), use smaller radius
@@ -200,7 +200,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
 
     // Simple seeded random function
     const seededRandom = (seed) => {
-      const x = Math.sin(seed) * 10000;
+      const x = Math.sin(seed) * 1000;
       return x - Math.floor(x);
     };
 
@@ -239,7 +239,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
       const baseScale = baseRichnessScale *  randomMultiplier ;
       
       if (isFeatured) {
-        scales[i] = 5.0 * baseScale; // Fixed size for featured cinemas (maintains constant size regardless of zoom)
+        scales[i] =  baseScale; // Fixed size for featured cinemas (maintains constant size regardless of zoom)
         colors.set([1.0, 0.84, 0.0], i * 3); // Gold color for featured cinemas
       } else {
         scales[i] = baseScale; // Scale = data richness * random multiplier
@@ -300,8 +300,8 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
 
     gsap.fromTo(
       camera.position,
-      { z: 400 },
-      { z: 100, duration: 2, ease: "power2.out" }
+      { z: 100 },
+      { z: 500, duration: 2, ease: "power2.out" }
     );
     // return null;
   }, [points.current, camera]);
@@ -460,7 +460,7 @@ export default function Scene({ fullData }) {
       <OrbitControls
         enableRotate={false}
         panSpeed={1.2}
-        maxDistance={400}
+        maxDistance={800}
         minDistance={10}
         mouseButtons={{
           LEFT: THREE.MOUSE.PAN,

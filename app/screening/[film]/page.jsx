@@ -216,7 +216,7 @@ export default function ScreeningPage() {
       events.forEach(([event, handler]) => {
         document.removeEventListener(event, handler);
       });
-      clearTimeout(timeoutRef.current);
+        clearTimeout(timeoutRef.current);
       clearTimeout(mouseMoveTimeout);
     };
   }, [isFullscreen, isPlaying, getFullscreenElement]);
@@ -351,17 +351,17 @@ export default function ScreeningPage() {
             <div className="text-yellow-400 text-sm font-avenir">
               {formatTime(currentTime)} / {formatTime(duration)}
             </div>
-            <button
-              onClick={handleFullscreen}
+        <button
+          onClick={handleFullscreen}
               className="rounded p-2 transition-all pointer-events-auto hover:bg-white/10"
-              aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-            >
-              {isFullscreen ? (
+          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+        >
+          {isFullscreen ? (
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FACC15"><path d="M240-120v-120H120v-80h200v200h-80Zm400 0v-200h200v80H720v120h-80ZM120-640v-80h120v-120h80v200H120Zm520 0v-200h80v120h120v80H640Z"/></svg>
-              ) : (
+          ) : (
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FACC15"><path d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z"/></svg>
-              )}
-            </button>
+          )}
+        </button>
           </div>
         </div>
       </div>
@@ -376,10 +376,10 @@ export default function ScreeningPage() {
         </button>
         {showReadMore && currentAsset.description && (
           <div className="mt-4 p-4 rounded text-base">
-            <div className="pt-2 font-avenir">
+              <div className="pt-2 font-avenir">
               <span className="text-yellow-400">Description:</span>
               <p className="mt-1">{currentAsset.description}</p>
-            </div>
+              </div>
           </div>
         )}
       </div>
@@ -388,7 +388,7 @@ export default function ScreeningPage() {
         <button
           onClick={() => setShowArchive(!showArchive)}
           className="text-primary hover:text-yellow-400 transition-colors flex items-center gap-2"
-        > 
+        >
           Archive {showArchive ? "^" : "⌄"}
         </button>
         {showArchive && (

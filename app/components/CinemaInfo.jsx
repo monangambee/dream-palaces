@@ -52,12 +52,12 @@ const CinemaInfo = () => {
   if (!selectedCinema) return null;
 
   return (
-    <div className="fixed flex flex-col gap-2 bottom-10 text-primary right-5 z-50 bg-background bg-opacity-90  p-8 max-w-[50vw] lg:max-w-[50vw] min-w-[20vw] max-h-[50vh]  overflow-y-scroll no-scrollbar  border-primary border-[0.5px] shadow-2xl font-avenir ">
-      <div className="font-bold text-lg mb-3 sticky top-0 bg-black py-4">
+    <div className="fixed flex flex-col gap-2 bottom-10 text-primary right-5 z-50 bg-background bg-opacity-90  px-8 max-w-[50vw] pb-8 lg:max-w-[50vw] min-w-[20vw] max-h-[50vh]  overflow-y-scroll no-scrollbar  border-primary border-[0.5px] shadow-2xl font-avenir ">
+      <div className="font-bold text-lg mb-3 sticky top-0 bg-black z-10 py-2 pt-8">
         {selectedCinema.fields.Name}
-      <div className="text-base font-light  mb-2  pt-2 ">
-        {selectedCinema.fields.City}, {selectedCinema.fields.Country}
-      </div>
+        <div className="text-base font-light mb-2 pt-2">
+          {selectedCinema.fields.City}, {selectedCinema.fields.Country}
+        </div>
       </div>
 
       <div className=" mb-2 text-xs">
@@ -67,7 +67,7 @@ const CinemaInfo = () => {
         {selectedCinema.fields.Condition}
       </div>
       {imageUrls.length > 0 && (
-        <div className="relative mb-2">
+        <div className="relative mb-2 z-0">
           {/* Image container */}
           <div className="relative w-full max-w-[300px] aspect-square">
             {imageUrls.map((urlObj, index) => {
