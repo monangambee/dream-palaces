@@ -1,13 +1,11 @@
 "use client";
 
-
 import { useParams } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
-import Link from "next/link";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import ImagesExport from "../../components/Images";
-import Image from "next/image";
+import Vimeo from '@u-wave/react-vimeo';
 
-import Vimeo from '@u-wave/react-vimeo'
+const HIDE_CONTROLS_DELAY = 3000;
 
 export default function ScreeningPage() {
   const params = useParams();
@@ -19,15 +17,16 @@ export default function ScreeningPage() {
   const [player, setPlayer] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [hasStartedPlaying, setHasStartedPlaying] = useState(false);
   const [showControls, setShowControls] = useState(false);
+  const [showPauseButton, setShowPauseButton] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
 
   const videoContainerRef = useRef(null);
-  // const iframeRef = useRef(null);
   const timeoutRef = useRef(null);
+  const pauseButtonTimeoutRef = useRef(null);
+  const initialTimerActiveRef = useRef(false);
 
   // Load assets from API and find the matching one
   useEffect(() => {
@@ -65,55 +64,34 @@ export default function ScreeningPage() {
 
 
 
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
-
-  // Format time to MM:SS
-  const formatTime = (seconds) => {
+  // Format time to MM:SS - memoized to prevent recreation
+  const formatTime = useCallback((seconds) => {
     if (!seconds || isNaN(seconds)) return '0:00';
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
+  }, []);
 
   // Handle player ready and setup
-  const handlePlayerReady = (playerInstance) => {
+  const handlePlayerReady = useCallback((playerInstance) => {
     setPlayer(playerInstance);
     
-    // Set up event listeners
-    playerInstance.on('play', () => {
-      setIsPlaying(true);
-      setHasStartedPlaying(true);
+    playerInstance.on('play', () => setIsPlaying(true));
+    playerInstance.on('pause', () => setIsPlaying(false));
+    playerInstance.on('timeupdate', (data) => {
+      if (!isSeeking) setCurrentTime(data.seconds);
+    });
+    playerInstance.on('loaded', () => {
+      playerInstance.getDuration().then(setDuration);
     });
     
-    playerInstance.on('pause', () => {
-      setIsPlaying(false);
-    });
-
-    playerInstance.on('timeupdate', (data) => {
-      if (!isSeeking) {
-        setCurrentTime(data.seconds);
-      }
-    });
-
-    playerInstance.on('loaded', () => {
-      playerInstance.getDuration().then((dur) => {
-        setDuration(dur);
-      });
-    });
-
+    // Try to get duration immediately
     playerInstance.getDuration().then((dur) => {
       if (dur) setDuration(dur);
     });
-  };
+  }, [isSeeking]);
 
-  // Handle seeking
-  const handleSeek = async (e) => {
+  const handleSeek = useCallback(async (e) => {
     if (!player || !duration) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
@@ -126,52 +104,40 @@ export default function ScreeningPage() {
       console.error('Seek error:', error);
     }
     setTimeout(() => setIsSeeking(false), 100);
-  };
+  }, [player, duration]);
 
-  // Cross-browser fullscreen helpers
-  const getFullscreenElement = () => {
+  // Cross-browser fullscreen helpers - memoized
+  const getFullscreenElement = useCallback(() => {
     return document.fullscreenElement || 
            document.webkitFullscreenElement || 
            document.mozFullScreenElement || 
            document.msFullscreenElement || 
            null;
-  };
+  }, []);
 
-  const requestFullscreen = async (element) => {
-    if (element.requestFullscreen) {
-      return element.requestFullscreen();
-    } else if (element.webkitRequestFullscreen) {
-      return element.webkitRequestFullscreen();
-    } else if (element.mozRequestFullScreen) {
-      return element.mozRequestFullScreen();
-    } else if (element.msRequestFullscreen) {
-      return element.msRequestFullscreen();
-    }
+  const requestFullscreen = useCallback(async (element) => {
+    if (element.requestFullscreen) return element.requestFullscreen();
+    if (element.webkitRequestFullscreen) return element.webkitRequestFullscreen();
+    if (element.mozRequestFullScreen) return element.mozRequestFullScreen();
+    if (element.msRequestFullscreen) return element.msRequestFullscreen();
     throw new Error('Fullscreen API not supported');
-  };
+  }, []);
 
-  const exitFullscreen = async () => {
-    if (document.exitFullscreen) {
-      return document.exitFullscreen();
-    } else if (document.webkitExitFullscreen) {
-      return document.webkitExitFullscreen();
-    } else if (document.mozCancelFullScreen) {
-      return document.mozCancelFullScreen();
-    } else if (document.msExitFullscreen) {
-      return document.msExitFullscreen();
-    }
+  const exitFullscreen = useCallback(async () => {
+    if (document.exitFullscreen) return document.exitFullscreen();
+    if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+    if (document.mozCancelFullScreen) return document.mozCancelFullScreen();
+    if (document.msExitFullscreen) return document.msExitFullscreen();
     throw new Error('Fullscreen API not supported');
-  };
+  }, []);
 
-  // Handle custom play/pause
-  const handlePlayPause = async () => {
+  const handlePlayPause = useCallback(async () => {
     if (!player) return;
     
     if (isPlaying) {
       player.pause();
     } else {
       try {
-        // Enter fullscreen first, then play
         if (!getFullscreenElement() && videoContainerRef.current) {
           try {
             await requestFullscreen(videoContainerRef.current);
@@ -180,21 +146,18 @@ export default function ScreeningPage() {
             console.log('Fullscreen not available:', error);
           }
         }
-        // Play the video
         await player.play();
       } catch (error) {
         console.error('Play error:', error);
       }
     }
-  };
+  }, [player, isPlaying, getFullscreenElement, requestFullscreen]);
 
-  // Handle fullscreen toggle
-  const handleFullscreen = async () => {
+  const handleFullscreen = useCallback(async () => {
     if (!videoContainerRef.current) return;
     
     try {
       const isCurrentlyFullscreen = !!getFullscreenElement();
-      
       if (isCurrentlyFullscreen) {
         await exitFullscreen();
         setIsFullscreen(false);
@@ -205,7 +168,7 @@ export default function ScreeningPage() {
     } catch (error) {
       console.error('Fullscreen error:', error);
     }
-  };
+  }, [getFullscreenElement, requestFullscreen, exitFullscreen]);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -213,47 +176,95 @@ export default function ScreeningPage() {
       setIsFullscreen(nowFullscreen);
       if (nowFullscreen) {
         setShowControls(true);
+        setShowPauseButton(false);
+        clearTimeout(pauseButtonTimeoutRef.current);
       } else {
         setShowControls(false);
       }
     };
 
+    let mouseMoveTimeout;
     const handleMouseMove = () => {
       if (isFullscreen) {
         setShowControls(true);
         clearTimeout(timeoutRef.current);
         timeoutRef.current = setTimeout(() => {
-          if (isPlaying) {
-            setShowControls(false);
-          }
-        }, 3000);
+          if (isPlaying) setShowControls(false);
+        }, HIDE_CONTROLS_DELAY);
+      } else if (isPlaying && !initialTimerActiveRef.current) {
+        setShowPauseButton(true);
+        clearTimeout(pauseButtonTimeoutRef.current);
+        pauseButtonTimeoutRef.current = setTimeout(() => {
+          setShowPauseButton(false);
+        }, HIDE_CONTROLS_DELAY);
       }
     };
 
-    // Listen to all browser-specific fullscreen events
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
-    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
-    document.addEventListener('mousemove', handleMouseMove);
+    const events = [
+      ['fullscreenchange', handleFullscreenChange],
+      ['webkitfullscreenchange', handleFullscreenChange],
+      ['mozfullscreenchange', handleFullscreenChange],
+      ['MSFullscreenChange', handleFullscreenChange],
+      ['mousemove', handleMouseMove]
+    ];
+
+    events.forEach(([event, handler]) => {
+      document.addEventListener(event, handler);
+    });
     
     return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
-      document.removeEventListener('mousemove', handleMouseMove);
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+      events.forEach(([event, handler]) => {
+        document.removeEventListener(event, handler);
+      });
+      clearTimeout(timeoutRef.current);
+      clearTimeout(mouseMoveTimeout);
     };
-  }, [isFullscreen, isPlaying]);
+  }, [isFullscreen, isPlaying, getFullscreenElement]);
+
+  // Show pause button when playing starts, hide after 3 seconds
+  useEffect(() => {
+    if (!isPlaying) {
+      setShowPauseButton(false);
+      clearTimeout(pauseButtonTimeoutRef.current);
+      initialTimerActiveRef.current = false;
+      return;
+    }
+
+    if (getFullscreenElement()) {
+      setShowPauseButton(false);
+      initialTimerActiveRef.current = false;
+      return;
+    }
+
+    initialTimerActiveRef.current = true;
+    setShowPauseButton(true);
+    clearTimeout(pauseButtonTimeoutRef.current);
+    pauseButtonTimeoutRef.current = setTimeout(() => {
+      setShowPauseButton(false);
+      initialTimerActiveRef.current = false;
+    }, HIDE_CONTROLS_DELAY);
+  }, [isPlaying, getFullscreenElement]);
+
+  const progressPercent = useMemo(() => 
+    duration > 0 ? (currentTime / duration) * 100 : 0
+  , [currentTime, duration]);
+
+  const playPauseButtonOpacity = useMemo(() => {
+    if (isFullscreen) return showControls ? 'opacity-100' : 'opacity-0';
+    if (isPlaying) return showPauseButton ? 'opacity-100' : 'opacity-0';
+    return 'opacity-100';
+  }, [isFullscreen, showControls, isPlaying, showPauseButton]);
+
+  const bottomControlsOpacity = useMemo(() => {
+    if (isFullscreen) return showControls ? 'opacity-100' : 'opacity-0';
+    if (isPlaying) return 'opacity-0 group-hover:opacity-100';
+    return 'opacity-0';
+  }, [isFullscreen, showControls, isPlaying]);
 
   if (loading || !currentAsset) {
     return (
       <div className="w-screen h-screen flex flex-col items-center justify-center bg-background text-primary">
         <h1 className="text-2xl font-basis mb-4">Loading film...</h1>
-        {/* <p className="font-basis text-sm">Playback ID: {playbackId}</p> */}
       </div>
     );
   }
@@ -281,7 +292,7 @@ export default function ScreeningPage() {
     )} */}
       <div 
         ref={videoContainerRef}
-        className="w-full max-w-7xl flex items-center justify-center p-4 md:p-8 group"
+        className="w-full max-w-7xl relative flex items-center justify-center p-4 md:p-8 group"
       >
         <Vimeo 
           className="w-full aspect-video rounded-lg"
@@ -311,39 +322,33 @@ export default function ScreeningPage() {
             className={`pointer-events-auto rounded-full p-6 transition-all z-10 ${
               isFullscreen
                 ? (showControls ? 'opacity-100' : 'opacity-0')
-                : (isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100')
+                : (isPlaying ? (showPauseButton ? 'opacity-100' : 'opacity-0') : 'opacity-100')
             }`}
             aria-label={isPlaying ? "Pause" : "Play"}
           >
             {isPlaying ? (
-             <svg xmlns="http://www.w3.org/2000/svg" height="128px" viewBox="0 -960 960 960" width="128px" fill="#FACC15"><path d="M520-200v-560h240v560H520Zm-320 0v-560h240v560H200Zm400-80h80v-400h-80v400Zm-320 0h80v-400h-80v400Zm0-400v400-400Zm320 0v400-400Z"/></svg>
+             <svg xmlns="http://www.w3.org/2000/svg" height="256px" viewBox="0 -960 960 960" width="256px" fill="#FACC15"><path d="M520-200v-560h240v560H520Zm-320 0v-560h240v560H200Zm400-80h80v-400h-80v400Zm-320 0h80v-400h-80v400Zm0-400v400-400Zm320 0v400-400Z"/></svg>
 
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" height="128px" viewBox="0 -960 960 960" width="128px" fill="#FACC15"><path d="M320-200v-560l440 280-440 280Zm80-280Zm0 134 210-134-210-134v268Z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" height="256px" viewBox="0 -960 960 960" width="256px" fill="#FACC15"><path d="M320-200v-560l440 280-440 280Zm80-280Zm0 134 210-134-210-134v268Z"/></svg>
             )}
           </button>
         </div>
 
-        {/* Progress Bar and Controls */}
-        <div className={`absolute bottom-0 left-0 right-0 px-4 pb-8 pointer-events-none z-30 ${
-          isFullscreen
-            ? (showControls ? 'opacity-100' : 'opacity-0')
-            : 'opacity-0 group-hover:opacity-100'
-        } transition-opacity`}>
-          {/* Progress Slider */}
+        <div className={`absolute bottom-0 left-0 right-0 px-4 pb-8 pointer-events-none z-30 ${bottomControlsOpacity} transition-opacity`}>
           <div 
             className="h-1 bg-white/30 rounded-full cursor-pointer pointer-events-auto mb-2"
             onClick={handleSeek}
           >
             <div 
               className="h-full bg-yellow-400 rounded-full transition-all"
-              style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
+              style={{ width: `${progressPercent}%` }}
             />
-          </div>
+          </div> 
           
           {/* Time Display and Fullscreen Button */}
           <div className="flex items-center justify-between">
-            <div className="text-yellow-400 text-sm font-mono">
+            <div className="text-yellow-400 text-sm font-avenir">
               {formatTime(currentTime)} / {formatTime(duration)}
             </div>
             <button
@@ -362,22 +367,19 @@ export default function ScreeningPage() {
       </div>
 
       <div className="w-[50%] px-4 md:px-8 pb-4 pt-4 font-avenir">
-        <h1 className="pb-4 font-frontage">{`${currentAsset.title}, ${currentAsset.year}`}</h1>
+        <h1 className="pb-4 font-frontage block">{`${currentAsset.title}, ${currentAsset.year}`}</h1>
         <button
           onClick={() => setShowReadMore(!showReadMore)}
           className="text-primary hover:text-yellow-400 transition-colors flex items-center gap-2"
         >
           Read more {showReadMore ? "^" : "⌄"}
         </button>
-        {showReadMore && (
-          <div className="mt-4 p-4  rounded text-base ">
-          
-            {currentAsset.description && (
-              <div className="pt-2 font-avenir">
-                <span className="text-yellow-400 ">Description:</span>
-                <p className="mt-1 ">{currentAsset.description}</p>
-              </div>
-            )}
+        {showReadMore && currentAsset.description && (
+          <div className="mt-4 p-4 rounded text-base">
+            <div className="pt-2 font-avenir">
+              <span className="text-yellow-400">Description:</span>
+              <p className="mt-1">{currentAsset.description}</p>
+            </div>
           </div>
         )}
       </div>
@@ -386,11 +388,11 @@ export default function ScreeningPage() {
         <button
           onClick={() => setShowArchive(!showArchive)}
           className="text-primary hover:text-yellow-400 transition-colors flex items-center gap-2"
-        >
+        > 
           Archive {showArchive ? "^" : "⌄"}
         </button>
         {showArchive && (
-          <div className="mt-4">
+          <div className="mt-4 w-full">
             <ImagesExport />
           </div>
         )}
