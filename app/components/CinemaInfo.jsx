@@ -1,9 +1,10 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useStore } from "../utils/useStore";
 import ReactMarkdown from "react-markdown";
 
 const CinemaInfo = () => {
   const { selectedCinema, clearSelectedCinema } = useStore();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Convert Google Drive links to direct image URLs using thumbnail API
   const imageUrls = useMemo(() => {
@@ -35,16 +36,30 @@ const CinemaInfo = () => {
       .filter(Boolean);
   }, [selectedCinema]);
 
+  // Reset image index when cinema changes
+ useEffect(() => {
+    setCurrentImageIndex(0);
+  }, [selectedCinema]);
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % imageUrls.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
+  };
+
   if (!selectedCinema) return null;
 
   return (
     <div className="fixed flex flex-col gap-2 bottom-10 text-primary right-5 z-50 bg-background bg-opacity-90  p-8 max-w-[50vw] lg:max-w-[50vw] min-w-[20vw] max-h-[50vh]  overflow-y-scroll no-scrollbar  border-primary border-[0.5px] shadow-2xl font-avenir ">
       <div className="font-bold text-lg mb-3 sticky top-0 bg-black py-4">
         {selectedCinema.fields.Name}
-      </div>
-      <div className="text-base mb-2 ">
+      <div className="text-base font-light  mb-2  pt-2 ">
         {selectedCinema.fields.City}, {selectedCinema.fields.Country}
       </div>
+      </div>
+
       <div className=" mb-2 text-xs">
         {selectedCinema.fields.Creation} - {selectedCinema.fields.Closure}
       </div>
@@ -52,37 +67,80 @@ const CinemaInfo = () => {
         {selectedCinema.fields.Condition}
       </div>
       {imageUrls.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-2">
-          {imageUrls.map((urlObj, index) => {
-            let attemptCount = 0;
-            const tryNextUrl = (e) => {
-              attemptCount++;
-              if (attemptCount === 1 && urlObj.fallback1) {
-                e.target.src = urlObj.fallback1;
-              } else if (attemptCount === 2 && urlObj.fallback2) {
-                e.target.src = urlObj.fallback2;
-              } else if (attemptCount === 3 && urlObj.fallback3) {
-                e.target.src = urlObj.fallback3;
-              } else {
-                // All attempts failed, hide the image
-                e.target.style.display = 'none';
-                console.warn(`Failed to load image ${index + 1} for ${selectedCinema.fields.Name}, fileId: ${urlObj.fileId}`);
-              }
-            };
+        <div className="relative mb-2">
+          {/* Image container */}
+          <div className="relative w-full max-w-[300px] aspect-square">
+            {imageUrls.map((urlObj, index) => {
+              let attemptCount = 0;
+              const tryNextUrl = (e) => {
+                attemptCount++;
+                if (attemptCount === 1 && urlObj.fallback1) {
+                  e.target.src = urlObj.fallback1;
+                } else if (attemptCount === 2 && urlObj.fallback2) {
+                  e.target.src = urlObj.fallback2;
+                } else if (attemptCount === 3 && urlObj.fallback3) {
+                  e.target.src = urlObj.fallback3;
+                } else {
+                  e.target.style.display = 'none';
+                }
+              };
+              
+              return (
+                <img
+                  key={`${urlObj.fileId}-${index}`}
+                  src={urlObj.primary}
+                  alt={`${selectedCinema.fields.Name} - Image ${index + 1}`}
+                  className={`absolute inset-0 w-full h-full object-cover rounded transition-opacity duration-300 ${
+                    index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  loading={index === currentImageIndex ? 'eager' : 'lazy'}
+                  fetchPriority={index === currentImageIndex ? 'high' : 'low'}
+                  decoding="async"
+                  onError={tryNextUrl}
+                />
+              );
+            })}
             
-            return (
-              <img
-                key={`${urlObj.fileId}-${index}`}
-                src={urlObj.primary}
-                alt={`${selectedCinema.fields.Name} - Image ${index + 1}`}
-                className="object-cover max-w-[300px] max-h-[300px]"
-                loading="lazy"
-                fetchPriority="low"
-                decoding="async"
-                onError={tryNextUrl}
-              />
-            );
-          })}
+            {/* Navigation arrows */}
+            {imageUrls.length > 1 && (
+              <>
+                <button
+                  onClick={prevImage}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 z-10 transition-all"
+                  aria-label="Previous image"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={nextImage}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 z-10 transition-all"
+                  aria-label="Next image"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </>
+            )}
+          </div>
+          
+          {/* Dots indicator */}
+          {imageUrls.length > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-2 w-full max-w-[300px]">
+              {imageUrls.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImageIndex(index)}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    index === currentImageIndex ? 'bg-primary' : 'bg-gray-500'
+                  }`}
+                  aria-label={`Go to image ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
       <p>{selectedCinema.fields["Image Credits"]}</p>
@@ -98,7 +156,7 @@ const CinemaInfo = () => {
        selectedCinema.fields["Additional resources"].trim().length > 0 && (
         <>
           <h3 className="text-base font-bold pt-4">Additional resources </h3>
-          <div className="text-xs font-primary [&_a]:underline">
+          <div className="text-xs font-primary prose prose-invert prose-sm max-w-none [&_a]:underline [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:ml-2">
             <ReactMarkdown>
               {selectedCinema.fields["Additional resources"]}
             </ReactMarkdown>
