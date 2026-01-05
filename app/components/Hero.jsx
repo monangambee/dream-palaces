@@ -100,7 +100,7 @@ const Hero = ({ fullData }) => {
     <div className="relative max-w-screen w-full  min-h-screen xl:max-h-[80vh]  max-h-[50vh] flex flex-col  items-center justify-center">
       <button
         onClick={handleShuffle}
-        className="font-frontage border-[0.5px] text-xs absolute bottom-[50%] left-1/2 z-10 flex items-center px-8 py-4 hover:bg-yellow-400 hover:text-black"
+        className="font-frontage border-[0.5px] text-xs absolute bottom-[50%] left-[47%] z-10 flex items-center px-8 py-4 hover:bg-yellow-400 hover:text-black"
       >
        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="M560-160v-80h104L537-367l57-57 126 126v-102h80v240H560Zm-344 0-56-56 504-504H560v-80h240v240h-80v-104L216-160Zm151-377L160-744l56-56 207 207-56 56Z"/></svg>
       </button>

@@ -15,15 +15,9 @@ import {
 
 import localFont from "next/font/local";
 import Link from "next/link";
+import { getFirstFilmSlug } from "./utils/vimeo";
 
-const clash = localFont({
-  src: "../public/fonts/ClashDisplay-Variable.woff",
-  variable: "--font-clash",
-  display: "swap",
-  style: "",
-  subsets: ["latin"],
-  // weight: '200',
-});
+
 
 
 const avenir = localFont({
@@ -74,7 +68,8 @@ const basis = localFont({
 });
 
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const { slug: firstFilmSlug } = await getFirstFilmSlug();
   return (
     <html
       lang="en"
@@ -100,19 +95,19 @@ export default function RootLayout({ children }) {
             </p>
             {/* <p className="hidden md:block">|</p> */}
             <p>
-              <Link className="hover:text-yellow-400 hidden md:block" href="/constellation">
+              <Link className="hover:text-[#ffD700] hidden md:block" href="/constellation">
                 Constellation
               </Link>
             </p>
             {/* <p className="hidden md:block">|</p> */}
             <p>
-              <Link href="/map" className="hover:text-yellow-400 hidden md:block">
+              <Link href="/map" className="hover:text-[#007bff] hidden md:block">
                 Map
               </Link>
             </p>
             {/* <p className="hidden md:block"></p> */}
             <p>
-              <Link href="/screening/NiUSiqPpmtsqaBeSmSDhbItV72hIBaH7TdpIpudDDbo" className="hidden md:block">
+              <Link href={`/screening/${firstFilmSlug || ''}`} className="hidden md:block hover:text-[#C4B0EC]">
                 Screening Room
               </Link>
             </p>
