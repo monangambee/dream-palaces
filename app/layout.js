@@ -76,38 +76,35 @@ export default async function RootLayout({ children }) {
       className={`${frontage3D.variable} ${basis.variable} ${marqueeMoon.variable} ${neon.variable} ${frontage.variable} ${avenir.variable} font-sans`}
     >
       <body>
-        <nav className="w-screen flex border-b-[0.5px]  flex-col justify-center items-center font-marqueeMoon bg-background border-primary p-4 text-primary">
-          <Link href="/" className="cursor-pointer p-4 text-xl md:text-7xl">
+        <nav className="w-screen flex border-b-[0.5px] flex-col justify-center items-center font-marqueeMoon bg-background border-primary p-2 sm:p-4 text-primary">
+          <Link href="/" className="cursor-pointer p-2 sm:p-4 text-3xl sm:text-5xl md:text-7xl">
             Dream Palaces
           </Link>
-          <p className='font-frontage pb-2'>Black cinema Spaces</p>
+          <p className='font-frontage pb-2 text-sm sm:text-base'>Black cinema Spaces</p>
         </nav>
 
         {children}
 
-        <footer className="w-screen lg:h-[10vh] flex flex-row md:flex-row justify-center items-center font-frontage bg-background border-t-[0.5px] border-primary p-4 text-primary gap-2 text-xs">
-          <div className="flex w-[80%] p-8 justify-between flex-col md:flex-row items-start h-full">
-            {/* <p className="hidden md:block">|</p> */}
+        <footer className="w-screen min-h-[10vh] flex flex-col sm:flex-row justify-center items-center font-frontage bg-background border-t-[0.5px] border-primary p-4 text-primary gap-4 sm:gap-2 text-xs">
+          <div className="flex w-full sm:w-[80%] p-4 sm:p-8 justify-center sm:justify-between flex-row flex-wrap md:flex-row items-center gap-4 h-full">
             <p>
-              <Link className="hidden md:block hover:text-yellow-400" href="/">
+              <Link className="hover:text-yellow-400" href="/">
                 Home
               </Link>
             </p>
-            {/* <p className="hidden md:block">|</p> */}
             <p>
-              <Link className="hover:text-[#ffD700] hidden md:block" href="/constellation">
+              <Link className="hover:text-[#ffD700]" href="/constellation">
                 Constellation
               </Link>
             </p>
             {/* <p className="hidden md:block">|</p> */}
             <p>
-              <Link href="/map" className="hover:text-[#007bff] hidden md:block">
+              <Link href="/map" className="hover:text-[#007bff]">
                 Map
               </Link>
             </p>
-            {/* <p className="hidden md:block"></p> */}
             <p>
-              <Link href={`/screening/${firstFilmSlug || ''}`} className="hidden md:block hover:text-[#C4B0EC]">
+              <Link href={`/screening/${firstFilmSlug || ''}`} className="hover:text-[#C4B0EC]">
                 Screening Room
               </Link>
             </p>

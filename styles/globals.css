@@ -103,3 +103,16 @@ select, option {
   border-radius: 4px;
   border: 1px solid #FFD700;
 }
+
+/* Mobile touch improvements */
+@media (max-width: 640px) {
+  .slider-black::-webkit-slider-thumb {
+    height: 28px;
+    width: 28px;
+  }
+  
+  .slider-black::-moz-range-thumb {
+    height: 28px;
+    width: 28px;
+  }
+}

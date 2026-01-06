@@ -111,22 +111,21 @@ const Filter = ({}) => {
     <div
       className={`flex flex-col font-avenir gap-4 ${
         isOpen 
-          ? isMobile ? "w-full" : "w-1/6" 
-          : isMobile ? "w-12" : "w-16"
-      } h-[100vh] font-basis border-primary justify-start overflow-hidden items-center bg-background z-50 p-4 transition-all duration-300 ease-in-out ${
+          ? isMobile ? "w-full h-full" : "w-1/5 min-w-[200px]" 
+          : isMobile ? "w-14" : "w-16"
+      } h-screen font-basis border-primary border-r-[0.5px] justify-start overflow-y-auto overflow-x-hidden items-center bg-background z-50 p-4 transition-all duration-300 ease-in-out ${
         isMobile && isOpen 
           ? "fixed inset-0 z-50" 
           : isMobile 
-            ? "absolute left-0 top-0" 
+            ? "fixed left-0 top-0 h-auto py-2" 
             : "absolute left-0 top-0"
       }`}
-      pointerEvents="auto"
     >
       {/* Toggle Button */}
       <button
         onClick={toggleFilter}
-        className={`text-primary mb-2 transition-colors duration-200 z-50 ${
-          isOpen ? "self-end text-sm" : "self-center text-lg"
+        className={`text-primary mb-2 transition-colors duration-200 z-50 min-w-[44px] min-h-[44px] flex items-center justify-center ${
+          isOpen ? "self-end text-xl" : "self-center text-2xl"
         }`}
         title={isOpen ? "Close Filter" : "Open Filter"}
         aria-label={isOpen ? "Close Filter" : "Open Filter"}
