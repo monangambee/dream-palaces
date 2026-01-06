@@ -38,19 +38,19 @@ const ImagesExport = () => {
   }
 
   return (
-    <div className="grid grid-cols-2 sm:flex flex-col gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-col gap-4">
       {vimeoAssets.map((asset) => (
         <div 
           key={asset.id}
           onClick={() => handleImageClick(asset)}
-          className="group cursor-pointer flex items-center gap-8 border border-primary hover:border-yellow-400 transition-colors p-2 "
+          className="group cursor-pointer flex flex-col sm:flex-row items-center gap-4 sm:gap-8 border border-primary hover:border-yellow-400 active:border-yellow-400 transition-colors p-3 sm:p-2 min-h-[44px]"
         >
           <img 
             src={asset.thumbnail}
             alt={asset.title}
-            className="w-[50%] aspect-video object-cover grayscale group-hover:grayscale-0 transition-all"
+            className="w-full sm:w-[50%] aspect-video object-cover grayscale group-hover:grayscale-0 group-active:grayscale-0 transition-all"
           />
-          <p className="text-xs mt-2 text-center truncate font-frontage">{asset.title}</p>
+          <p className="text-sm sm:text-xs mt-2 sm:mt-0 text-center font-frontage break-words whitespace-normal w-full sm:w-auto">{asset.title}</p>
         </div>
       ))}
     </div>

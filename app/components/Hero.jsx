@@ -6,11 +6,16 @@ import { useStore } from "../utils/useStore";
 import Link from "next/link";
 
 const Hero = ({ fullData }) => {
-  // const [cachedData, setCachedData] = useState(null);
   const [allUrls, setAllUrls] = useState([]);
+  const [imageUrls, setImageUrls] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
 
- 
-   const [imageUrls, setImageUrls] = useState([]);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
    const urls = [
       "/images/Accra Africa Film Society.jpg",
@@ -97,10 +102,10 @@ const Hero = ({ fullData }) => {
   };
 
   return (
-    <div className="relative max-w-screen w-full  min-h-screen xl:max-h-[80vh]  max-h-[50vh] flex flex-col  items-center justify-center">
+    <div className="relative max-w-screen w-full min-h-[50vh] sm:min-h-screen xl:max-h-[80vh] flex flex-col items-center justify-center px-4">
       <button
         onClick={handleShuffle}
-        className="font-frontage border-[0.5px] text-xs absolute bottom-[50%] left-[47%] z-10 flex items-center px-8 py-4 hover:bg-yellow-400 hover:text-black"
+        className="font-frontage border-[0.5px] text-xs z-10 flex items-center px-4 sm:px-8 py-3 sm:py-4 hover:bg-yellow-400 hover:text-black active:bg-yellow-400 active:text-black min-h-[44px] order-last sm:order-none sm:absolute sm:bottom-[50%] sm:left-1/2 sm:-translate-x-1/2 mt-4 sm:mt-0"
       >
        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="M560-160v-80h104L537-367l57-57 126 126v-102h80v240H560Zm-344 0-56-56 504-504H560v-80h240v240h-80v-104L216-160Zm151-377L160-744l56-56 207 207-56 56Z"/></svg>
       </button>
@@ -111,8 +116,8 @@ const Hero = ({ fullData }) => {
         return (
           <div
             key={index}
-            className="relative h-full w-full sm:absolute sm:w-[30%] sm:h-[30%]"
-            style={position}
+            className="relative h-[200px] w-full max-w-[300px] sm:absolute sm:w-[30%] sm:h-[30%] sm:max-w-none"
+            style={!isMobile ? position : {}}
           >
             <Image
               // unoptimized
