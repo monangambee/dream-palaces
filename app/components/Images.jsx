@@ -43,12 +43,12 @@ const ImagesExport = () => {
         <div 
           key={asset.id}
           onClick={() => handleImageClick(asset)}
-          className="group cursor-pointer flex flex-col sm:flex-row items-center gap-4 sm:gap-8 border border-primary hover:border-yellow-400 active:border-yellow-400 transition-colors p-3 sm:p-2 min-h-[44px]"
+          className="group cursor-pointer flex flex-col sm:flex-row items-center gap-4 sm:gap-8 border border-primary md:hover:border-yellow-400 active:border-yellow-400 transition-colors p-3 sm:p-2 min-h-[44px]"
         >
           <img 
             src={asset.thumbnail}
             alt={asset.title}
-            className="w-full sm:w-[50%] aspect-video object-cover grayscale group-hover:grayscale-0 group-active:grayscale-0 transition-all"
+            className="w-full sm:w-[50%] aspect-video object-cover grayscale md:group-hover:grayscale-0 group-active:grayscale-0 transition-all"
           />
           <p className="text-sm sm:text-xs mt-2 sm:mt-0 text-center font-frontage break-words whitespace-normal w-full sm:w-auto">{asset.title}</p>
         </div>
