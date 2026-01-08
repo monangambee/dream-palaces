@@ -58,7 +58,7 @@ const CinemaInfo = () => {
       md:max-w-[50vw] md:min-w-[20vw] md:max-h-[50vh]">
       <button
         onClick={clearSelectedCinema}
-        className="absolute top-2 right-2 text-gray-400 hover:text-white text-3xl p-2 min-w-[44px] min-h-[44px] flex items-center justify-center z-20"
+        className="absolute top-2 right-2 text-gray-400 md:hover:text-white text-3xl p-2 min-w-[44px] min-h-[44px] flex items-center justify-center z-20"
         aria-label="Close"
       >
         ×
@@ -116,7 +116,7 @@ const CinemaInfo = () => {
               <>
                 <button
                   onClick={prevImage}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 z-10 transition-all"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 md:hover:bg-black/70 text-white rounded-full p-2 z-10 transition-all"
                   aria-label="Previous image"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,7 +125,7 @@ const CinemaInfo = () => {
                 </button>
                 <button
                   onClick={nextImage}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 z-10 transition-all"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 md:hover:bg-black/70 text-white rounded-full p-2 z-10 transition-all"
                   aria-label="Next image"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

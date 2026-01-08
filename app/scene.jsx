@@ -89,15 +89,17 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
       }
     }
   };
+    // const { gl } = useThree();
+
 
   const uniforms = useMemo(() => {
     const dpr = typeof window !== 'undefined' ? window.devicePixelRatio : 1;
     return {
       uTime: { value: 0.0 },
-      uSize: { value: 20.0 },
+      uSize: { value: 30.0 * gl.getPixelRatio() },
       uPosition: { value: 0.0 },
       uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-      uDevicePixelRatio: { value: dpr },
+      uDevicePixelRatio: { value: gl.getPixelRatio() },
       uTexture: { value: particleTexture },
       uGoldenTexture: { value: goldenTexture }
     };

@@ -185,6 +185,11 @@ export default function ScreeningPage() {
 
     let mouseMoveTimeout;
     const handleMouseMove = () => {
+      // Skip on mobile/touch devices
+      if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+        return
+      }
+      
       if (isFullscreen) {
         setShowControls(true);
         clearTimeout(timeoutRef.current);
@@ -257,7 +262,7 @@ export default function ScreeningPage() {
 
   const bottomControlsOpacity = useMemo(() => {
     if (isFullscreen) return showControls ? 'opacity-100' : 'opacity-0';
-    if (isPlaying) return 'opacity-0 group-hover:opacity-100';
+    if (isPlaying) return 'opacity-0 md:group-hover:opacity-100';
     return 'opacity-0';
   }, [isFullscreen, showControls, isPlaying]);
 

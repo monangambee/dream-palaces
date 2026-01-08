@@ -90,7 +90,7 @@ export default async function HomePage() {
               diaspora. Alternatively, join us to watch a film in the screening
               room.
               <span className=" mt-4">
-                <Link href="/about" className="text-yellow-400 hover:text-white ">
+                <Link href="/about" className="text-yellow-400 md:hover:text-white ">
                  Learn More
                 </Link>
               </span>
@@ -104,12 +104,12 @@ export default async function HomePage() {
             {modes.map((mode, index) => (
               <Link key={index} href={mode.link}>
                 <div 
-                  className="w-full min-h-[12vh] sm:h-[10vh] flex items-center justify-center font-frontage relative border-[0.5px] p-6 sm:p-8 transition-all duration-200 ease-in-out hover:border-[var(--accent-color)] active:border-[var(--accent-color)] group"
+                  className="w-full min-h-[12vh] sm:h-[10vh] flex items-center justify-center font-frontage relative border-[0.5px] p-6 sm:p-8 transition-all duration-200 ease-in-out md:hover:border-[var(--accent-color)] active:border-[var(--accent-color)] group"
                   style={{ '--accent-color': mode.accentColor }}
                 >
                   <p className="font-bold text-primary text-sm sm:text-sm xl:text-xl">{mode.name}</p>
                   {mode.image && (
-                    <div className="absolute right-1/4 top-1/2 -translate-y-1/2 w-[250px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <div className="absolute right-1/4 top-1/2 -translate-y-1/2 w-[250px] opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                       <img 
                         src={mode.image} 
                         alt={mode.name}
