@@ -90,7 +90,7 @@ export default async function HomePage() {
               diaspora. Alternatively, join us to watch a film in the screening
               room.
               <span className=" mt-4">
-                <Link href="/about" className="text-yellow-400 md:hover:text-white ">
+                <Link href="/about" className="text-homeAccent uppercase md:hover:text-white ">
                  Learn More
                 </Link>
               </span>
@@ -98,7 +98,7 @@ export default async function HomePage() {
         </div>
 
         <div className="w-[100%] bg-background font-avenir flex  flex-col gap-4  md:p-8 items-center justify-center">
-          <p className=" text-yellow-400 pt-8">[ Choose your experience ]</p>
+          <p className=" text-white pt-8">[ Choose your experience ]</p>
 
           <div className="flex flex-col gap-4 sm:gap-8 w-[95%] sm:w-[70%] items-between justify-start py-8">
             {modes.map((mode, index) => (

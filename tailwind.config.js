@@ -27,6 +27,7 @@ module.exports = {
         secondary: '#F3FFB6', // Example secondary color
         accent: '#10B981', // Example accent color
         background: '#000000ff', // Example background color
+        homeAccent: '#96C7B0',
 
         foreground: '#F3F4F6', // Example foreground color
       },
