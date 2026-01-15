@@ -77,10 +77,10 @@ export default async function RootLayout({ children }) {
     >
       <body>
         <nav className="w-screen flex border-b-[0.5px] flex-col justify-center items-center font-marqueeMoon bg-background border-primary p-2 sm:p-4 text-primary">
-          <Link href="/" className="cursor-pointer p-2 sm:p-4 text-3xl sm:text-5xl md:text-7xl">
+          <Link href="/" className="cursor-pointer p-2 sm:p-4 text-3xl sm:text-5xl md:text-8xl">
             Dream Palaces
           </Link>
-          <p className='font-frontage pb-2 text-sm sm:text-base'>Black cinema Spaces</p>
+          <p className='font-frontage pb-2 text-sm sm:text-sm'>Black cinema Spaces</p>
         </nav>
 
         {children}
@@ -88,21 +88,25 @@ export default async function RootLayout({ children }) {
         <footer className="w-screen min-h-[10vh] flex flex-col sm:flex-row justify-center items-center font-frontage bg-background border-t-[0.5px] border-primary p-4 text-primary gap-4 sm:gap-2 text-xs">
           <div className="flex w-full sm:w-[80%] p-4 sm:p-8 justify-center sm:justify-between flex-row flex-wrap md:flex-row items-center gap-4 h-full">
             <p>
-              <Link className="hover:text-yellow-400" href="/">
-                Home
+              <Link className="hover:text-homeAccent" href="/">
+                Home 
               </Link>
             </p>
+            <p className="hidden md:block">|</p>
+
             <p>
               <Link className="hover:text-[#ffD700]" href="/constellation">
-                Constellation
+                Constellation 
               </Link>
             </p>
-            {/* <p className="hidden md:block">|</p> */}
+            <p className="hidden md:block">|</p>
             <p>
               <Link href="/map" className="hover:text-[#007bff]">
-                Map
+                Map 
               </Link>
             </p>
+            <p className="hidden md:block">|</p>
+
             <p>
               <Link href={`/screening/${firstFilmSlug || ''}`} className="hover:text-[#C4B0EC]">
                 Screening Room

@@ -157,7 +157,7 @@ const CinemaInfo = () => {
 
       {/* <audio src={selectedCinema.fields["Sound Links"]}/> */}
       {/* <p>{selectedCinema.fields["Sound Credits"]}</p> */}
-      <div className="text-base font-primary prose prose-invert prose-sm max-w-none">
+      <div className="text-base font-primary prose prose-invert prose-sm max-w-none [&_a]:underline [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:ml-2">
         <ReactMarkdown>
           {selectedCinema.fields["Website description"]}
         </ReactMarkdown>

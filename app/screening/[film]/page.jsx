@@ -375,9 +375,9 @@ export default function ScreeningPage() {
         <h1 className="pb-4 font-frontage block">{`${currentAsset.title}, ${currentAsset.year}`}</h1>
         <button
           onClick={() => setShowReadMore(!showReadMore)}
-          className="text-primary hover:text-yellow-400 transition-colors flex items-center gap-2"
+          className="text-primary uppercase hover:text-yellow-400 transition-colors flex items-center gap-2"
         >
-          Read more {showReadMore ? "^" : "⌄"}
+          About Film{showReadMore ? "^" : " ⌄"}
         </button>
         {showReadMore && currentAsset.description && (
           <div className="mt-4 p-4 rounded text-base">
@@ -392,9 +392,9 @@ export default function ScreeningPage() {
       <div className="w-full sm:w-[80%] lg:w-[50%] px-4 md:px-8 pb-8 font-avenir">
         <button
           onClick={() => setShowArchive(!showArchive)}
-          className="text-primary hover:text-yellow-400 transition-colors flex items-center gap-2"
+          className="text-primary uppercase hover:text-yellow-400 transition-colors flex items-center gap-2"
         >
-          Archive {showArchive ? "^" : "⌄"}
+          Archive {showArchive ? "^" : " ⌄"}
         </button>
         {showArchive && (
           <div className="mt-4 w-full">

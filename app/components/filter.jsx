@@ -109,7 +109,7 @@ const Filter = ({}) => {
 
   return (
     <div
-      className={`flex flex-col font-avenir gap-4 ${
+      className={`flex flex-col font-avenir gap-4 min-w-[300px] ${
         isOpen 
           ? isMobile ? "w-full h-full" : "w-1/5 min-w-[200px]" 
           : isMobile ? "w-14" : "w-16"
