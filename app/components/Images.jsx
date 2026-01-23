@@ -48,7 +48,7 @@ const ImagesExport = () => {
           <img 
             src={asset.thumbnail}
             alt={asset.title}
-            className="w-full sm:w-[50%] aspect-video object-cover grayscale md:group-hover:grayscale-0 border border-primary  group-active:grayscale-0 transition-all"
+            className="w-full sm:w-[50%] aspect-square  object-cover grayscale md:group-hover:grayscale-0 border border-primary  group-active:grayscale-0 transition-all"
           />
           <p className="text-sm sm:text-xs mt-2 sm:mt-0 text-center font-frontage break-words whitespace-normal w-full sm:w-auto">{asset.title}</p>
         </div>
