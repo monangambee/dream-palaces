@@ -41,16 +41,16 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
 
   // Update threshold based on camera distance - smaller threshold when close, larger when far
   // This prevents selecting wrong points when they're close together
-  useFrame(() => {
-    if (!camera || !raycaster.params.Points) return;
+  // useFrame(() => {
+  //   if (!camera || !raycaster.params.Points) return;
     
-    const cameraDistance = Math.abs(camera.position.z);
-    // Adaptive threshold: smaller when camera is close (more precision), larger when far
-    // At z=50: threshold ~12 (precise), at z=100: threshold ~20 (still precise but reachable)
-    // This balances clickability with precision for close points
-    const threshold = Math.max(8, Math.min(15, cameraDistance * 0.2));
-    raycaster.params.Points.threshold = threshold;
-  });
+  //   const cameraDistance = Math.abs(camera.position.z);
+  //   // Adaptive threshold: smaller when camera is close (more precision), larger when far
+  //   // At z=50: threshold ~12 (precise), at z=100: threshold ~20 (still precise but reachable)
+  //   // This balances clickability with precision for close points
+  //   const threshold = Math.max(8, Math.min(15, cameraDistance * 0.2));
+  //   raycaster.params.Points.threshold = threshold;
+  // });
 
   const { filters, setSelectedCinema, setAnimateParticles, data } = useStore();
 
@@ -208,7 +208,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
 
     // Minimum distance between particles (in world units)
     // Increased to ensure particles don't touch, accounting for max particle size
-    const minDistance = 15.0; // Minimum spacing between particle centers
+    const minDistance = .0; // Minimum spacing between particle centers
     const placedPositions = []; // Track placed positions for collision detection
     
     for (let i = 0; i < count; i++) {
@@ -241,8 +241,8 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
       const baseScale = baseRichnessScale *  randomMultiplier ;
       
       if (isFeatured) {
-        scales[i] =  baseScale; // Fixed size for featured cinemas (maintains constant size regardless of zoom)
-        colors.set([1.0, 0.84, 0.0], i * 3); // Gold color for featured cinemas
+        scales[i] =  baseScale * 2.0; // Fixed size for featured cinemas (maintains constant size regardless of zoom)
+        colors.set([1.0, 0.843, 0.0], i * 3); // Gold color for featured cinemas
       } else {
         scales[i] = baseScale; // Scale = data richness * random multiplier
         colors.set([1.0, 1.0, 1.0], i * 3); // Default color for non-featured cinemas

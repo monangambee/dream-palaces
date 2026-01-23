@@ -13,26 +13,28 @@ void main() {
     // Featured cinemas have scales from 5.0 to 8.8 (Math.max(5.0, baseScale + 1.0))
     // Non-featured cinemas have scales from 0.7 to 7.8 (baseScale)
     // Using threshold of 4.5 to distinguish between them
-  bool isFeatured = vScale > 5.0;
+  bool isFeatured = vScale > 4.0;
 
     // Select texture based on featured status
   vec4 particleTexture;
-    // if (isFeatured) {
-    //     particleTexture = texture2D(uGoldenTexture, gl_PointCoord);
-    // } else {
-  particleTexture = texture2D(uTexture, gl_PointCoord);
-    // }
-    //circluar mask 
-  vec2 center = vec2(0.5, 0.5);
-  vec2 uv = gl_PointCoord;
-  float distanceToCenter = length(uv - 0.5);
-  float alpha = 0.05 / distanceToCenter - 0.1;
+  // vec2 scaledUv = gl_PointCoord * 0.6;
 
-  float strength = distance(gl_PointCoord, vec2(0.5));
+  if(isFeatured) {
+    particleTexture = texture2D(uGoldenTexture, gl_PointCoord);
+  } else {
+    particleTexture = texture2D(uTexture, gl_PointCoord);
+  }
+    //circluar mask 
+  // vec2 center = vec2(0.5, 0.5);
+  // vec2 uv = gl_PointCoord;
+  // float distanceToCenter = length(uv - 0.5);
+  // float alpha = 0.05 / distanceToCenter - 0.1;
+
+  // float strength = distance(gl_PointCoord, vec2(0.5));
   // strength = step(0.5, strength);
-  strength *= 2.0;
-  strength = 1.0 - strength;
-  strength = pow(strength, 18.0);
+  // strength *= 2.0;
+  // strength = 1.0 - strength;
+  // strength = pow(strength, 18.0);
 
   // strength = strength * 0.4;
 

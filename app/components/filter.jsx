@@ -109,9 +109,9 @@ const Filter = ({}) => {
 
   return (
     <div
-      className={`flex flex-col font-avenir gap-4 min-w-[300px] ${
+      className={`flex flex-col font-avenir gap-4 max-w-[300px] ${
         isOpen 
-          ? isMobile ? "w-full h-full" : "w-1/5 min-w-[200px]" 
+          ? isMobile ? "w-full h-full" : "w-1/5 max-w-[300px]" 
           : isMobile ? "w-14" : "w-16"
       } h-screen font-basis border-primary border-r-[0.5px] justify-start overflow-y-auto overflow-x-hidden items-center bg-background z-50 p-4 transition-all duration-300 ease-in-out ${
         isMobile && isOpen 
@@ -125,7 +125,7 @@ const Filter = ({}) => {
       <button
         onClick={toggleFilter}
         className={`text-primary mb-2 transition-colors duration-200 z-50 min-w-[44px] min-h-[44px] flex items-center justify-center ${
-          isOpen ? "self-end text-xl" : "self-center text-2xl"
+          isOpen ? "self-end text-base" : "self-center text-base"
         }`}
         title={isOpen ? "Close Filter" : "Open Filter"}
         aria-label={isOpen ? "Close Filter" : "Open Filter"}

@@ -4,6 +4,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import ImagesExport from "../../components/Images";
 import Vimeo from '@u-wave/react-vimeo';
+import Image from "next/image";
+
 
 const HIDE_CONTROLS_DELAY = 3000;
 
@@ -317,7 +319,7 @@ export default function ScreeningPage() {
         />
 
         {/* Custom Controls Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+        <div className="absolute  inset-0 flex items-center justify-center pointer-events-none z-20">
           {/* {!isPlaying && (  
             <Image alt="Fannie's Film" src='/thumbnails/FANNIE’S FILM.gif' fill className=" absolute inset-0 w-full h-full object-cover z-1"></Image>
           )} */}
@@ -332,10 +334,21 @@ export default function ScreeningPage() {
             aria-label={isPlaying ? "Pause" : "Play"}
           >
             {isPlaying ? (
-             <svg xmlns="http://www.w3.org/2000/svg" height="256px" viewBox="0 -960 960 960" width="256px" fill="#FACC15"><path d="M520-200v-560h240v560H520Zm-320 0v-560h240v560H200Zm400-80h80v-400h-80v400Zm-320 0h80v-400h-80v400Zm0-400v400-400Zm320 0v400-400Z"/></svg>
-
+            //  <svg xmlns="http://www.w3.org/2000/svg" height="256px" viewBox="0 -960 960 960" width="256px" fill="#FACC15"><path d="M520-200v-560h240v560H520Zm-320 0v-560h240v560H200Zm400-80h80v-400h-80v400Zm-320 0h80v-400h-80v400Zm0-400v400-400Zm320 0v400-400Z"/></svg>
+<Image
+src={'/icons/Pause Icon.png'}
+width={256}
+height={256}
+alt='pause'
+/>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" height="256px" viewBox="0 -960 960 960" width="256px" fill="#FACC15"><path d="M320-200v-560l440 280-440 280Zm80-280Zm0 134 210-134-210-134v268Z"/></svg>
+              // <svg xmlns="http://www.w3.org/2000/svg" height="256px" viewBox="0 -960 960 960" width="256px" fill="#FACC15"><path d="M320-200v-560l440 280-440 280Zm80-280Zm0 134 210-134-210-134v268Z"/></svg>
+              <Image
+src={'/icons/Play Icon.png'}
+width={256}
+height={256}
+alt='play'
+/>
             )}
           </button>
         </div>
@@ -346,14 +359,14 @@ export default function ScreeningPage() {
             onClick={handleSeek}
           >
             <div 
-              className="h-full bg-yellow-400 rounded-full transition-all"
+              className="h-full bg-[#C4B0EC] rounded-full transition-all"
               style={{ width: `${progressPercent}%` }}
             />
           </div> 
           
           {/* Time Display and Fullscreen Button */}
           <div className="flex items-center justify-between">
-            <div className="text-yellow-400 text-sm font-avenir">
+            <div className="text-[#C4B0EC] text-sm font-avenir">
               {formatTime(currentTime)} / {formatTime(duration)}
             </div>
         <button
@@ -372,17 +385,18 @@ export default function ScreeningPage() {
       </div>
 
       <div className="w-full sm:w-[80%] lg:w-[50%] px-4 md:px-8 pb-4 pt-4 font-avenir">
-        <h1 className="pb-4 font-frontage block">{`${currentAsset.title}, ${currentAsset.year}`}</h1>
+        <h1 className="pb-8 font-frontage block">{`${currentAsset.title}, ${currentAsset.year}`}</h1>
         <button
           onClick={() => setShowReadMore(!showReadMore)}
-          className="text-primary uppercase hover:text-yellow-400 transition-colors flex items-center gap-2"
+          className="text-primary font-bold uppercase hover:text-yellow-400 transition-colors flex items-center gap-2"
         >
-          About Film{showReadMore ? "^" : " ⌄"}
+          About Film
+          {/* {showReadMore ? "^" : " ⌄"} */}
         </button>
         {showReadMore && currentAsset.description && (
           <div className="mt-4 p-4 rounded text-base">
               <div className="pt-2 font-avenir">
-              <span className="text-yellow-400">Description:</span>
+              <span className="text-[#C4B0EC]">Description:</span>
               <p className="mt-1">{currentAsset.description}</p>
               </div>
           </div>
@@ -392,9 +406,10 @@ export default function ScreeningPage() {
       <div className="w-full sm:w-[80%] lg:w-[50%] px-4 md:px-8 pb-8 font-avenir">
         <button
           onClick={() => setShowArchive(!showArchive)}
-          className="text-primary uppercase hover:text-yellow-400 transition-colors flex items-center gap-2"
+          className="text-primary font-bold uppercase hover:text-[#C4B0EC] transition-colors flex items-center gap-2"
         >
-          Archive {showArchive ? "^" : " ⌄"}
+          Archive
+           {/* {showArchive ? "^" : " ⌄"} */}
         </button>
         {showArchive && (
           <div className="mt-4 w-full">

@@ -1,8 +1,8 @@
 'use client'
 import React, { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { useFrame, useThree } from '@react-three/fiber'
-import { Preload, useTexture, AdaptiveDpr, Bvh } from '@react-three/drei'
+import { useFrame, useThree,  } from '@react-three/fiber'
+import { Preload, useTexture, AdaptiveDpr, Bvh, OrbitControls } from '@react-three/drei'
 import { useRouter } from 'next/navigation'
 import * as THREE from 'three'
 import { useMemo, useRef, useState, useEffect } from 'react'
@@ -149,7 +149,7 @@ export function EarthScene() {
     if (!earthRef.current || !earthMaterial) return;
     
     const elapsed = clock.getElapsedTime();
-    earthRef.current.rotation.y = elapsed * 0.1;
+    earthRef.current.rotation.y = elapsed * 0.01;
     earthMaterial.uniforms.uTime.value = elapsed;
   });
 
@@ -160,23 +160,26 @@ export function EarthScene() {
 
   return (
     <>
-      <mesh 
+      {/* <mesh 
         ref={earthRef} 
         geometry={SPHERE_GEOMETRY} 
         material={earthMaterial}
         onClick={handleEarthClick}
         onPointerOver={() => document.body.style.cursor = 'pointer'}
         onPointerOut={() => document.body.style.cursor = 'default'}
+      /> */}
+      {/* <mesh ref={atmosphereRef} geometry={SPHERE_GEOMETRY} material={atmosphereMaterial} scale={1.015} /> */}
+      <primitive object={particles} ref={earthRef} />
+      <OrbitControls 
+        enableZoom={false}
       />
-      <mesh ref={atmosphereRef} geometry={SPHERE_GEOMETRY} material={atmosphereMaterial} scale={1.015} />
-      <primitive object={particles} />
     </>
   );
 }
 
 const HomeScene = () => {
   return (
-    <Canvas className='border-[0.5px] h-1/2'>
+    <Canvas className=' h-screen w-screen z-0'>
       <AdaptiveDpr pixelated />
       <Bvh firstHitOnly />
       <Suspense fallback={
