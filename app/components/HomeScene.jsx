@@ -179,7 +179,7 @@ export function EarthScene() {
 
 const HomeScene = () => {
   return (
-    <Canvas className=' h-screen w-screen z-0'>
+    <Canvas className=' h-screen w-screen -z-1'>
       <AdaptiveDpr pixelated />
       <Bvh firstHitOnly />
       <Suspense fallback={

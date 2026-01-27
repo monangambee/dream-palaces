@@ -59,6 +59,14 @@ select, option {
     width: 100vw;
     height: 100vh;
   } 
+  .vimeo iframe {
+  visibility: hidden;
+}
+
+iframe[src*="vimeo"] {
+  --vimeo-captions-bottom: 60px; /* Adjust distance from bottom */
+  --vimeo-captions-font-size: 14px;
+}
 
 /* #__next {
   width: 100%;

@@ -5,6 +5,8 @@ const client = new Vimeo(
   process.env.VIMEO_CLIENT_SECRET,
   process.env.VIMEO_ACCESS_TOKEN
 )
+  const DREAM_PALACES_FOLDER_ID ='27904211'
+
 
 export async function GET() {
   try {
@@ -12,7 +14,7 @@ export async function GET() {
       client.request(
         {
           method: 'GET',
-          path: '/me/videos',
+          path: `/me/folders/${DREAM_PALACES_FOLDER_ID}/videos`,
           query: {
             per_page: 100,
             fields: 'uri,name,description,duration,created_time,pictures,link,privacy,stats'
