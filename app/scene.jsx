@@ -34,6 +34,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
   useEffect(() => {
     raycaster.near = 0;
     raycaster.far = 1000;
+      raycaster.params.Points.threshold = 20
     gl.setClearColor('#000000', 1);
     gl.toneMapping = THREE.ACESFilmicToneMapping;
     gl.outputColorSpace = THREE.SRGBColorSpace;

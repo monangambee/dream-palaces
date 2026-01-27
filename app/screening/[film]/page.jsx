@@ -243,7 +243,7 @@ export default function ScreeningPage() {
   if (loading || !currentAsset) {
     return (
       <div className="w-screen h-screen flex flex-col items-center justify-center bg-background text-primary">
-        <h1 className="text-2xl font-basis mb-4">Loading film...</h1>
+        {/* <h1 className="text-2xl font-basis mb-4">Loading film...</h1> */}
       </div>
     );
   }
