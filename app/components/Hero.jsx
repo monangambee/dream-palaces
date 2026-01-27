@@ -240,7 +240,7 @@ const Hero = ({ fullData }) => {
               alt={`Cinema ${index}`}
               fill
               sizes="(max-width: 640px) 100px, (max-width: 768px) 80px, (max-width: 1024px) 120px, (max-width: 1280px) 180px, 300px"
-              className=" border-primary border-2   object-cover"
+              className=" border-primary border-[0.5px] p-2  object-cover"
             />
 
             <div className="pointer-events-none absolute z-10 inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 transition-opacity duration-100 ease-out group-hover:opacity-100">
