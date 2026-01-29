@@ -6,52 +6,59 @@ const nextConfig = {
     // Handle GLSL shader files
     config.module.rules.push({
       test: /\.(glsl|vs|fs|vert|frag)$/,
-      use: 'raw-loader'
+      use: "raw-loader",
     });
-    
+
     return config;
   },
   turbopack: {
- // Handle GLSL shader files
-        rules: {
-            '*.{glsl,vs,fs,vert,frag}': {
-                loaders: ['raw-loader'],
-                as: '*.js',
-            },
-        },
+    // Handle GLSL shader files
+    rules: {
+      "*.{glsl,vs,fs,vert,frag}": {
+        loaders: ["raw-loader"],
+        as: "*.js",
+      },
+    },
   },
   // Optimize images
   images: {
     unoptimized: false,
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'image.mux.com',
-        port: '',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "image.mux.com",
+        port: "",
+        pathname: "/**",
       },
       {
-        protocol: 'https',
-        hostname: 'v5.airtableusercontent.com',
-        port: '',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "v5.airtableusercontent.com",
+        port: "",
+        pathname: "/**",
       },
       {
-        protocol: 'https',
-        hostname: 'dl.airtable.com',
-        port: '',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "dl.airtable.com",
+        port: "",
+        pathname: "/**",
       },
       {
-        protocol: 'https',
-        hostname: 'drive.google.com',
-        port: '',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "drive.google.com",
+        port: "",
+        pathname: "/**",
+      },
+
+      {
+        protocol: "https",
+        hostname: "i.vimeocdn.com",
+        port: "",
+        pathname: "/**",
       },
     ],
   },
   // Fix lockfile warning
-  outputFileTracingRoot: __dirname
-}
+  outputFileTracingRoot: __dirname,
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

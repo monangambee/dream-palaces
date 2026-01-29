@@ -209,10 +209,10 @@ const Hero = ({ fullData }) => {
   };
 
   return (
-    <div className="relative flex-nowrap  max-w-screen w-full min-h-[50vh] xl:h-full flex flex-row items-start justify-center px-4">
+    <div className="relative flex-nowrap  max-w-screen w-[100%] md:w-[80%] min-h-[50vh] xl:h-full flex flex-row items-start justify-center px-4">
       <button
         onClick={handleShuffle}
-        className="font-frontage border-[0.5px] text-xs z-10 flex items-center px-4 sm:px-8 py-3 sm:py-4 md:hover:bg-homeAccent md:hover:text-black active:bg-homeAccent active:text-black min-h-[44px] order-last sm:order-none sm:absolute sm:bottom-[10%] sm:left-1/2 sm:-translate-x-1/2 mt-4 sm:mt-0"
+        className="font-frontage border-[0.5px] text-xs z-10 flex items-center px-4 sm:px-8 py-3 sm:py-4 md:hover:bg-homeAccent md:hover:text-black active:bg-homeAccent active:text-black min-h-[44px] order-last sm:order-none absolute bottom-5 sm:bottom-[10%] sm:left-1/2 sm:-translate-x-1/2 mt-4 sm:mt-0"
       >
         <Image
           src={"/icons/shuffle.png"}
@@ -231,30 +231,31 @@ const Hero = ({ fullData }) => {
         return (
           <div
             key={index}
-            className="group relative h-[250px] z-10 sm:h-[350px] w-[350px] hover:w-[400px] transition-all duration-300 ease-in-out mx-auto"
+            className="group relative h-[200px] z-10 sm:h-[350px] w-[350px] hover:w-[500px] transition-all duration-300 ease-in-out mx-auto"
             // style={!isMobile ? position : {}}
           >
             <Image
-              // unoptimized
+  
               src={image.url}
               alt={`Cinema ${index}`}
+              
               fill
               sizes="(max-width: 640px) 100px, (max-width: 768px) 80px, (max-width: 1024px) 120px, (max-width: 1280px) 180px, 300px"
               className=" border-primary border-[0.5px] p-2  object-cover"
             />
 
             <div className="pointer-events-none absolute z-10 inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 transition-opacity duration-100 ease-out group-hover:opacity-100">
-              <div className="absolute bottom-2 left-0 right-0 p-3 text-white text-sm space-y-1">
+              <div className="absolute bottom-2 left-0 right-0 p-3 text-white text-xs sm:text-sm space-y-1">
                 {image.name ? (
                   <p className="font-semibold">{image.name}</p>
                 ) : null}
                 {image.country ? (
-                  <p className="text-xs uppercase tracking-wide">
+                  <p className="text-[10px] uppercase tracking-wide">
                     {image.country}
                   </p>
                 ) : null}
                 {image.credit ? (
-                  <p className="text-[11px] leading-snug opacity-80">
+                  <p className="text-[8px] leading-snug opacity-80">
                     {image.credit}
                   </p>
                 ) : null}
