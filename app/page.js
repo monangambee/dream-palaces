@@ -88,7 +88,7 @@ export default async function HomePage() {
           WELCOME TO DREAM PALACES
         </h1> */}
           </div>
-          <p className="w-[80%] text-xs z-20 sm:text-base xl:text-base flex flex-col items-start justify-start  font-light font-frontage border-primary p-4 sm:p-8 leading-relaxed">
+          <p className="w-[100%] md:w-[80%] text-xs z-20 sm:text-base xl:text-base flex flex-col items-start justify-start  font-light font-frontage border-primary p-4 sm:p-8 leading-relaxed">
             Dream Palaces explores the architectural, geographical, and cultural
             histories of Black cinema spaces across six countries in Africa and
             the diaspora.
@@ -111,7 +111,7 @@ export default async function HomePage() {
               diaspora. Alternatively, join us to watch a film in the screening
               room.
             </span>
-            <span className=" mt-4 text-sm">
+            <span className=" mt-4 text-xs sm:text-sm">
               <Link
                 href="/about"
                 className="text-homeAccent uppercase md:hover:text-white "

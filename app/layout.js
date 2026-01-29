@@ -82,9 +82,9 @@ export default async function RootLayout({ children }) {
 
         {children}
 
-        <footer className="w-screen min -h-[10vh] flex z-20  justify-center  font-frontage bg-background border-t-[0.5px] border-primary text-primary p-2 px-8  text-xs">
-          <div className="flex justify-center w-[80%] items-center flex-col sm:flex-row gap-4 sm:gap-2 p-4">
-          <div className="flex w-full sm:w-[80%] p-4 sm:p-4 justify-start sm:justify-start flex-col flex-wrap md:flex-col items-start gap-8 h-full">
+        <footer className="w-screen min-h-[10vh] flex z-20  justify-center  font-frontage bg-background border-t-[0.5px] border-primary text-primary p-2 px-8 text-[10px]  sm:text-xs">
+          <div className="p-2 flex w-full sm:w-[80%] items-center flex-row justify-between sm:flex-row gap-4 sm:gap-2 sm:p-4">
+          <div className="flex w-full sm:w-[80%]  sm:p-4 justify-start sm:justify-start flex-col  md:flex-col items-start gap-8 h-full">
             {/* <h2 className="text-sm">Quick Links</h2> */}
             <p>
               <Link className="hover:text-homeAccent" href="/">
@@ -112,11 +112,11 @@ export default async function RootLayout({ children }) {
               </Link> 
             </p> */}
           </div>
-          <div className="flex text-xs justify-center p-4 flex-col">
-            <p>
+          <div className="flex h-full jsutify-start sm:justify-center  sm:p-4 flex-col">
+            <p className="hidden sm:block">
               Contact
             </p>
-            <Link href="mailto:monangambee@gmail.com " className="hover:text-homeAccent pt-4">
+            <Link href="mailto:monangambee@gmail.com " className="hover:text-homeAccent sm:pt-4">
               monangambee@gmail.com
             </Link>
 
