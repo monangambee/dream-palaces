@@ -61,7 +61,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
       points.current.material.uniforms.uPosition,
       { value: 0.0 },
       {
-        value: 8.0, // Reduced from 20.0 to prevent particles from overlapping
+        value: 10.0, // Reduced from 20.0 to prevent particles from overlapping
         duration: 3,
         ease:"sine.inOut",
       }
@@ -304,8 +304,10 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
     gsap.fromTo(
       camera.position,
       { z: 100 },
-      { z: 500, duration: 2, ease: "power2.out" }
+      { z: 600, duration: 2, ease: "power2.out" }
     );
+
+    animateParticles();
     // return null;
   }, [points.current, camera]);
 
