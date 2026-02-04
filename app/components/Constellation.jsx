@@ -70,7 +70,7 @@ export default function Constellation({ fullData }) {
       <Filter />
       <Canvas 
         className="canvas w-full h-full z-10" 
-        camera={{ position: [0, 0, 50], fov: 75 }}
+        camera={{ position: [0, 0, 100], fov: 75 }}
         dpr={[1, 2]}
         performance={{ min: 0.5 }}
         frameloop="always"

@@ -16,7 +16,7 @@ export async function getFirstFilmSlug() {
           method: "GET",
           path: `/me/folders/${DREAM_PALACES_FOLDER_ID}/videos`,
           query: { per_page: 1, fields: "uri,name,pictures" },
-        },
+        }, 
         (error, body) => (error ? reject(error) : resolve(body)),
       );
     });

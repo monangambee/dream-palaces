@@ -53,7 +53,7 @@ export default async function HomePage() {
       name: "SCREENING ROOM",
       description:
         "Use your mobile device to experience movies from a virtual screening room.",
-      link: `/screening/${firstFilmSlug || "default"}`,
+      link: `/screening/${firstFilmSlug || ""}`,
       image: screeningGif,
       accentColor: "#C4B0EC",
     },
