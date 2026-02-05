@@ -1,5 +1,5 @@
 'use client'
-import Images from "../components/Images";
+import Images from "../components/Films";
 
 export default function Screening() {
   return (
