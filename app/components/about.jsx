@@ -48,7 +48,7 @@ const About = () => {
           </p>
             <Link
                 href='/about'
-                className='text-black uppercase md:hover:text-homeAccent p-4 border-[0.5px] border-black rounded-xl'
+                className='text-black uppercase md:hover:text-homeAccent p-4 border-[0.5px] border-black '
               >
                 Learn More
               </Link>
