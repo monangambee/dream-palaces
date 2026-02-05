@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
-import ImagesExport from "../../components/Images";
+import ImagesExport from "../../components/Films";
 import Vimeo from "@u-wave/react-vimeo";
 import Image from "next/image";
 
@@ -366,7 +366,7 @@ export default function ScreeningPage() {
               width={512}
               height={512}
               alt={isPlaying ? "pause" : "play"}
-              className="w-16 h-16 sm:w-24 sm:h-24 md:w-64 md:h-64 object-contain"
+              className="w-16 h-16 sm:w-24 sm:h-24 md:w-72 md:h-72 object-contain"
             />
           </button>
         </div>

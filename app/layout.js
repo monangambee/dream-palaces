@@ -82,8 +82,8 @@ export default async function RootLayout({ children }) {
 
         {children}
 
-        <footer className="w-screen min-h-[10vh] flex z-20  justify-center  font-frontage bg-background border-t-[0.5px] border-primary text-primary p-2 px-8 text-[10px]  sm:text-xs">
-          <div className="p-2 flex w-full sm:w-[80%] items-center flex-row justify-between sm:flex-row gap-4 sm:gap-2 sm:p-4">
+        <footer className="w-screen min-h-[10vh] flex z-20  justify-center font-frontage bg-background border-t-[0.5px] border-primary text-primary p-2 px-8 text-[10px]  sm:text-xs">
+          <div className="p-2 flex w-full sm:w-[80%] items-start flex-row justify-between sm:flex-row gap-4 sm:gap-2 sm:p-4">
           <div className="flex w-full sm:w-[80%]  sm:p-4 justify-start sm:justify-start flex-col  md:flex-col items-start gap-8 h-full">
             {/* <h2 className="text-sm">Quick Links</h2> */}
             <p>
@@ -112,12 +112,18 @@ export default async function RootLayout({ children }) {
               </Link> 
             </p> */}
           </div>
-          <div className="flex h-full jsutify-start sm:justify-center  sm:p-4 flex-col">
-            <p className="hidden sm:block">
+          <div className="flex h-full justify-start items-center sm:justify-center  sm:p-4 flex-col sm:flex-row sm:gap-6">
+            {/* <p className="hidden sm:block">
               Contact
-            </p>
-            <Link href="mailto:monangambee@gmail.com " className="hover:text-homeAccent sm:pt-4">
-              monangambee@gmail.com
+            </p> */}
+            <Link href="mailto:monangambee@gmail.com " className="hover:text-homeAccent ">
+              <Image src={'/icons/email.png'}
+                alt="Email Icon"
+                width={24}
+                height={24}
+                className=" invert"
+                
+              />
             </Link>
 
             <Link href={'https://www.instagram.com/monangambee/'} target="_blank" rel="noopener noreferrer">
@@ -126,7 +132,7 @@ export default async function RootLayout({ children }) {
                 alt="Instagram Icon"
                 width={24}
                 height={24}
-                className="mt-2 invert pt-2"
+                className="mt-2 sm:mt-0 invert pt-3 sm:pt-0"
                 
               />
             </Link>

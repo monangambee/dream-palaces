@@ -117,7 +117,7 @@ const CinemaInfo = () => {
             })}
 
             {/* Navigation arrows */}
-            {imageUrls.length > 1 && (
+            {/* {imageUrls.length > 1 && (
               <>
                 <button
                   onClick={prevImage}
@@ -158,7 +158,7 @@ const CinemaInfo = () => {
                   </svg>
                 </button>
               </>
-            )}
+            )} */}
           </div>
 
           {/* Dots indicator */}

@@ -7,7 +7,6 @@ import Link from "next/link";
 import { count } from "d3";
 // import motion from "framer-motion";
 
-
 const Hero = ({ fullData }) => {
   const [allUrls, setAllUrls] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
@@ -209,10 +208,53 @@ const Hero = ({ fullData }) => {
   };
 
   return (
-    <div className="relative flex-nowrap  max-w-screen w-[100%] md:w-[80%] min-h-[50vh] xl:h-full flex flex-row items-start justify-center px-4">
+    <div className="w-full flex flex-col justify-center items-center  min-h-[50vh] gap-16">
+      <div className="relative flex-nowrap  max-w-screen w-[100%] md:w-[80%]  xl:h-full flex flex-row items-start justify-center px-4">
+        {/* <div className="grid  grid-cols-2 gap-4  p-4  sm:w-full sm:h-full min-h-screen"> */}
+
+        {imageUrls.map((image, index) => {
+          if (!image.url) return null;
+          const position = getRandomPosition(index);
+          return (
+            <div
+              key={index}
+              className="group relative h-[200px] z-10 sm:h-[350px] w-[350px] hover:w-[500px] transition-all duration-300 ease-in-out mx-auto"
+              // style={!isMobile ? position : {}}
+            >
+              <Image
+                src={image.url}
+                alt={`Cinema ${index}`}
+                fill
+                sizes="(max-width: 640px) 100px, (max-width: 768px) 80px, (max-width: 1024px) 120px, (max-width: 1280px) 180px, 300px"
+                className=" border-primary border-[0.5px] p-2  object-cover"
+              />
+
+              <div className="pointer-events-none absolute z-10 inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 transition-opacity duration-100 ease-out group-hover:opacity-100">
+                <div className="absolute bottom-2 left-0 right-0 p-3 text-white text-xs sm:text-sm space-y-1">
+                  {image.name ? (
+                    <p className="font-semibold">{image.name}</p>
+                  ) : null}
+                  {image.country ? (
+                    <p className="text-[10px] uppercase tracking-wide">
+                      {image.country}
+                    </p>
+                  ) : null}
+                  {image.credit ? (
+                    <p className="text-[8px] leading-snug opacity-80">
+                      {image.credit}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        {/* </div> */}
+      </div>
+
       <button
         onClick={handleShuffle}
-        className="font-frontage border-[0.5px] text-xs z-10 flex items-center px-4 sm:px-8 py-3 sm:py-4 md:hover:bg-homeAccent md:hover:text-black active:bg-homeAccent active:text-black min-h-[44px] order-last sm:order-none absolute bottom-5 sm:bottom-[10%] sm:left-1/2 sm:-translate-x-1/2 mt-4 sm:mt-0"
+        className="font-frontage border-[0.5px] text-xs z-10 flex items-center justify-center px-4 sm:px-8 py-3 sm:py-4 md:hover:bg-homeAccent md:hover:text-black active:bg-homeAccent active:text-black min-h-[44px] order-last sm:order-none  mt-4 sm:mt-0"
       >
         <Image
           src={"/icons/shuffle.png"}
@@ -223,48 +265,6 @@ const Hero = ({ fullData }) => {
         />
         {/* <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="M560-160v-80h104L537-367l57-57 126 126v-102h80v240H560Zm-344 0-56-56 504-504H560v-80h240v240h-80v-104L216-160Zm151-377L160-744l56-56 207 207-56 56Z"/></svg> */}
       </button>
-      {/* <div className="grid  grid-cols-2 gap-4  p-4  sm:w-full sm:h-full min-h-screen"> */}
-
-      {imageUrls.map((image, index) => {
-        if (!image.url) return null;
-        const position = getRandomPosition(index);
-        return (
-          <div
-            key={index}
-            className="group relative h-[200px] z-10 sm:h-[350px] w-[350px] hover:w-[500px] transition-all duration-300 ease-in-out mx-auto"
-            // style={!isMobile ? position : {}}
-          >
-            <Image
-  
-              src={image.url}
-              alt={`Cinema ${index}`}
-              
-              fill
-              sizes="(max-width: 640px) 100px, (max-width: 768px) 80px, (max-width: 1024px) 120px, (max-width: 1280px) 180px, 300px"
-              className=" border-primary border-[0.5px] p-2  object-cover"
-            />
-
-            <div className="pointer-events-none absolute z-10 inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 transition-opacity duration-100 ease-out group-hover:opacity-100">
-              <div className="absolute bottom-2 left-0 right-0 p-3 text-white text-xs sm:text-sm space-y-1">
-                {image.name ? (
-                  <p className="font-semibold">{image.name}</p>
-                ) : null}
-                {image.country ? (
-                  <p className="text-[10px] uppercase tracking-wide">
-                    {image.country}
-                  </p>
-                ) : null}
-                {image.credit ? (
-                  <p className="text-[8px] leading-snug opacity-80">
-                    {image.credit}
-                  </p>
-                ) : null}
-              </div>
-            </div>
-          </div>
-        );
-      })}
-      {/* </div> */}
     </div>
   );
 };

@@ -5,8 +5,8 @@ import Constellation from "./components/Constellation";
 import Link from "next/link";
 import Image from "next/image";
 import Hero from "./components/Hero";
+import About from "./components/about";
 import { Suspense } from "react";
-import HomeScene from "./components/HomeScene";
 
 // Enable static generation with revalidation
 // export const revalidate = 3600; // Revalidate every hour
@@ -87,39 +87,11 @@ export default async function HomePage() {
           {" "}
           WELCOME TO DREAM PALACES
         </h1> */}
+
+           
           </div>
-          <p className="w-[100%] md:w-[80%] text-xs z-20 sm:text-base xl:text-base flex flex-col items-start justify-start  font-light font-frontage border-primary p-4 sm:p-8 leading-relaxed">
-            Dream Palaces explores the architectural, geographical, and cultural
-            histories of Black cinema spaces across six countries in Africa and
-            the diaspora.
-            
-            <span className="font-avenir pt-4">
+              <About />
 
-            Initiated by an emotional encounter with a demolished
-            historical cinema in South Africa, the project aims to
-            recontextualize and archive these spaces digitally. It asks: how can
-            we disrupt the erasure of Black cinema spaces and reimagine them as
-            sites of memory and possibility?
-            </span>
-
-            <span className="font-avenir pt-4">
-              {" "}
-              Explore over 1400 black cinemas, each representing a unique story
-              and history, via two navigation modes: a constellation where you
-              can uncover individual cinema’s narratives or a map showcasing the
-              geographical distribution of the cinemas across Africa and the
-              diaspora. Alternatively, join us to watch a film in the screening
-              room.
-            </span>
-            <span className=" mt-4 text-xs sm:text-sm">
-              <Link
-                href="/about"
-                className="text-homeAccent uppercase md:hover:text-white "
-              >
-                Learn More
-              </Link>
-            </span>
-          </p>
         </div>
 
         <div className="w-[100%] bg-background font-avenir flex  flex-col gap-4  md:p-8 items-center justify-center">
