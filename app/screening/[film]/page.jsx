@@ -289,7 +289,8 @@ export default function ScreeningPage() {
 
   const bottomControlsOpacity = useMemo(() => {
     if (isFullscreen) return showControls ? "opacity-100" : "opacity-0";
-    if (isMobile && isPlaying) return showControls ? "opacity-100" : "opacity-0";
+    if (isMobile && isPlaying)
+      return showControls ? "opacity-100" : "opacity-0";
     if (isPlaying) return "opacity-0 md:group-hover:opacity-100";
     return "opacity-0";
   }, [isFullscreen, showControls, isPlaying, isMobile]);
@@ -302,7 +303,15 @@ export default function ScreeningPage() {
       return bottomControlsOpacity;
     }
     return "opacity-100 md:opacity-0 md:group-hover:opacity-100";
-  }, [videoReady, isBuffering, isPlaying, isFullscreen, showControls, isMobile, bottomControlsOpacity]);
+  }, [
+    videoReady,
+    isBuffering,
+    isPlaying,
+    isFullscreen,
+    showControls,
+    isMobile,
+    bottomControlsOpacity,
+  ]);
 
   if (loading || !currentAsset) {
     return (
@@ -355,8 +364,8 @@ export default function ScreeningPage() {
           )}
           <button
             onClick={(e) => {
-              e.stopPropagation()
-              handlePlayPause()
+              e.stopPropagation();
+              handlePlayPause();
             }}
             className={`pointer-events-auto rounded-full p-4 sm:p-6  duration-300 transition-all z-10 ${centerButtonOpacity}`}
             aria-label={isPlaying ? "Pause" : "Play"}
@@ -378,12 +387,12 @@ export default function ScreeningPage() {
           <div
             className="h-2 sm:h-1 bg-white/30 rounded-full cursor-pointer pointer-events-auto mb-2 touch-none"
             onClick={(e) => {
-              e.stopPropagation()
-              handleSeek(e)
+              e.stopPropagation();
+              handleSeek(e);
             }}
             onTouchStart={(e) => {
-              e.stopPropagation()
-              handleSeek(e)
+              e.stopPropagation();
+              handleSeek(e);
             }}
           >
             <div
@@ -398,8 +407,8 @@ export default function ScreeningPage() {
             </div>
             <button
               onClick={(e) => {
-                e.stopPropagation()
-                handleFullscreen()
+                e.stopPropagation();
+                handleFullscreen();
               }}
               className="rounded p-1 sm:p-2 transition-all duration-1000 ease-in-out pointer-events-auto hover:bg-white/10"
               aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
@@ -437,9 +446,9 @@ export default function ScreeningPage() {
         <h1 className="pb-4 sm:pb-8 font-frontage text-lg sm:text-xl md:text-2xl">{`${currentAsset.title}, ${currentAsset.year}`}</h1>
         <button
           onClick={() => setShowReadMore(!showReadMore)}
-          className="text-primary font-bold uppercase text-sm sm:text-base hover:text-[#C4B0EC] ease-in-out duration-500 transition-colors flex items-center gap-2"
+          className="group text-primary font-bold uppercase text-sm sm:text-base hover:text-[#C4B0EC] ease-in-out duration-500 transition-colors flex items-center gap-2"
         >
-          About Film
+          About Film <span className="invisible text-sm group-hover:visible">{showReadMore ? '▲' : '▼'}</span>
         </button>
         {showReadMore && currentAsset.description && (
           <div className="mt-4 p-2 sm:p-4 rounded text-sm sm:text-base">
@@ -455,9 +464,9 @@ export default function ScreeningPage() {
       <div className="w-full sm:w-[80%] lg:w-[50%] px-4 md:px-8 pb-8 font-avenir">
         <button
           onClick={() => setShowArchive(!showArchive)}
-          className="text-primary font-bold uppercase text-sm sm:text-base hover:text-[#C4B0EC] ease-in-out transition-colors duration-500 flex items-center gap-2"
+          className="group text-primary font-bold uppercase text-sm sm:text-base hover:text-[#C4B0EC] ease-in-out transition-colors duration-500 flex items-center gap-2"
         >
-          Archive
+         Archive <span className="invisible group-hover:visible text-sm">{showArchive ? '▲' : '▼'}</span>
         </button>
         {showArchive && (
           <div className="mt-4 w-full">
