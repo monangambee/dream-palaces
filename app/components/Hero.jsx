@@ -208,8 +208,8 @@ const Hero = ({ fullData }) => {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center items-center h-full py-4 gap-8">
-      <div className="relative flex-nowrap max-w-screen w-[100%] md:w-[100%]  xl:h-full flex flex-row items-start justify-center px-2">
+    <div className="w-full flex flex-col justify-center items-center h-full py-4 px-4 gap-8 md:gap-16 md:py-16">
+      <div className="relative flex-nowrap max-w-screen w-[100%] md:w-[100%]  xl:h-full grid grid-cols-3 items-start justify-center">
         {/* <div className="grid  grid-cols-2 gap-4  p-4  sm:w-full sm:h-full min-h-screen"> */}
 
         {imageUrls.map((image, index) => {
@@ -218,7 +218,7 @@ const Hero = ({ fullData }) => {
           return (
             <div
               key={index}
-              className="group relative h-[150px] z-10 xl:h-[350px] sm:h-[250px] w-[350px] hover:w-[500px] transition-all duration-300 ease-in-out mx-auto"
+              className="group relative h-[20vw] z-10 2xl:h-[25vw] 2xl:w-[25vw] lg:h-[30vw] lg:w-[30vw] sm:h-[25vw] sm:w-[25vw] w-[20vw]   md:w-[30vw] lg:hover:w-[32vw] sm:hover-[30vw] transition-all duration-300 ease-in-out mx-auto"
               // style={!isMobile ? position : {}}
             >
               <Image
@@ -230,17 +230,17 @@ const Hero = ({ fullData }) => {
               />
 
               <div className="pointer-events-none absolute z-10 inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 transition-opacity duration-100 ease-out group-hover:opacity-100">
-                <div className="absolute bottom-2 left-0 right-0 p-3 text-white text-xs sm:text-sm space-y-1">
+                <div className="absolute bottom-2 left-0 right-0 p-3 text-white text-[6px] sm:text-sm space-y-1">
                   {image.name ? (
                     <p className="font-semibold">{image.name}</p>
                   ) : null}
                   {image.country ? (
-                    <p className="text-[10px] uppercase tracking-wide">
+                    <p className="text-[6px] sm:text-[10px] uppercase tracking-wide">
                       {image.country}
                     </p>
                   ) : null}
                   {image.credit ? (
-                    <p className="text-[8px] leading-snug opacity-80">
+                    <p className="text-[6px] sm:text-[8px] leading-snug opacity-80">
                       {image.credit}
                     </p>
                   ) : null}

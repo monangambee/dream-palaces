@@ -326,7 +326,7 @@ export default function ScreeningPage() {
         onClick={handleVideoTap}
         className={`relative flex items-center justify-center group ${
           isFullscreen
-            ? "fixed inset-0 w-screen h-screen z-50 p-0 bg-black"
+            ? "fixed inset-0 w-screen  h-[100dvh] first-letter:overflow-hidden z-50 p-0 bg-black"
             : "w-full max-w-7xl px-2 sm:px-4 md:px-8"
         }`}
       >

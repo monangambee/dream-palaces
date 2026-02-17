@@ -23,13 +23,15 @@ module.exports = {
         avenir: ['var(--font-avenir)', 'sans-serif'],
       },
       colors: {
-        primary: '#FDF9ED', // Example primary color
-        secondary: '#F3FFB6', // Example secondary color
-        accent: '#10B981', // Example accent color
-        background: '#000000ff', // Example background color
+        primary: '#FDF9ED', //primary color
+        secondary: '#F3FFB6', // secondary color
+        accent: '#10B981', // accent color
+        background: '#000000ff', // background color
+        // background: '#1B2021', // background color
+
         homeAccent: '#96C7B0',
 
-        foreground: '#F3F4F6', // Example foreground color
+        foreground: '#F3F4F6', // foreground color
       },
   
       
