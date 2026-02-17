@@ -5,8 +5,8 @@ import Link from 'next/link'
 const About = () => {
   return (
     <section className='w-full h-full flex items-center flex-col justify-center '>
-      <div className='flex h-[55vh] flex-col lg:flex-row w-[100%] justify-center gap-8 p-6 border-[0.5px] z-50 text-white py-8'>
-        <div className='relative w-full lg:w-1/2 h-full '>
+      <div className='flex h-full lg:h-[55vh] flex-col lg:flex-row w-[100%] justify-center gap-8 p-4 sm:p-6 border-[0.5px] z-50 text-white py-4 sm:py-8'>
+        <div className='relative w-full lg:w-1/2 h-[300px] sm:h-[500px] lg:h-full '>
           <Image
             src='/images/Seattle WA Anzier.jpg'
             fill
@@ -16,8 +16,8 @@ const About = () => {
           />
         </div>
         <div className='w-full lg:w-1/2 flex h-full items-start flex-col gap-6 '>
-          <p className='w-full h-full md:w-[100%] text-sm gap-8 z-20  xl:text-base 2xl:text-lg items-start justify-start font-light font-frontage border-primary leading-relaxed'>
-           <span className='font-marqueeMoon text-5xl xl:text-7xl inline align-baseline'>
+          <p className='w-full h-full md:w-[100%] text-xs gap-8 z-20  xl:text-base 2xl:text-lg items-start justify-start font-light font-frontage border-primary leading-relaxed'>
+           <span className='font-marqueeMoon text-4xl sm:text-5xl xl:text-7xl inline align-baseline'>
              Dream Palaces
             </span>
             
