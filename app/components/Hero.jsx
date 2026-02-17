@@ -208,7 +208,7 @@ const Hero = ({ fullData }) => {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center items-center h-full py-4 px-4 gap-8 md:gap-16 md:py-16">
+    <div className="w-full flex flex-col justify-center items-center h-full py-4 sm:px-4 gap-8 md:gap-16 md:py-16">
       <div className="relative flex-nowrap max-w-screen w-[100%] md:w-[100%]  xl:h-full grid grid-cols-3 items-start justify-center">
         {/* <div className="grid  grid-cols-2 gap-4  p-4  sm:w-full sm:h-full min-h-screen"> */}
 
@@ -218,7 +218,7 @@ const Hero = ({ fullData }) => {
           return (
             <div
               key={index}
-              className="group relative h-[20vw] z-10 2xl:h-[25vw] 2xl:w-[25vw] lg:h-[30vw] lg:w-[30vw] sm:h-[25vw] sm:w-[25vw] w-[20vw]   md:w-[30vw] lg:hover:w-[32vw] sm:hover-[30vw] transition-all duration-300 ease-in-out mx-auto"
+              className="group relative h-[27vw] z-10 2xl:h-[25vw] 2xl:w-[25vw] lg:h-[30vw] lg:w-[30vw] sm:h-[25vw] sm:w-[25vw] w-[27vw]   md:w-[30vw] lg:hover:w-[32vw] sm:hover-[30vw] transition-all duration-300 ease-in-out mx-auto"
               // style={!isMobile ? position : {}}
             >
               <Image
