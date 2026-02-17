@@ -17,7 +17,7 @@ export default async function HomePage() {
   let error = null;
 
   try {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV ==! "development") {
       fullData = [];
     } else {
       fullData = await fetchAirtableDataProgressive(
@@ -61,8 +61,8 @@ export default async function HomePage() {
 
   return (
     <Suspense>
-      <div className="w-screen flex flex-col items-center relative bg-background">
-        <div className="lg:w-[100%] w-full h-full flex text-primary flex-col justify-start items-center bg-background relative bg-contain p-4 sm:p-10 sm:pt-32">
+      <div className="w-screen flex flex-col items-center relative bg-background overflow-hidden">
+        <div className="lg:w-[100%] w-full h-full flex text-primary flex-col justify-start items-center bg-background relative bg-contain sm:p-4 sm:pt-32">
           {/* Add this gradient overlay */}
           {/* <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black opacity-100 pointer-events-none"></div> */}
           {/* <div className="absolute inset-0 backdrop-blur-sm pointer-events-none"></div> */}
@@ -90,16 +90,19 @@ export default async function HomePage() {
 
            
           </div>
-              <About />
+          <div className=" px-2 sm:px-12 ">
+                    <About />
+             </div>
+        
 
         </div>
 
-        <div className="w-[100%] bg-background font-avenir flex  flex-col gap-4  md:p-8 items-center justify-center">
-          <p className=" text-white pt-8 uppercase font-bold text-sm">
+        <div className="w-[100%] bg-background font-avenir flex  flex-col   md:p-16 items-center justify-center">
+          <p className=" text-white mt-9  uppercase font-bold text-sm">
             [ Choose your experience ]
           </p>
 
-          <div className="flex flex-col gap-4 sm:gap-8 w-[95%] sm:w-[75%] items-between justify-start py-8">
+          <div className="flex flex-col gap-4 sm:gap-8 w-[100%] sm:w-[100%] items-between justify-start px-2 py-8">
             {modes.map((mode, index) => (
               <Link key={index} href={mode.link}>
                 <div

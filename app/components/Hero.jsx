@@ -208,8 +208,8 @@ const Hero = ({ fullData }) => {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center items-center  min-h-[50vh] gap-16">
-      <div className="relative flex-nowrap  max-w-screen w-[100%] md:w-[80%]  xl:h-full flex flex-row items-start justify-center px-4">
+    <div className="w-full flex flex-col justify-center items-center h-full py-4 gap-8">
+      <div className="relative flex-nowrap max-w-screen w-[100%] md:w-[100%]  xl:h-full flex flex-row items-start justify-center px-2">
         {/* <div className="grid  grid-cols-2 gap-4  p-4  sm:w-full sm:h-full min-h-screen"> */}
 
         {imageUrls.map((image, index) => {
@@ -218,7 +218,7 @@ const Hero = ({ fullData }) => {
           return (
             <div
               key={index}
-              className="group relative h-[200px] z-10 sm:h-[350px] w-[350px] hover:w-[500px] transition-all duration-300 ease-in-out mx-auto"
+              className="group relative h-[150px] z-10 xl:h-[350px] sm:h-[250px] w-[350px] hover:w-[500px] transition-all duration-300 ease-in-out mx-auto"
               // style={!isMobile ? position : {}}
             >
               <Image
@@ -254,7 +254,7 @@ const Hero = ({ fullData }) => {
 
       <button
         onClick={handleShuffle}
-        className="font-frontage border-[0.5px] text-xs z-10 flex items-center justify-center px-4 sm:px-8 py-3 sm:py-4 md:hover:bg-homeAccent md:hover:text-black active:bg-homeAccent active:text-black min-h-[44px] order-last sm:order-none  mt-4 sm:mt-0"
+        className="font-frontage border-[0.5px] text-xs z-10 flex items-center justify-center px-4 sm:px-8 py-2 sm:py-4 md:hover:bg-homeAccent md:hover:text-black active:bg-homeAccent active:text-black min-h-[44px] order-last sm:order-none sm:mt-0"
       >
         <Image
           src={"/icons/shuffle.png"}
