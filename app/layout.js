@@ -82,9 +82,9 @@ export default async function RootLayout({ children }) {
 
         {children}
 
-        <footer className="w-screen min-h-[10vh] flex z-20  justify-center font-frontage bg-background border-t-[0.5px] border-primary text-primary p-2 px-8 text-[10px]  sm:text-xs">
-          <div className="p-2 flex w-full sm:w-[80%] items-start flex-row justify-between sm:flex-row gap-4 sm:gap-2 sm:p-4">
-          <div className="flex w-full sm:w-[80%]  sm:p-4 justify-start sm:justify-start flex-col  md:flex-col items-start gap-8 h-full">
+        <footer className="w-full min-h-[10vh] flex z-20  justify-center font-frontage bg-background border-t-[0.5px] border-primary text-primary p-2  text-[10px]  sm:text-xs">
+          <div className="p-2 flex w-full sm:w-[100%] items-start flex-row justify-between sm:flex-row gap-4 sm:gap-2 px-2 sm:px-16">
+          <div className="flex w-full sm:w-[80%]  sm:p-2 justify-start sm:justify-start flex-col  md:flex-col items-start gap-8 h-full">
             {/* <h2 className="text-sm">Quick Links</h2> */}
             <p>
               <Link className="hover:text-homeAccent" href="/">

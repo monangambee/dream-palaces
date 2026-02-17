@@ -61,17 +61,17 @@ export default function Header({ firstFilmSlug }) {
   const navLinks = getNavLinks()
 
   return (
-    <nav className="w-screen bg-black flex border-b-[0.5px] flex-row justify-start items-center font-marqueeMoon bg-background mx-auto border-primary p-2 sm:p-4 sm:px-8 text-primary">
-      <Link href="/" className="cursor-pointer p-2 sm:p-4 text-4xl sm:text-5xl md:text-8xl flex flex-col w-2/3">
+    <nav className="w-full  z-50 bg-black flex border-b-[0.5px] pt-8 p-4 flex-row justify-start items-start font-marqueeMoon bg-background mx-auto border-primary gap-4 sm:p-4 sm:px-8 text-primary">
+      <Link href="/" className="cursor-pointer  sm:p-4 text-4xl sm:text-5xl md:text-8xl flex flex-col w-2/3">
         Dream Palaces
         <span className='font-frontage pb-2 text-[8px] sm:text-sm pt-2'>Black cinema Spaces</span>
       </Link>
 
-      <ul className="flex w-full h-full font-frontage sm:w-[80%] text-xs sm:text-sm p-4 sm:p-8 justify-center sm:justify-end flex-row flex-wrap md:flex-row items-center gap-8">
+      <ul className="flex w-full h-full font-frontage sm:w-[80%] items-end text-[9px] sm:text-sm  sm:p-8 justify-end  sm:justify-end flex-col flex-wrap md:flex-row sm:items-end sm:self-end px-2 gap-8">
         {navLinks.map((link) => (
           <li key={link.href}>
             <Link className={link.hoverColor} href={link.href}>
-              {link.label}
+              {link.label}  
             </Link>
           </li>
         ))}

@@ -74,10 +74,12 @@ const CinemaInfo = () => {
           {selectedCinema.fields.City}, {selectedCinema.fields.Country}
         </div>
       </div>
-
-      <div className=" mb-2 text-xs">
-        {selectedCinema.fields.Creation} - {selectedCinema.fields.Closure}
-      </div>
+{selectedCinema.fields.Creation && (
+      <div className='mb-2 text-xs'>
+          {selectedCinema.fields.Creation}
+          {selectedCinema.fields.Closure && ` - ${selectedCinema.fields.Closure}`}
+        </div>
+      )}
       <div className="text-gray-400 text-xs mb-2">
         {selectedCinema.fields.Condition}
       </div>

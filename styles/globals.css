@@ -18,9 +18,23 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background-color: black;
+  background-color: rgb(0, 0, 0);
   /* background: var(--color-primary); */
   /* overflow: hidden; */
+}
+
+/* Prevent scrolling when fullscreen */
+html.fullscreen, 
+body.fullscreen {
+  overflow: hidden;
+}
+
+/* Ensure proper fullscreen behavior on mobile landscape */
+@supports (height: 100dvh) {
+  /* Use dynamic viewport height for better mobile support */
+  html, body {
+    height: 100dvh;
+  }
 }
 
 

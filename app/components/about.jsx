@@ -4,9 +4,9 @@ import Link from 'next/link'
 
 const About = () => {
   return (
-    <section className='w-screen h-fit flex items-center px-64 mt-4'>
-      <div className='flex flex-col md:flex-row w-full gap-8 p-2 bg-white z-50 text-black py-8'>
-        <div className='relative w-full md:w-1/2 h-[50vh] '>
+    <section className='w-full h-full flex items-center flex-col justify-center '>
+      <div className='flex h-[55vh] flex-col lg:flex-row w-[100%] justify-center gap-8 p-6 border-[0.5px] z-50 text-white py-8'>
+        <div className='relative w-full lg:w-1/2 h-full '>
           <Image
             src='/images/Seattle WA Anzier.jpg'
             fill
@@ -15,9 +15,9 @@ const About = () => {
             priority
           />
         </div>
-        <div className='w-full md:w-1/2 flex h-full items-start flex-col gap-6 '>
-          <p className='w-full  md:w-[80%] text-xs gap-8 z-20 sm:text-base xl:text-base  items-start justify-start font-light font-frontage border-primary leading-relaxed'>
-           <span className='font-marqueeMoon text-5xl inline align-baseline'>
+        <div className='w-full lg:w-1/2 flex h-full items-start flex-col gap-6 '>
+          <p className='w-full h-full md:w-[100%] text-sm gap-8 z-20  xl:text-base 2xl:text-lg items-start justify-start font-light font-frontage border-primary leading-relaxed'>
+           <span className='font-marqueeMoon text-5xl xl:text-7xl inline align-baseline'>
              Dream Palaces
             </span>
             
@@ -25,7 +25,7 @@ const About = () => {
             histories of Black cinema spaces across six countries in Africa and
             the diaspora.
 
-            <span className='font-avenir pt-4 inline-block'>
+            <span className='font-avenir pt-5 inline-block text-xs sm:text-base xl:text-base 2xl:text-lg  '>
               Initiated by an emotional encounter with a demolished
               historical cinema in South Africa, the project aims to
               recontextualize and archive these spaces digitally. It asks: how can
@@ -33,7 +33,7 @@ const About = () => {
               sites of memory and possibility?
             </span>
 
-            <span className='font-avenir pt-4'>
+            <span className='font-avenir overflow-auto pt-5 text-xs sm:text-base xl:text-base 2xl:text-lg inline-block'>
               {' '}
               Explore over 1400 black cinemas, each representing a unique story
               and history, via two navigation modes: a constellation where you
@@ -48,7 +48,7 @@ const About = () => {
           </p>
             <Link
                 href='/about'
-                className='text-black uppercase md:hover:text-homeAccent p-4 border-[0.5px] border-black '
+                className='text-white uppercase md:hover:text-homeAccent p-3 font-basis text-xs lg:text-base border-[0.5px] border-white '
               >
                 Learn More
               </Link>
