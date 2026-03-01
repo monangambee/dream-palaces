@@ -112,7 +112,7 @@ void main() {
 
   // Scale particles only based on data richness (aScale attribute)
   // No camera distance scaling - particles maintain constant size regardless of zoom
-  gl_PointSize = uSize * aScale;
+  gl_PointSize = uSize * aScale * 1.5;
   gl_PointSize *= (100.0 / -viewPosition.z);
 
   vUv = uv;

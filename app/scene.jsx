@@ -239,7 +239,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
       // Add random multiplier (0.7 to 1.3) using seeded random for consistency
       // This ensures particles have variation while maintaining deterministic results
       const randomMultiplier = 0.7 + (seededRandom(seed + 100) * 0.6); // Range: 0.7 to 1.3
-      const baseScale = baseRichnessScale *  randomMultiplier ;
+      const baseScale = Math.random()  // Range: 0.5 to 5.0
       
       if (isFeatured) {
         scales[i] =  baseScale * 2.0; // Fixed size for featured cinemas (maintains constant size regardless of zoom)
@@ -299,17 +299,34 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
   }, [positions]);
 
   useGSAP(() => {
+    
     if (!points.current) return; // don’t animate yet if geometry isn’t ready
 
     gsap.fromTo(
       camera.position,
       { z: 100 },
-      { z: 600, duration: 2, ease: "power2.out" }
+      { z: 400, duration: 2, ease: "power2.out" }
     );
 
     animateParticles();
     // return null;
   }, [points.current, camera]);
+
+    useEffect(() => {
+    // Trigger camera zoom when filters change
+    if (!camera) return;
+    
+    // Check if any filter is active (not all)
+    const hasActiveFilter = filters && Object.values(filters).some(val => val !== 'all');
+    
+    const targetZ = hasActiveFilter ? 100 : 400; // Zoom in (200) when filtering, zoom out (600) when all
+    
+    gsap.to(camera.position, {
+      z: targetZ,
+      duration: 1.5,
+      ease: 'power2.inOut'
+    });
+  }, [filters, camera]);
 
 
   const pointsGeometryRef = useRef();

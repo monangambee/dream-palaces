@@ -17,7 +17,7 @@ export default async function HomePage() {
   let error = null;
 
   try {
-    if (process.env.NODE_ENV ==! "development") {
+    if (process.env.NODE_ENV === "development") {
       fullData = [];
     } else {
       fullData = await fetchAirtableDataProgressive(
@@ -61,8 +61,8 @@ export default async function HomePage() {
 
   return (
     <Suspense>
-      <main className="w-screen flex flex-col items-center gap-3 relative bg-background overflow-hidden ">
-        <section className="lg:w-[100%] w-full h-full flex text-primary flex-col justify-start items-center bg-background relative bg-contain sm:p-4 sm:pt-2">
+      <main className="w-screen flex flex-col items-center gap-16 relative bg-background overflow-hidden  ">
+        <section className="lg:w-[100%] w-full h-full flex text-primary flex-col gap-16 justify-start items-center bg-background relative bg-contain sm:p-4 sm:pt-2">
           {/* Add this gradient overlay */}
           {/* <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black opacity-100 pointer-events-none"></div> */}
           {/* <div className="absolute inset-0 backdrop-blur-sm pointer-events-none"></div> */}
@@ -80,7 +80,7 @@ export default async function HomePage() {
             </video>
           </div>
 
-          <section className="w-full h-full flex flex-col lg:flex-row items-start justify-center p-2 relative">
+          {/* <section className="w-full h-full flex flex-col lg:flex-row items-center justify-center  relative"> */}
             <Hero fullData={fullData} />
 
             {/* <h1 className="text-[5rem] font-sansation border-b-[0.5px]">
@@ -89,20 +89,22 @@ export default async function HomePage() {
         </h1> */}
 
            
-          </section>
-          <section className=" px-2 sm:px-12 xl:px-24 ">
+        
+
+          <section className="  ">
                     <About />
              </section>
         
 
         </section>
 
-        <div className="w-[100%] bg-background font-avenir flex  flex-col   md:p-16 xl:p-24 items-center justify-center">
-          <p className=" text-white mt-4 sm:mt-2 uppercase font-basis text-xs sm:text-sm">
+        <div className="w-[100%] h-full bg-background font-avenir flex  flex-col md:px-16 xl:px-24 items-center justify-center">
+       
+
+          <div className="flex flex-col gap-4 sm:gap-8 w-[100%]  items-between justify-start px-4 xl:px-32 pb-8">
+               <p className=" text-primary z-20  text-center uppercase font-avenir text-xs 2xl:text-sm sm:text-base">
             [ Choose your experience ]
           </p>
-
-          <div className="flex flex-col gap-4 sm:gap-8 w-[100%] sm:w-[100%] items-between justify-start px-3 py-8">
             {modes.map((mode, index) => (
               <Link key={index} href={mode.link}>
                 <div
@@ -117,7 +119,7 @@ export default async function HomePage() {
                       <img
                         src={mode.image}
                         alt={mode.name}
-                        className="w-full h-auto border border-primary rounded"
+                        className="w-full h-auto border aspect-square object-cover border-primary rounded"
                       />
                     </div>
                   )}

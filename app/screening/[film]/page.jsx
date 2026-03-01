@@ -105,6 +105,21 @@ export default function ScreeningPage() {
     }
   }, [isPlaying, isFullscreen]);
 
+  // Auto-enable subtitles when video is ready
+  useEffect(() => {
+    if (videoReady && player) {
+      player
+        .getTextTracks?.()
+        .then((tracks) => {
+          if (!tracks || tracks.length === 0) return;
+          const track =
+            tracks.find((item) => item.language === "en") || tracks[0];
+          return player.enableTextTrack(track.language, track.kind);
+        })
+        .catch((err) => console.log("Subtitle auto-enable:", err));
+    }
+  }, [videoReady, player]);
+
   const formatTime = useCallback((seconds) => {
     if (!seconds || isNaN(seconds)) return "0:00";
     const mins = Math.floor(seconds / 60);
@@ -319,6 +334,8 @@ export default function ScreeningPage() {
     );
   }
 
+  // const [subtitlesEnabled, setSubtitlesEnabled] = useState(true)
+
   return (
     <div className="w-screen min-h-[calc(100vh-200px)] flex flex-col items-center font-basis justify-center bg-background text-primary relative py-4 sm:py-8">
       <div
@@ -326,12 +343,12 @@ export default function ScreeningPage() {
         onClick={handleVideoTap}
         className={`relative flex items-center justify-center group ${
           isFullscreen
-            ? "fixed inset-0 w-screen  h-[100dvh] first-letter:overflow-hidden z-50 p-0 bg-black"
+            ? "screening-fullscreen fixed inset-0 w-full h-full overflow-hidden z-50 p-0 bg-black"
             : "w-full max-w-7xl px-2 sm:px-4 md:px-8"
         }`}
       >
         <Vimeo
-          className={`w-full aspect-video rounded-lg duration-1000 transition-opacity ease-in-out ${videoReady ? "opacity-100" : "opacity-0"} ${isFullscreen ? "rounded-none" : ""}`}
+          className={`${isFullscreen ? "w-full h-full" : "w-full aspect-video"} rounded-lg duration-1000 transition-opacity ease-in-out ${videoReady ? "opacity-100" : "opacity-0"} ${isFullscreen ? "rounded-none" : ""}`}
           video={currentAsset.id}
           autoplay={false}
           width="100%"
@@ -370,22 +387,53 @@ export default function ScreeningPage() {
             className={`pointer-events-auto rounded-full p-4 sm:p-6  duration-300 transition-all z-10 ${centerButtonOpacity}`}
             aria-label={isPlaying ? "Pause" : "Play"}
           >
-            <Image
-              src={isPlaying ? "/icons/pause2.png" : "/icons/play2.png"}
-              width={512}
-              height={512}
-              alt={isPlaying ? "pause" : "play"}
-              className="w-16 h-16 sm:w-24 sm:h-24 md:w-72 md:h-72 object-contain"
-            />
+            {isPlaying ? (
+              <svg
+                className="w-64 h-64 text-movieAccent"
+                viewBox="0 0 211.34 400"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g>
+                  <rect fill="currentColor" width="80" height="400" />
+                  <rect
+                    fill="currentColor"
+                    x="131.34"
+                    width="80"
+                    height="400"
+                  />
+                </g>
+              </svg>
+            ) : (
+              <svg
+                className="w-64 h-64 text-movieAccent"
+                viewBox="0 0 295.52 400"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g>
+                  <polygon
+                    fill="currentColor"
+                    points="0 0 0 400 295.52 200 0 0"
+                  />
+                </g>
+              </svg>
+            )}
+
+            {/* <Image
+                src={isPlaying ? "/icons/Pause Icon.svg" : "/icons/play2.png"}
+                width={512}
+                height={512}
+                alt={ isPlaying ? "pause" : "play"}
+                className="w-16 h-16 sm:w-24 sm:h-24 md:w-64 md:h-72 object-contain"
+              /> */}
           </button>
         </div>
 
         {/* Bottom Controls */}
         <div
-          className={`absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 duration-1000 ease-in-out w-[calc(100%-1rem)] sm:w-full max-w-2xl px-2 sm:px-4 pb-4 sm:pb-8 pointer-events-none z-30 ${bottomControlsOpacity} ease-in-out duration-1000 transition-opacity`}
+          className={`absolute ${isFullscreen ? "bottom-2 sm:bottom-0" : "bottom-2 sm:bottom-0"} left-1/2 -translate-x-1/2 w-[calc(100%-1rem)] sm:w-full max-w-2xl px-2 sm:px-4 pb-4 sm:pb-2 pointer-events-none z-30 ${bottomControlsOpacity} ease-in-out duration-1000 transition-opacity`}
         >
           <div
-            className="h-2 sm:h-1 bg-white/30 rounded-full cursor-pointer pointer-events-auto mb-2 touch-none"
+            className="h-2 sm:h-1 bg-white/30  cursor-pointer pointer-events-auto mb-2 touch-none"
             onClick={(e) => {
               e.stopPropagation();
               handleSeek(e);
@@ -396,7 +444,7 @@ export default function ScreeningPage() {
             }}
           >
             <div
-              className="h-full bg-[#C4B0EC] rounded-full ease-in-out transition-all duration-1000"
+              className="h-full bg-[#C4B0EC] "
               style={{ width: `${progressPercent}%` }}
             />
           </div>
@@ -410,7 +458,7 @@ export default function ScreeningPage() {
                 e.stopPropagation();
                 handleFullscreen();
               }}
-              className="rounded p-1 sm:p-2 transition-all duration-1000 ease-in-out pointer-events-auto hover:bg-white/10"
+              className="rounded p-1 sm:p-2 pointer-events-auto"
               aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
             >
               {isFullscreen ? (
@@ -448,7 +496,10 @@ export default function ScreeningPage() {
           onClick={() => setShowReadMore(!showReadMore)}
           className="group text-primary font-bold uppercase text-sm sm:text-base hover:text-[#C4B0EC] ease-in-out duration-500 transition-colors flex items-center gap-2"
         >
-          About Film <span className="invisible text-sm group-hover:visible">{showReadMore ? '▲' : '▼'}</span>
+          About Film{" "}
+          <span className="invisible text-sm group-hover:visible">
+            {showReadMore ? "▲" : "▼"}
+          </span>
         </button>
         {showReadMore && currentAsset.description && (
           <div className="mt-4 p-2 sm:p-4 rounded text-sm sm:text-base">
@@ -466,7 +517,10 @@ export default function ScreeningPage() {
           onClick={() => setShowArchive(!showArchive)}
           className="group text-primary font-bold uppercase text-sm sm:text-base hover:text-[#C4B0EC] ease-in-out transition-colors duration-500 flex items-center gap-2"
         >
-         Archive <span className="invisible group-hover:visible text-sm">{showArchive ? '▲' : '▼'}</span>
+          Archive{" "}
+          <span className="invisible group-hover:visible text-sm">
+            {showArchive ? "▲" : "▼"}
+          </span>
         </button>
         {showArchive && (
           <div className="mt-4 w-full">

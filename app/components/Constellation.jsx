@@ -6,6 +6,8 @@ import { useEffect, useState, useRef } from 'react';
 import { AdaptiveDpr, Bvh } from "@react-three/drei";
 import { useStore } from "../utils/useStore";
 
+import {ToneMapping, EffectComposer} from '@react-three/postprocessing'
+
 const Scene = dynamic(() => import('../scene'), { ssr: false });
 const Filter = dynamic(() => import('./filter'), { ssr: false });
 const CinemaInfo = dynamic(() => import('./CinemaInfo'), { ssr: false });
