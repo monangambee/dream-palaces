@@ -61,14 +61,15 @@ const CinemaInfo = () => {
       sm:bottom-10 sm:right-5 sm:left-auto sm:max-w-[80vw] sm:min-w-[300px]
       md:max-w-[50vw] md:min-w-[20vw] md:max-h-[80vh]"
     >
-      <button
+     
+      <div className="font-bold sticky text-lg mb-3 top-0 bg-black z-10 py-2 pt-8 pr-12">
+         <button
         onClick={clearSelectedCinema}
         className="absolute top-2 right-2 text-gray-400 md:hover:text-white text-3xl p-2 min-w-[44px] min-h-[44px] flex items-center justify-center z-20"
         aria-label="Close"
       >
         ×
       </button>
-      <div className="font-bold sticky text-lg mb-3 top-0 bg-black z-10 py-2 pt-8 pr-12">
         {selectedCinema.fields.Name}
         <div className="text-base font-light mb-2 pt-2">
           {selectedCinema.fields.City}, {selectedCinema.fields.Country}
@@ -168,7 +169,7 @@ const CinemaInfo = () => {
 
           {/* Dots indicator */}
           {imageUrls.length > 1 && (
-            <div className="flex justify-center items-center gap-2 mt-2 w-full max-w-[300px]">
+            <div className="flex justify-center items-center gap-2 mt-2 w-full ">
               {imageUrls.map((_, index) => (
                 <button
                   key={index}
