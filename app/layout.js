@@ -1,10 +1,12 @@
 import "../styles/globals.css";
 import Image from "next/image";
 import Header from "./components/Header";
+import NavLinks from "./components/NavLinks";
 
 export const metadata = {
   title: "Dream Palaces",
   description: "Interactive visualization of cinema data",
+  
 };
 
 import {
@@ -67,22 +69,27 @@ const basis = localFont({
   variable: "--font-basis",
   display: "swap",
   style: "normal",
-});
+})
+
+
 
 
 export default async function RootLayout({ children }) {
+
   const { slug: firstFilmSlug } = await getFirstFilmSlug();
   return (
     <html
       lang="en"
       className={`${frontage3D.variable} ${basis.variable} ${marqueeMoon.variable} ${neon.variable} ${frontage.variable} ${avenir.variable} font-sans`}
     >
+      
       <body>
+        
         <Header firstFilmSlug={firstFilmSlug} />
 
         {children}
 
-        <footer className="w-full min-h-[10vh] flex z-20  justify-center font-frontage bg-background border-t-[0.5px] border-primary text-primary p-2  text-[10px]  sm:text-xs">
+        <footer className="w-full min-h-[10vh] flex z-20  justify-between font-frontage bg-background border-t-[0.5px] border-primary text-primary p-2  text-[10px]  sm:text-xs">
           <div className="p-2 flex w-full sm:w-[100%] items-start flex-row justify-between sm:flex-row gap-4 sm:gap-2 px-2 sm:px-16">
           <div className="flex w-full sm:w-[80%]  sm:p-2 justify-start sm:justify-start flex-col  md:flex-col items-start gap-8 h-full">
             {/* <h2 className="text-sm">Quick Links</h2> */}
@@ -112,6 +119,9 @@ export default async function RootLayout({ children }) {
               </Link> 
             </p> */}
           </div>
+          <div className="w-full">
+            <NavLinks firstFilmSlug={firstFilmSlug} />
+          </div>
           <div className="flex h-full justify-start items-center sm:justify-center  sm:p-4 flex-col sm:flex-row sm:gap-6">
             {/* <p className="hidden sm:block">
               Contact
@@ -119,8 +129,8 @@ export default async function RootLayout({ children }) {
             <Link href="mailto:monangambee@gmail.com " className="hover:text-homeAccent ">
               <Image src={'/icons/email.png'}
                 alt="Email Icon"
-                width={24}
-                height={24}
+                width={64}
+                height={64}
                 className=" invert"
                 
               />
@@ -130,8 +140,8 @@ export default async function RootLayout({ children }) {
 
               <Image src={'/icons/insta.png'}
                 alt="Instagram Icon"
-                width={24}
-                height={24}
+                width={64 }
+                height={64}
                 className="mt-2 sm:mt-0 invert pt-3 sm:pt-0"
                 
               />

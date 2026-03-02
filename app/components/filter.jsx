@@ -113,7 +113,7 @@ const Filter = ({}) => {
         isOpen 
           ? isMobile ? "w-full h-full" : "w-1/5 max-w-[300px]" 
           : isMobile ? "w-14" : "w-16"
-      } h-screen font-basis border-primary border-r-[0.5px] justify-start overflow-y-auto overflow-x-hidden items-center bg-background z-50 p-4 transition-all duration-300 ease-in-out ${
+      } h-screen font-avenir border-primary border-r-[0.5px] justify-start overflow-y-auto overflow-x-hidden items-center bg-background z-50 p-4 transition-all duration-300 ease-in-out ${
         isMobile && isOpen 
           ? "fixed inset-0 z-50" 
           : isMobile 

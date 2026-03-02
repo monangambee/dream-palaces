@@ -8,6 +8,9 @@ attribute vec3 color;
 varying vec3 vColor;
 uniform float uPosition;
 varying float vScale;
+attribute float aFeatured;
+varying float vFeatured;
+
 uniform float uDevicePixelRatio;
 
 // simplex noise functions (inlined)
@@ -112,10 +115,11 @@ void main() {
 
   // Scale particles only based on data richness (aScale attribute)
   // No camera distance scaling - particles maintain constant size regardless of zoom
-  gl_PointSize = uSize * aScale;
+  gl_PointSize = uSize * aScale * 1.5;
   gl_PointSize *= (100.0 / -viewPosition.z);
 
   vUv = uv;
   vColor = color;
   vScale = aScale;
+  vFeatured = aFeatured;
 }

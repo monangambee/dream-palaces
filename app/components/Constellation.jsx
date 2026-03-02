@@ -6,6 +6,8 @@ import { useEffect, useState, useRef } from 'react';
 import { AdaptiveDpr, Bvh } from "@react-three/drei";
 import { useStore } from "../utils/useStore";
 
+import {Bloom, EffectComposer} from '@react-three/postprocessing'
+
 const Scene = dynamic(() => import('../scene'), { ssr: false });
 const Filter = dynamic(() => import('./filter'), { ssr: false });
 const CinemaInfo = dynamic(() => import('./CinemaInfo'), { ssr: false });
@@ -75,10 +77,16 @@ export default function Constellation({ fullData }) {
         performance={{ min: 0.5 }}
         frameloop="always"
       >
+     
         <AdaptiveDpr pixelated />
         <Bvh firstHitOnly>
           <Scene fullData={data || fullData} useApiForFullData={false} />
         </Bvh>
+
+         <EffectComposer>  
+        <Bloom luminanceThreshold={1.1} mipmapBlur/>
+
+      </EffectComposer>
       </Canvas>
       <CinemaInfo />
     </div>

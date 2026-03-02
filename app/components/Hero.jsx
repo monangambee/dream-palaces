@@ -159,11 +159,11 @@ const Hero = ({ fullData }) => {
     //   .filter(cinema => cinema.fields?.Images?.length > 0)
     //   .map(cinema => cinema.fields.Images[0].url)
     //   .filter(Boolean); // Remove any falsy URLs
-
-    setAllUrls(images);
+    const validImages = images.filter((img) => img.url);
+    setAllUrls(validImages);
 
     // Random selection
-    const shuffled = [...images].sort(() => 0.5 - Math.random());
+    const shuffled = [...validImages].sort(() => 0.5 - Math.random());
     const selectedImages = shuffled.slice(0, 3);
 
     setImageUrls(selectedImages);
@@ -208,17 +208,16 @@ const Hero = ({ fullData }) => {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center items-center h-full py-4 sm:px-4 gap-8 md:gap-16 md:py-16">
-      <div className="relative flex-nowrap max-w-screen w-[100%] md:w-[100%]  xl:h-full grid grid-cols-3 items-start justify-center">
+    <div className="w-full sm:w-[80%] flex flex-col justify-center items-center h-full pt-4 sm:px-4 gap-8 md:gap-8 md:pt-16 xl:px-4">
+      <div className="relative  w-[100%] h-[150px] sm:h-[250px]  xl:h-[400px] flex flex-row gap-2 items-start justify-center">
         {/* <div className="grid  grid-cols-2 gap-4  p-4  sm:w-full sm:h-full min-h-screen"> */}
-
         {imageUrls.map((image, index) => {
           if (!image.url) return null;
           const position = getRandomPosition(index);
           return (
             <div
               key={index}
-              className="group relative h-[27vw] z-10 2xl:h-[25vw] 2xl:w-[25vw] lg:h-[30vw] lg:w-[30vw] sm:h-[25vw] sm:w-[25vw] w-[27vw]   md:w-[30vw] lg:hover:w-[32vw] sm:hover-[30vw] transition-all duration-300 ease-in-out mx-auto"
+              className="group relative flex-1 max-w-[30vw]  hover:flex-[1.3] h-full transition-all duration-300 ease-in-out mx-auto"
               // style={!isMobile ? position : {}}
             >
               <Image
@@ -229,8 +228,8 @@ const Hero = ({ fullData }) => {
                 className=" border-primary border-[0.5px] p-2  object-cover"
               />
 
-              <div className="pointer-events-none absolute z-10 inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 transition-opacity duration-100 ease-out group-hover:opacity-100">
-                <div className="absolute bottom-2 left-0 right-0 p-3 text-white text-[6px] sm:text-sm space-y-1">
+              <div className="font-avenir pointer-events-none absolute z-10 inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 transition-opacity duration-100 ease-out group-hover:opacity-100">
+                <div className="absolute bottom-2 left-0 right-0 p-3 text-primary text-[6px] sm:text-sm space-y-1">
                   {image.name ? (
                     <p className="font-semibold">{image.name}</p>
                   ) : null}
@@ -254,16 +253,34 @@ const Hero = ({ fullData }) => {
 
       <button
         onClick={handleShuffle}
-        className="font-frontage border-[0.5px] text-xs z-10 flex items-center justify-center px-4 sm:px-8 py-2 sm:py-4 md:hover:bg-homeAccent md:hover:text-black active:bg-homeAccent active:text-black min-h-[44px] order-last sm:order-none sm:mt-0"
+        className="group font-frontage border-[0.5px] text-xs z-10 flex items-center justify-center p-3 px-8 hover:bg-primary md:hover:text-black active:text-black min-h-[44px] order-last sm:order-none sm:mt-0"
       >
-        <Image
-          src={"/icons/shuffle.png"}
+        {/* <Image
+          src={"/icons/shuffle.svg"}
           width={36}
           height={36}
           alt="shuffle icon"
-          className="invert"
-        />
-        {/* <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="M560-160v-80h104L537-367l57-57 126 126v-102h80v240H560Zm-344 0-56-56 504-504H560v-80h240v240h-80v-104L216-160Zm151-377L160-744l56-56 207 207-56 56Z"/></svg> */}
+          className=""
+        /> */}
+        <svg
+          width="32px"
+          height="32px"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g id="Media / Shuffle">
+            <path
+              id="Vector"
+              d="M18 20L21 17M21 17L18 14M21 17H17C14.2386 17 12 14.7614 12 12C12 9.23858 9.76142 7 7 7H3M18 4L21 7M21 7L18 10M21 7L17 7C15.8744 7 14.8357 7.37194 14 7.99963M3 17H7C8.12561 17 9.16434 16.6277 10 16"
+              stroke="#FDF9ED"
+              strokeWidth="1"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="md:group-hover:stroke-black active:stroke-primary transition-colors duration-300"
+            />
+          </g>
+        </svg>
       </button>
     </div>
   );
