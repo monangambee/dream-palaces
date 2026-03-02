@@ -5,6 +5,7 @@ import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import ImagesExport from "../../components/Films";
 import Vimeo from "@u-wave/react-vimeo";
 import Image from "next/image";
+import Player from "@vimeo/player";
 
 const HIDE_CONTROLS_DELAY = 3000;
 
@@ -172,6 +173,14 @@ export default function ScreeningPage() {
     if (!player) return;
 
     if (isPlaying) {
+      if (isFullscreen) {
+        try {
+          await exitFullscreen();
+        } catch (error) {
+          console.warn("Fullscreen exit error:", error);
+        }
+        setIsFullscreen(false);
+      }
       player.pause();
     } else {
       try {
@@ -341,150 +350,154 @@ export default function ScreeningPage() {
       <div
         ref={videoContainerRef}
         onClick={handleVideoTap}
-        className={`relative flex items-center justify-center group ${
+        className={` flex items-center justify-center group ${
           isFullscreen
-            ? "screening-fullscreen fixed inset-0 w-full h-full overflow-hidden z-50 p-0 bg-black"
+            ? " object-contain fixed inset-0 w-full h-screen  z-50 p-0 bg-black"
             : "w-full max-w-7xl px-2 sm:px-4 md:px-8"
-        }`}
+        }`}ßßß
       >
-        <Vimeo
-          className={`${isFullscreen ? "w-full h-full" : "w-full aspect-video"} rounded-lg duration-1000 transition-opacity ease-in-out ${videoReady ? "opacity-100" : "opacity-0"} ${isFullscreen ? "rounded-none" : ""}`}
-          video={currentAsset.id}
-          autoplay={false}
-          width="100%"
-          height="100%"
-          showTitle={false}
-          showByline={false}
-          showPortrait={false}
-          color="FACC15"
-          responsive={true}
-          loop={false}
-          background={false}
-          controls={false}
-          onReady={handlePlayerReady}
-        />
-
-        {/* Hover/Touch detection layer */}
-        {(isFullscreen || (isMobile && isPlaying)) && (
-          <div className="absolute inset-0 z-10" />
-        )}
-
-        {/* Custom Controls Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-          {/* Thumbnail background until video ready */}
-          {!videoReady && currentAsset.thumbnail && (
-            <img
-              src={currentAsset.thumbnail}
-              alt={currentAsset.title}
-              className="absolute inset-0 w-full h-full object-contain pointer-events-none"
-            />
-          )}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handlePlayPause();
-            }}
-            className={`pointer-events-auto rounded-full p-4 sm:p-6  duration-300 transition-all z-10 ${centerButtonOpacity}`}
-            aria-label={isPlaying ? "Pause" : "Play"}
-          >
-            {isPlaying ? (
-              <svg
-                className="w-64 h-64 text-movieAccent"
-                viewBox="0 0 211.34 400"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g>
-                  <rect fill="currentColor" width="80" height="400" />
-                  <rect
-                    fill="currentColor"
-                    x="131.34"
-                    width="80"
-                    height="400"
-                  />
-                </g>
-              </svg>
-            ) : (
-              <svg
-                className="w-64 h-64 text-movieAccent"
-                viewBox="0 0 295.52 400"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g>
-                  <polygon
-                    fill="currentColor"
-                    points="0 0 0 400 295.52 200 0 0"
-                  />
-                </g>
-              </svg>
-            )}
-
-            {/* <Image
-                src={isPlaying ? "/icons/Pause Icon.svg" : "/icons/play2.png"}
-                width={512}
-                height={512}
-                alt={ isPlaying ? "pause" : "play"}
-                className="w-16 h-16 sm:w-24 sm:h-24 md:w-64 md:h-72 object-contain"
-              /> */}
-          </button>
-        </div>
-
-        {/* Bottom Controls */}
         <div
-          className={`absolute ${isFullscreen ? "bottom-2 sm:bottom-0" : "bottom-2 sm:bottom-0"} left-1/2 -translate-x-1/2 w-[calc(100%-1rem)] sm:w-full max-w-2xl px-2 sm:px-4 pb-4 sm:pb-2 pointer-events-none z-30 ${bottomControlsOpacity} ease-in-out duration-1000 transition-opacity`}
+          className={`${
+            isFullscreen
+              ? "flex w-full h-full items-center justify-center "
+              : "relative w-full aspect-auto "
+          }`}
         >
-          <div
-            className="h-2 sm:h-1 bg-white/30  cursor-pointer pointer-events-auto mb-2 touch-none"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleSeek(e);
-            }}
-            onTouchStart={(e) => {
-              e.stopPropagation();
-              handleSeek(e);
-            }}
-          >
-            <div
-              className="h-full bg-[#C4B0EC] "
-              style={{ width: `${progressPercent}%` }}
-            />
-          </div>
+          <Vimeo
+            className={`${isFullscreen ? "w-full h-full " : "w-full aspect-video"} rounded-lg duration-1000 flex items-center justify-center transition-opacity ease-in-out ${videoReady ? "opacity-100" : "opacity-0"} ${isFullscreen ? "rounded-none" : ""}`}
+            video={currentAsset.id}
+            autoplay={false}
+            width="100%"
+            height="100%"
+            showTitle={false}
+            showByline={false}
+            showPortrait={false}
+            color="FACC15"
+            responsive={false}
+            loop={false}
+            background={false}
+            controls={false}
+            onReady={handlePlayerReady}
+          />
 
-          <div className="flex items-center justify-between">
-            <div className="text-[#C4B0EC] text-xs sm:text-sm font-avenir">
-              {formatTime(currentTime)} / {formatTime(duration)}
-            </div>
+          {/* Hover/Touch detection layer */}
+          {(isFullscreen || (isMobile && isPlaying)) && (
+            <div className="absolute inset-0 z-10" />
+          )}
+
+          {/* Custom Controls Overlay */}
+          <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none z-20">
+            {/* Thumbnail background until video ready */}
+            {!isPlaying && !isBuffering && (
+              <img
+                src={
+                  "https://videoapi-muybridge.vimeocdn.com/animated-thumbnails/image/1d8f168a-b823-4d54-96db-c437ec81aa53.gif?ClientID=sulu&Date=1772450589&Signature=c328f11e3c46256ad8ada2f04993f2fd6cd539db"
+                }
+                alt={currentAsset.title}
+                className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              />
+            )}
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                handleFullscreen();
+                handlePlayPause();
               }}
-              className="rounded p-1 sm:p-2 pointer-events-auto"
-              aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+              className={`pointer-events-auto rounded-full p-4 sm:p-6  duration-300 transition-all z-10 ${centerButtonOpacity}`}
+              aria-label={isPlaying ? "Pause" : "Play"}
             >
-              {isFullscreen ? (
+              {isPlaying ? (
                 <svg
+                  className="w-64 h-64 text-movieAccent"
+                  viewBox="0 0 211.34 400"
                   xmlns="http://www.w3.org/2000/svg"
-                  height="20px"
-                  viewBox="0 -960 960 960"
-                  width="20px"
-                  fill="#C4B0EC"
-                  className="sm:w-6 sm:h-6"
                 >
-                  <path d="M240-120v-120H120v-80h200v200h-80Zm400 0v-200h200v80H720v120h-80ZM120-640v-80h120v-120h80v200H120Zm520 0v-200h80v120h120v80H640Z" />
+                  <g>
+                    <rect fill="currentColor" width="80" height="400" />
+                    <rect
+                      fill="currentColor"
+                      x="131.34"
+                      width="80"
+                      height="400"
+                    />
+                  </g>
                 </svg>
               ) : (
                 <svg
+                  className="w-64 h-64 text-movieAccent"
+                  viewBox="0 0 295.52 400"
                   xmlns="http://www.w3.org/2000/svg"
-                  height="20px"
-                  viewBox="0 -960 960 960"
-                  width="20px"
-                  fill="#C4B0EC"
-                  className="sm:w-6 sm:h-6"
                 >
-                  <path d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z" />
+                  <g>
+                    <polygon
+                      fill="currentColor"
+                      points="0 0 0 400 295.52 200 0 0"
+                    />
+                  </g>
                 </svg>
               )}
             </button>
+          </div>
+
+          {/* Bottom Controls */}
+          <div
+            className={`absolute ${isFullscreen ? "bottom-2 sm:bottom-0" : "bottom-2 sm:bottom-0"} left-1/2 -translate-x-1/2 w-[calc(100%-1rem)] sm:w-full max-w-2xl px-2 sm:px-4 pb-4 sm:pb-2 pointer-events-none z-30 ${bottomControlsOpacity} ease-in-out duration-1000 transition-opacity`}
+          >
+            <div
+              className="h-2 sm:h-1 bg-white/30  cursor-pointer pointer-events-auto mb-2 touch-none"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSeek(e);
+              }}
+              onTouchStart={(e) => {
+                e.stopPropagation();
+                handleSeek(e);
+              }}
+            >
+              <div
+                className="h-full bg-[#C4B0EC] "
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="text-[#C4B0EC] text-xs sm:text-sm font-avenir">
+                {formatTime(currentTime)} / {formatTime(duration)}
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleFullscreen();
+                }}
+                className="rounded p-1 sm:p-2 pointer-events-auto"
+                aria-label={
+                  isFullscreen ? "Exit fullscreen" : "Enter fullscreen"
+                }
+              >
+                {isFullscreen ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="20px"
+                    viewBox="0 -960 960 960"
+                    width="20px"
+                    fill="#C4B0EC"
+                    className="sm:w-6 sm:h-6"
+                  >
+                    <path d="M240-120v-120H120v-80h200v200h-80Zm400 0v-200h200v80H720v120h-80ZM120-640v-80h120v-120h80v200H120Zm520 0v-200h80v120h120v80H640Z" />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="20px"
+                    viewBox="0 -960 960 960"
+                    width="20px"
+                    fill="#C4B0EC"
+                    className="sm:w-6 sm:h-6"
+                  >
+                    <path d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>

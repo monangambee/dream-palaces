@@ -1,6 +1,7 @@
 varying vec2 vUv;
 varying float vGroup;
 varying vec3 vColor;
+varying float vFeatured;
 varying float vScale;
 uniform float uTime;
 uniform float uSize;
@@ -13,7 +14,7 @@ void main() {
     // Featured cinemas have scales from 5.0 to 8.8 (Math.max(5.0, baseScale + 1.0))
     // Non-featured cinemas have scales from 0.7 to 7.8 (baseScale)
     // Using threshold of 4.5 to distinguish between them
-  bool isFeatured = vScale > 4.0;
+  bool isFeatured = vFeatured > 0.5;
 
     // Select texture based on featured status
   vec4 particleTexture;
@@ -34,7 +35,7 @@ void main() {
   // strength = step(0.5, strength);
   // strength *= 2.0;
   strength = 1.0 - strength;
-  strength = pow(strength, 10.0);
+  strength = pow(strength, 18.0);
 
   // strength = strength * 0.4;
 

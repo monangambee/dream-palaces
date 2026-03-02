@@ -17,7 +17,7 @@ export default async function HomePage() {
   let error = null;
 
   try {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV ==! "development") {
       fullData = [];
     } else {
       fullData = await fetchAirtableDataProgressive(

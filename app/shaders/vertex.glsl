@@ -8,6 +8,9 @@ attribute vec3 color;
 varying vec3 vColor;
 uniform float uPosition;
 varying float vScale;
+attribute float aFeatured;
+varying float vFeatured;
+
 uniform float uDevicePixelRatio;
 
 // simplex noise functions (inlined)
@@ -118,4 +121,5 @@ void main() {
   vUv = uv;
   vColor = color;
   vScale = aScale;
+  vFeatured = aFeatured;
 }

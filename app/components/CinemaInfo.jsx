@@ -59,7 +59,7 @@ const CinemaInfo = () => {
       className="fixed flex flex-col gap-2 text-primary z-50 bg-background bg-opacity-95 px-4 sm:px-8 pb-8 overflow-y-scroll no-scrollbar border-primary border-[0.5px] shadow-2xl font-avenir
       bottom-0 left-0 right-0 max-h-[60vh]
       sm:bottom-10 sm:right-5 sm:left-auto sm:max-w-[80vw] sm:min-w-[300px]
-      md:max-w-[50vw] md:min-w-[20vw] md:max-h-[50vh]"
+      md:max-w-[50vw] md:min-w-[20vw] md:max-h-[80vh]"
     >
       <button
         onClick={clearSelectedCinema}
@@ -68,25 +68,28 @@ const CinemaInfo = () => {
       >
         ×
       </button>
-      <div className="font-bold text-lg mb-3 top-0 bg-black z-10 py-2 pt-8 pr-12">
+      <div className="font-bold sticky text-lg mb-3 top-0 bg-black z-10 py-2 pt-8 pr-12">
         {selectedCinema.fields.Name}
         <div className="text-base font-light mb-2 pt-2">
           {selectedCinema.fields.City}, {selectedCinema.fields.Country}
         </div>
       </div>
-{selectedCinema.fields.Creation && (
-      <div className='mb-2 text-xs'>
+
+      {selectedCinema.fields.Creation && (
+        <div className="mb-2 text-xs">
           {selectedCinema.fields.Creation}
-          {selectedCinema.fields.Closure && ` - ${selectedCinema.fields.Closure}`}
+          {selectedCinema.fields.Closure &&
+            ` - ${selectedCinema.fields.Closure}`}
         </div>
       )}
       <div className="text-gray-400 text-xs mb-2">
         {selectedCinema.fields.Condition}
       </div>
+
       {imageUrls.length > 0 && (
         <div className="relative mb-2 z-0">
           {/* Image container */}
-          <div className="relative w-full max-w-[300px] aspect-square">
+          <div className="relative w-full aspect-square object-contain">
             {imageUrls.map((urlObj, index) => {
               let attemptCount = 0;
               const tryNextUrl = (e) => {

@@ -34,7 +34,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
   useEffect(() => {
     raycaster.near = 0;
     raycaster.far = 1000;
-      raycaster.params.Points.threshold = 20
+      raycaster.params.Points.threshold = 15
     gl.setClearColor('#000000', 1);
     gl.toneMapping = THREE.ACESFilmicToneMapping;
     gl.outputColorSpace = THREE.SRGBColorSpace;
@@ -135,21 +135,12 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
 
   // Create a set of featured cinema IDs for quick lookup
   // Only cinemas with featured = true should be yellow
-  const featuredCinemas = useMemo(() => {
-    const featured = new Set();
+  const featuredCinemas = useMemo(
+    () => new Set(originalData?.filter(c => c.fields?.featured ?? c.fields?.Featured).map(c => c.id)),
+    [originalData]
+  )
     
-    if (originalData && originalData.length > 0) {
-      originalData.forEach((cinema) => {
-        // Check if featured field is true (case-insensitive check)
-        const featuredValue = cinema.fields?.featured || cinema.fields?.Featured;
-        if (featuredValue === true || featuredValue === 'true' || featuredValue === 'True') {
-          featured.add(cinema.id);
-        }
-      });
-    }
-    
-    return featured;
-  }, [originalData]);
+
 
   // Calculate data richness score for a cinema record
   const calculateDataRichness = useCallback((cinema) => {
@@ -183,12 +174,13 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
     return score;
   }, []);
 
-  const { positions, groups, scales, colors } = useMemo(() => {
+  const { positions, groups, scales, colors, featured } = useMemo(() => {
    
     const groups = new Float32Array(count);
     const positions = new Float32Array(count * 3);
     const scales = new Float32Array(count);
     const colors = new Float32Array(count * 3);
+     const featured = new Float32Array(count)
 
     // Normalize based on FULL dataset (all cinemas) for consistent scaling
     // This ensures particles maintain their size relationship regardless of filters
@@ -225,21 +217,11 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
         }
       }
       
-      // Check if this cinema is featured
-      const isFeatured = featuredCinemas.has(cinema.id);
+            // Check if this cinema is featured
+      const isFeatured = featuredCinemas.has(cinema.id)
+      featured[i] = isFeatured ? 1.0 : 0.0
       
-      // Calculate data richness and normalize to scale range
-      const richness = richnessScores[i];
-      const normalizedRichness = (richness - minRichness) / richnessRange; // 0 to 1
-      
-      // Map richness to base scale: min 1.0, max 4.0
-      // More information = larger particle base
-      const baseRichnessScale = 1.0 + (normalizedRichness * 5.0); // Range: 1.0 to 4.0
-      
-      // Add random multiplier (0.7 to 1.3) using seeded random for consistency
-      // This ensures particles have variation while maintaining deterministic results
-      const randomMultiplier = 0.7 + (seededRandom(seed + 100) * 0.6); // Range: 0.7 to 1.3
-      const baseScale = Math.random()  // Range: 0.5 to 5.0
+     const baseScale = Math.random() * 1.0 + 0.5 // Range: 0.5 to 5.0
       
       if (isFeatured) {
         scales[i] =  baseScale * 2.0; // Fixed size for featured cinemas (maintains constant size regardless of zoom)
@@ -283,7 +265,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
       positions.set([x, y, z], i * 3);
     }
 
-    return { positions, groups, scales, colors };
+    return { positions, groups, scales, colors, featured };
   }, [count, groupIndex, originalData, featuredCinemas, radius, calculateDataRichness, fullDataForNormalization]);
 
   useFrame((state) => {
@@ -371,6 +353,12 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex, fullDataForN
             attach="attributes-aScale"
             count={scales.length}
             array={scales}
+            itemSize={1}
+          />
+             <bufferAttribute
+            attach="attributes-aFeatured"
+            count={featured.length}
+            array={featured}
             itemSize={1}
           />
           <bufferAttribute
@@ -482,7 +470,7 @@ export default function Scene({ fullData }) {
       <OrbitControls
         enableRotate={false}
         panSpeed={1.2}
-        maxDistance={800}
+        maxDistance={400}
         minDistance={10}
         mouseButtons={{
           LEFT: THREE.MOUSE.PAN,
