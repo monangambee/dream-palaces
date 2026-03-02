@@ -287,7 +287,7 @@ export default function ScreeningPage() {
         onClick={handleVideoTap}
         className={`flex items-center justify-center group ${
           isFullscreen
-            ? "object-contain fixed inset-0 w-full h-screen z-50 p-0 bg-black"
+            ? "object-contain fixed inset-0 w-full h-full z-50 p-0 bg-black"
             : "w-full max-w-7xl px-2 sm:px-4 md:px-8"
         }`}
       >
@@ -295,15 +295,15 @@ export default function ScreeningPage() {
           className={
             isFullscreen
               ? "flex w-full h-full items-center justify-center"
-              : "relative w-full aspect-auto"
+              : "relative w-full aspect-auto h-full"
           }
         >
           <Vimeo
-            className={`${isFullscreen ? "w-full h-full rounded-none" : "w-full aspect-video rounded-lg"} duration-1000 flex items-center justify-center transition-opacity ease-in-out ${videoReady ? "opacity-100" : "opacity-0"}`}
+            className={`vimeo-player ${isFullscreen ? "w-full h-full rounded-none" : "w-full h-full aspect-video rounded-lg"} duration-1000 flex items-center justify-center transition-opacity ease-in-out ${videoReady ? "opacity-100" : "opacity-0"}`}
             video={currentAsset.id}
             autoplay={false}
-            width="100%"
-            height="100%"
+            // width="100%"
+            // height="100%"
             showTitle={false}
             showByline={false}
             showPortrait={false}
