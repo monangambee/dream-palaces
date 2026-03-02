@@ -61,7 +61,7 @@ void main() {
     //
   vec3 color = mix(vec3(0.0), vColor, strength);
 
-  gl_FragColor = vec4(color, 1.0);
+  gl_FragColor = vec4(vColor, strength);
   // gl_FragColor = particleTexture;
     #include <tonemapping_fragment>
     #include <colorspace_fragment>

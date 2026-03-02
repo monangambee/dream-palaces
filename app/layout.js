@@ -1,7 +1,6 @@
 import "../styles/globals.css";
-import Image from "next/image";
 import Header from "./components/Header";
-import NavLinks from "./components/NavLinks";
+import Footer from "./components/Footer";
 
 export const metadata = {
   title: "Dream Palaces",
@@ -89,67 +88,7 @@ export default async function RootLayout({ children }) {
 
         {children}
 
-        <footer className="w-full min-h-[10vh] flex z-20  justify-between font-frontage bg-background border-t-[0.5px] border-primary text-primary p-2  text-[10px]  sm:text-xs">
-          <div className="p-2 flex w-full sm:w-[100%] items-start flex-row justify-between sm:flex-row gap-4 sm:gap-2 px-2 sm:px-16">
-          <div className="flex w-full sm:w-[80%]  sm:p-2 justify-start sm:justify-start flex-col  md:flex-col items-start gap-8 h-full">
-            {/* <h2 className="text-sm">Quick Links</h2> */}
-            <p>
-              <Link className="hover:text-homeAccent" href="/">
-                Home 
-              </Link>
-            </p>
-            {/* <p className="hidden md:block">|</p> */}
-
-            <p>
-              <Link className="hover:text-[#ffD700]" href="/about">
-                About 
-              </Link>
-            </p>
-            {/* <p className="hidden md:block">|</p> */}
-            {/* <p>
-              <Link href="/map" className="hover:text-[#007bff]">
-                Map 
-              </Link>
-            </p>
-            {/* <p className="hidden md:block">|</p> */}
-
-            {/* <p>
-              <Link href={`/screening/${firstFilmSlug || ''}`} className="hover:text-[#C4B0EC]">
-                Screening Room
-              </Link> 
-            </p> */}
-          </div>
-          <div className="w-full">
-            <NavLinks firstFilmSlug={firstFilmSlug} />
-          </div>
-          <div className="flex h-full justify-start items-center sm:justify-center  sm:p-4 flex-col sm:flex-row sm:gap-6">
-            {/* <p className="hidden sm:block">
-              Contact
-            </p> */}
-            <Link href="mailto:monangambee@gmail.com " className="hover:text-homeAccent ">
-              <Image src={'/icons/email.png'}
-                alt="Email Icon"
-                width={64}
-                height={64}
-                className=" invert"
-                
-              />
-            </Link>
-
-            <Link href={'https://www.instagram.com/monangambee/'} target="_blank" rel="noopener noreferrer">
-
-              <Image src={'/icons/insta.png'}
-                alt="Instagram Icon"
-                width={64 }
-                height={64}
-                className="mt-2 sm:mt-0 invert pt-3 sm:pt-0"
-                
-              />
-            </Link>
-          </div>
-            </div>
-
-        </footer>
+        <Footer firstFilmSlug={firstFilmSlug} />
       </body>
     </html>
   );

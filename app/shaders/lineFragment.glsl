@@ -34,7 +34,7 @@ void main() {
 
     // color = color * vColor;
 
-    gl_FragColor = vec4(1.0, 1.0, 1.0, 0.2);
+    gl_FragColor = vec4(0.88, 0.88, 0.88, 0.1);
     // gl_FragColor = vec4(vColor, 1.0);
     #include <tonemapping_fragment>
     #include <colorspace_fragment> // Make lines fully opaque and visible
