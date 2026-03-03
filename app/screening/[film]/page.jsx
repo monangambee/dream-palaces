@@ -66,9 +66,9 @@ export default function ScreeningPage() {
           setCurrentAsset(asset)
 
           // First asset in the list is the latest film
-          if (asset && data.assets[0] && asset.id === data.assets[0].id) {
-            setIsLatestFilm(true)
-          }
+          setIsLatestFilm(
+            !!(asset && data.assets[0] && asset.id === data.assets[0].id),
+          )
         } else {
           console.error("Failed to load assets:", data.error)
         }
@@ -323,7 +323,7 @@ export default function ScreeningPage() {
           {/* Custom Controls Overlay */}
           <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none z-20">
             {/* Thumbnail background until video ready */}
-            {!isPlaying && !isBuffering && currentAsset.thumbnail && (
+            {!isPlaying && !isBuffering && currentAsset.thumbnail && isLatestFilm && (
               <img
                 src={'https://videoapi-muybridge.vimeocdn.com/animated-thumbnails/image/1d8f168a-b823-4d54-96db-c437ec81aa53.gif?ClientID=sulu&Date=1772467095&Signature=aeece7e2e99bb38a6e18e7e8e655946ccbd14dab'}
                 alt={currentAsset.title}

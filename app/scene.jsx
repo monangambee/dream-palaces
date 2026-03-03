@@ -19,6 +19,8 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP);
 
+
+
 const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
 
   const particleTexture = useLoader(THREE.TextureLoader, "/particle/star_04.png");
@@ -142,7 +144,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
 
       const x = distance * Math.cos(angle);
       const y = distance * Math.sin(angle) + 10;
-      const z = 0;
+      const z = 0
 
       positions.set([x, y, z], i * 3);
     }
@@ -305,7 +307,7 @@ export default function Scene({ fullData }) {
         />
       )}
 
-      <Stars radius={100} depth={50} count={100} factor={1} saturation={2} fade speed={1} />
+      <Stars radius={500} depth={10} count={1000} factor={5} saturation={1} fade speed={1} />
 
 
 

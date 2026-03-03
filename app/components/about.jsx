@@ -19,7 +19,7 @@ const About = () => {
   useGSAP(() => {
     gsap.fromTo(
       [textRef.current, span1Ref.current, span2Ref.current, span3Ref.current],
-      { opacity: 0.3, y: 0 },
+      { opacity: 0.2, y: 0 },
       {
         opacity: 1,
         y: -5,
@@ -27,8 +27,8 @@ const About = () => {
         stagger: 0.3,
         scrollTrigger: {
           trigger: textRef.current,
-          start: 'top 80%',
-          end: 'top 20%',
+          start: 'top 100%',
+          end: 'top 10%',
           scrub: true,
     
         },
@@ -48,14 +48,12 @@ const About = () => {
             priority
           />
         </div> */}
-        <div className='w-full lg:w-1/2 flex h-full justify-start items-center text-center flex-col gap-4 '>
+        <div className='w-full lg:w-1/2 flex h-full justify-start items-center text-center flex-col '>
           <p 
           ref={textRef}
-          className='w-full h-full flex flex-col md:w-[100%] text-xs  z-20 gap-2 sm:text-base xl:text-2xl items-start justify-start font-light font-avenir leading-relaxed'>
-           {/* <span className=' text-4xl sm:text-5xl xl:text-7xl inline align-baseline'> */}
-            Dream Palaces
-            {/* </span> */}
-            explores the architectural, geographical, and cultural
+          className='w-1/2 md:w-123 lg:w-full h-full flex flex-col text-xs  z-20 gap-4 sm:text-base 2xl:text-xl items-start justify-start font-light font-avenir leading-relaxed'>
+   
+            Dream Palaces explores the architectural, geographical, and cultural
             histories of Black cinema spaces across six countries in Africa and
             the diaspora.
 
@@ -88,7 +86,7 @@ const About = () => {
           </p>
             <Link
                 href='/about'
-                className='text-primary uppercase md:hover:bg-primary hover:text-black p-3 xl:p-4 font-avenir text-xs lg:text-xs border-[0.5px] border-primary '
+                className='text-primary uppercase md:hover:bg-primary hover:text-black p-3 xl:p-5 font-avenir text-xs lg:text-xs border-[0.5px] border-primary '
               >
                 Learn More
               </Link>
