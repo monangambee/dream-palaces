@@ -54,8 +54,8 @@ export default function NavLinks({ firstFilmSlug }) {
 
     // Default - show all
     return [
-      { href: '/constellation', label: 'Constellation |', hoverColor: 'hover:text-[#ffD700]' },
-      { href: '/map', label: 'Map |', hoverColor: 'hover:text-[#007bff]' },
+      { href: '/constellation', label: 'Constellation', hoverColor: 'hover:text-[#ffD700]' },
+      { href: '/map', label: 'Map', hoverColor: 'hover:text-[#007bff]' },
       { href: `/screening/${firstFilmSlug || ''}`, label: 'Screening Room', hoverColor: 'hover:text-[#C4B0EC]' },
     ]
   }
@@ -67,25 +67,25 @@ export default function NavLinks({ firstFilmSlug }) {
     return (
       <div className="flex items-center justify-center gap-6">
         <Link href="mailto:monangambee@gmail.com" className="hover:text-homeAccent">
-          <Image src={'/icons/email.png'} alt="Email Icon" width={28} height={28} className="invert" />
+          <Image src={'/icons/email.png'} alt="Email Icon" width={24} height={24} className="invert" />
         </Link>
 
         <Link href={'https://www.instagram.com/monangambee/'} target="_blank" rel="noopener noreferrer">
-          <Image src={'/icons/insta.png'} alt="Instagram Icon" width={28} height={28} className="invert" />
+          <Image src={'/icons/insta.png'} alt="Instagram Icon" width={24} height={24} className="invert" />
         </Link>
       </div>
     )
   }
 
   return (
-    <ul className="flex w-full h-full font-frontage sm:w-[100%] items-end text-[9px] sm:text-sm sm:p-8 justify-center flex-row md:flex-row sm:items-end sm:self-end px-2 gap-8">
+    <ul className="flex w-full h-full font-frontage sm:w-[100%] items-end text-[9px] sm:text-sm sm:p-8 justify-center flex-row md:flex-row sm:items-end sm:self-end px-2 gap-0">
       {navLinks.map((link, index) => (
-        <div key={link.href} className="flex items-center gap-4">
+        <li key={link.href} className="flex items-center">
           <Link className={link.hoverColor} href={link.href}>
             {link.label}
           </Link>
-          {index < navLinks.length - 1 && <span>|</span>}
-        </div>
+          {index < navLinks.length - 1 && <span className="mx-4">|</span>}
+        </li>
       ))}
     </ul>
   )

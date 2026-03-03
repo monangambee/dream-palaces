@@ -98,11 +98,11 @@ export default async function HomePage() {
 
         </section>
 
-        <div className="w-[100%] h-full bg-background font-avenir flex  flex-col md:px-16 xl:px-24 items-center justify-center">
+        <div className="w-[100%] h-full bg-background font-avenir flex  flex-col md:px-16 xl:px-24 items-center justify-center pb-8">
        
 
           <div className="flex flex-col gap-4 sm:gap-8 w-[100%]  items-between justify-start px-4 xl:px-32 pb-8">
-               <p className=" text-primary z-20  text-center uppercase font-avenir text-xs 2xl:text-sm sm:text-base">
+               <p className=" text-primary z-10  text-center uppercase font-avenir text-xs 2xl:text-sm sm:text-sm">
             [ Choose your experience ]
           </p>
             {modes.map((mode, index) => (
@@ -115,7 +115,7 @@ export default async function HomePage() {
                     {mode.name}
                   </p>
                   {mode.image && (
-                    <div className="absolute right-1/4 top-1/2 -translate-y-1/2 w-[300px] opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <div className="absolute right-20 top-1/2 -translate-y-1/2 w-[150px] xl:w-[180px] 2xl:w-[300px] opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20">
                       <img
                         src={mode.image}
                         alt={mode.name}

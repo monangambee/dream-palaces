@@ -208,8 +208,8 @@ const Hero = ({ fullData }) => {
   };
 
   return (
-    <div className="w-full sm:w-[80%] flex flex-col justify-center items-center h-full pt-4 sm:px-4 gap-8 md:gap-8 md:pt-16 xl:px-4">
-      <div className="relative  w-[100%] h-[150px] sm:h-[250px]  xl:h-[400px] flex flex-row gap-2 items-start justify-center">
+    <div className="w-full sm:w-[80%] flex flex-col justify-center items-center h-full pt-4 sm:px-4 2xl:gap-8 gap-8 md:pt-16 2xl:px-4">
+      <div className="relative  w-[100%] h-[150px] sm:h-[300px]  2xl:h-[400px] flex flex-row gap-2 items-start justify-center">
         {/* <div className="grid  grid-cols-2 gap-4  p-4  sm:w-full sm:h-full min-h-screen"> */}
         {imageUrls.map((image, index) => {
           if (!image.url) return null;
@@ -217,7 +217,7 @@ const Hero = ({ fullData }) => {
           return (
             <div
               key={index}
-              className="group relative flex-1 max-w-[30vw]  hover:flex-[1.3] h-full transition-all duration-300 ease-in-out mx-auto"
+              className="group relative flex-1  max-w-[30vw]   hover:flex-[1.5] h-full transition-all duration-300 ease-in-out mx-auto"
               // style={!isMobile ? position : {}}
             >
               <Image
