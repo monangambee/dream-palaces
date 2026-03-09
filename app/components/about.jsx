@@ -51,7 +51,7 @@ const About = () => {
         <div className='w-full lg:w-1/2 flex h-full justify-start items-center text-center flex-col '>
           <p 
           ref={textRef}
-          className='w-1/2 md:w-123 lg:w-full h-full flex flex-col text-xs  z-20 gap-4 sm:text-base 2xl:text-xl items-start justify-start font-light font-avenir leading-relaxed'>
+          className='w-full md:w-1/3 lg:w-full h-full flex flex-col text-sm  z-20 gap-4 sm:text-base 2xl:text-xl items-start justify-start font-light font-avenir leading-relaxed'>
    
             Dream Palaces explores the architectural, geographical, and cultural
             histories of Black cinema spaces across six countries in Africa and

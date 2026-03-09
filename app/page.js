@@ -102,7 +102,7 @@ export default async function HomePage() {
        
 
           <div className="flex flex-col gap-4 sm:gap-8 w-[100%]  items-between justify-start px-4 xl:px-32 pb-8">
-               <p className=" text-primary z-10  text-center uppercase font-avenir text-xs 2xl:text-sm sm:text-sm">
+               <p className=" text-primary z-10 pb-2  text-center uppercase font-avenir text-xs 2xl:text-sm sm:text-sm">
             [ Choose your experience ]
           </p>
             {modes.map((mode, index) => (
