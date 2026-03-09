@@ -38,10 +38,7 @@ const Hero = ({ fullData }) => {
       credit: "© Mamadou Dia, 2016. (Still from Samedi Cinema)",
       country: "Dakar, Senegal",
     },
-    {
-      // url: "/images/Durban Lyric 1.png",
-      // credit: ""
-    },
+  
     {
       name: "Eyethu Cinema",
       url: "/images/Eyethu Johannesburg 4.jpg",
@@ -118,7 +115,7 @@ const Hero = ({ fullData }) => {
     },
     {
       name: "Abbia Cinema",
-      url: "/images/Yaoundé Abbia 2.jpg",
+      url: "/images/YaoundeAbbia2.jpg",
       credit: "",
       country: "Yaoundé, Cameroon",
     },
@@ -208,7 +205,7 @@ const Hero = ({ fullData }) => {
   };
 
   return (
-    <div className="w-full sm:w-[80%] flex flex-col justify-center items-center h-full pt-4 sm:px-4 2xl:gap-8 gap-8 md:pt-16 2xl:px-4">
+    <div className="w-full sm:w-[80%] flex flex-col justify-center items-center h-full px-2 pt-4 sm:px-4 2xl:gap-8 gap-8 md:pt-16 2xl:px-4">
       <div className="relative  w-[100%] h-[150px] sm:h-[300px]  2xl:h-[400px] flex flex-row gap-2 items-start justify-center">
         {/* <div className="grid  grid-cols-2 gap-4  p-4  sm:w-full sm:h-full min-h-screen"> */}
         {imageUrls.map((image, index) => {
@@ -263,11 +260,12 @@ const Hero = ({ fullData }) => {
           className=""
         /> */}
         <svg
-          width="32px"
-          height="32px"
+          // width="32px"
+          // height="32px"
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          className="w-4 sm:w-8 sm:h-8"
         >
           <g id="Media / Shuffle">
             <path

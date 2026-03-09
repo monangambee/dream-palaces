@@ -130,7 +130,17 @@ export default function ScreeningPage() {
       playerInstance.getDuration().then(setDuration)
       setVideoReady(true)
     })
-  }, [])
+    playerInstance.on("fullscreenchange", (data) => {
+      const nowFullscreen =
+        typeof data === "boolean" ? data : !!data?.fullscreen
+      setIsFullscreen(nowFullscreen)
+      if (nowFullscreen) {
+        scheduleHideControls()
+      } else {
+        setShowControls(false)
+      }
+    })
+  }, [scheduleHideControls])
 
   const handleSeek = useCallback(
     async (e) => {
@@ -154,13 +164,35 @@ export default function ScreeningPage() {
     [player, duration],
   )
 
+  const requestNativeFullscreen = useCallback(async () => {
+    if (player?.requestFullscreen) {
+      await player.requestFullscreen()
+      return
+    }
+
+    if (videoContainerRef.current) {
+      await requestFullscreen(videoContainerRef.current)
+    }
+  }, [player])
+
+  const exitNativeFullscreen = useCallback(async () => {
+    if (player?.exitFullscreen) {
+      await player.exitFullscreen()
+      return
+    }
+
+    if (getFullscreenElement()) {
+      await exitFullscreen()
+    }
+  }, [player])
+
   const handlePlayPause = useCallback(async () => {
     if (!player) return
 
     if (isPlaying) {
       if (isFullscreen) {
         try {
-          await exitFullscreen()
+          await exitNativeFullscreen()
         } catch (error) {
           console.warn("Fullscreen exit error:", error)
         }
@@ -169,35 +201,52 @@ export default function ScreeningPage() {
       player.pause()
     } else {
       try {
-        if (!getFullscreenElement() && videoContainerRef.current && !isMobile) {
-          await requestFullscreen(videoContainerRef.current)?.catch(() => {})
-          setIsFullscreen(true)
+        if (!isMobile && !isFullscreen) {
+          try {
+            await requestNativeFullscreen()
+            setIsFullscreen(true)
+          } catch (error) {
+            console.warn("Auto fullscreen error:", error)
+          }
         }
         await player.play()
       } catch (error) {
         console.error("Play error:", error)
       }
     }
-  }, [player, isPlaying, isMobile, isFullscreen])
+  }, [
+    player,
+    isPlaying,
+    isMobile,
+    isFullscreen,
+    exitNativeFullscreen,
+    requestNativeFullscreen,
+  ])
 
   const handleFullscreen = useCallback(async () => {
     if (!videoContainerRef.current) return
 
     try {
-      if (getFullscreenElement()) {
-        await exitFullscreen()
+      if (isFullscreen || getFullscreenElement()) {
+        await exitNativeFullscreen()
         setIsFullscreen(false)
       } else {
-        await requestFullscreen(videoContainerRef.current)
+        await requestNativeFullscreen()
         setIsFullscreen(true)
+        if (isMobile) {
+          scheduleHideControls()
+        }
       }
     } catch (error) {
-      if (isMobile) {
-        setIsFullscreen(!isFullscreen)
-      }
       console.error("Fullscreen error:", error)
     }
-  }, [isMobile, isFullscreen])
+  }, [
+    isFullscreen,
+    isMobile,
+    exitNativeFullscreen,
+    requestNativeFullscreen,
+    scheduleHideControls,
+  ])
 
   const handleVideoTap = useCallback(() => {
     if (!isMobile) return
@@ -340,7 +389,7 @@ export default function ScreeningPage() {
             >
               {isPlaying ? (
                 <svg
-                  className="w-64 h-64 text-movieAccent"
+                  className="w-16 h-16 md:w-64 md:h-64 text-movieAccent"
                   viewBox="0 0 211.34 400"
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -356,7 +405,7 @@ export default function ScreeningPage() {
                 </svg>
               ) : (
                 <svg
-                  className="w-64 h-64 text-movieAccent"
+                  className="w-16 h-16 md:w-64 md:h-64 text-movieAccent"
                   viewBox="0 0 295.52 400"
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -373,7 +422,7 @@ export default function ScreeningPage() {
 
           {/* Bottom Controls */}
           <div
-            className={`absolute bottom-2 sm:bottom-0 left-1/2 -translate-x-1/2 w-[calc(100%-1rem)] sm:w-full max-w-2xl px-2 sm:px-4 pb-4 sm:pb-2 pointer-events-none z-30 ${bottomControlsOpacity} ease-in-out duration-1000 transition-opacity`}
+            className={`absolute bottom-0 sm:bottom-0 left-1/2 -translate-x-1/2 w-[calc(100%-1rem)] sm:w-full max-w-2xl px-2 sm:px-4 pb-4 sm:pb-2 pointer-events-none z-30 ${bottomControlsOpacity} ease-in-out duration-1000 transition-opacity`}
           >
             <div
               className="h-2 sm:h-1 bg-white/30 cursor-pointer pointer-events-auto mb-2 touch-none"
@@ -436,8 +485,8 @@ export default function ScreeningPage() {
       </div>
 
       {/* Film Info Section */}
-      <div className="w-full sm:w-[80%] lg:w-[50%] px-4 md:px-8 pb-4 pt-6 sm:pt-4 font-avenir">
-        <h1 className="pb-4 sm:pb-8 font-frontage text-lg sm:text-xl md:text-2xl">{`${currentAsset.title}, ${currentAsset.year}`}</h1>
+      <div className="w-full sm:w-[80%] lg:w-[50%] px-5 md:px-8 pb-4 pt-6 sm:pt-4 font-avenir">
+        <h1 className="pb-4 sm:pb-8 font-frontage text-lg sm:text-xl md:text-2xl">{`${currentAsset.title}`}</h1>
         <button
           onClick={() => setShowReadMore(!showReadMore)}
           className="group text-primary font-bold uppercase text-sm sm:text-base hover:text-[#C4B0EC] ease-in-out duration-500 transition-colors flex items-center gap-2"
@@ -458,7 +507,7 @@ export default function ScreeningPage() {
       </div>
 
       {/* Archive Section */}
-      <div className="w-full sm:w-[80%] lg:w-[50%] px-4 md:px-8 pb-8 font-avenir">
+      <div className="w-full sm:w-[80%] lg:w-[50%] px-5 md:px-8 pb-8 font-avenir">
         <button
           onClick={() => setShowArchive(!showArchive)}
           className="group text-primary font-bold uppercase text-sm sm:text-base hover:text-[#C4B0EC] ease-in-out transition-colors duration-500 flex items-center gap-2"
