@@ -1,18 +1,31 @@
-'use client';
+/**
+ * Constellation – Three.js Canvas Wrapper
+ *
+ * Three-tier data loading strategy:
+ *  1. Server-side prop (fullData) passed from the page component
+ *  2. localStorage cache (avoids a network round-trip on repeat visits)
+ *  3. Client-side /api/airtable fetch as last resort
+ *
+ * Once data is available, it's pushed into the Zustand store and
+ * rendered through <Scene /> as a particle cloud.
+ */
+'use client'
 
-import { Canvas } from "@react-three/fiber";
-import dynamic from 'next/dynamic';
-import { useEffect, useState, useRef } from 'react';
-import { AdaptiveDpr, Bvh } from "@react-three/drei";
-import { useStore } from "../utils/useStore";
+import { Canvas } from "@react-three/fiber"
+import dynamic from 'next/dynamic'
+import { useEffect, useState, useRef } from 'react'
+import { AdaptiveDpr, Bvh } from "@react-three/drei"
+import { useStore } from "../utils/useStore"
 
-import {Bloom, EffectComposer} from '@react-three/postprocessing'
+import { Bloom, EffectComposer } from '@react-three/postprocessing'
 
-const Scene = dynamic(() => import('../scene'), { ssr: false });
-const Filter = dynamic(() => import('./filter'), { ssr: false });
-const CinemaInfo = dynamic(() => import('./CinemaInfo'), { ssr: false });
+// Dynamically imported so Three.js never runs during SSR
+const Scene = dynamic(() => import('../scene'), { ssr: false })
+const Filter = dynamic(() => import('./filter'), { ssr: false })
+const CinemaInfo = dynamic(() => import('./CinemaInfo'), { ssr: false })
 
-const CACHE_KEY = 'airtable-cache';
+// ── localStorage helpers for offline-first data caching ──────
+const CACHE_KEY = 'airtable-cache'
 
 const saveCache = (data) => {
   localStorage.setItem(CACHE_KEY, JSON.stringify({ fullData: data, timestamp: Date.now() }));

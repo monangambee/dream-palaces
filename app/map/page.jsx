@@ -1,5 +1,9 @@
-
-
+/**
+ * Map Page
+ *
+ * Full-screen iframe embedding the external Dream Palace Web Map
+ * (a separate Vercel-hosted app with Mapbox/Leaflet).
+ */
 export default function Map() { 
     return (
         <div className="w-screen min-h-screen h-screen bg-background text-primary">

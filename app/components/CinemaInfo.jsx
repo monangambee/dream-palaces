@@ -1,14 +1,29 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { useStore } from "../utils/useStore";
-import ReactMarkdown from "react-markdown";
+/**
+ * CinemaInfo – Detail Panel
+ *
+ * Slides up (mobile) or in from the right (desktop) when a cinema
+ * particle is clicked in the constellation.
+ *
+ * Images are fetched from Google Drive using a 4-URL fallback chain
+ * because Drive's sharing URLs are unreliable:
+ *   1. /thumbnail?id=…&sz=w1000  (most reliable for public files)
+ *   2. lh3.googleusercontent.com  (direct content CDN)
+ *   3. /uc?export=download         (force download trick)
+ *   4. /uc?export=view              (legacy viewer URL)
+ *
+ * The description field is rendered as Markdown via react-markdown.
+ */
+import React, { useMemo, useState, useEffect } from "react"
+import { useStore } from "../utils/useStore"
+import ReactMarkdown from "react-markdown"
 
 const CinemaInfo = () => {
   const { selectedCinema, clearSelectedCinema } = useStore();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Convert Google Drive links to direct image URLs using thumbnail API
+  // Build an array of image objects, each with a primary URL + 3 fallbacks
   const imageUrls = useMemo(() => {
-    if (!selectedCinema?.fields?.["Image Links"]) return [];
+    if (!selectedCinema?.fields?.["Image Links"]) return []
 
     return selectedCinema.fields["Image Links"]
       .split(",")
@@ -16,22 +31,22 @@ const CinemaInfo = () => {
       .filter((link) => link.includes("drive.google.com"))
       .map((link) => {
         // Extract file ID from various Google Drive URL formats
-        // Handles: /d/FILE_ID/view, /d/FILE_ID, /file/d/FILE_ID/view?usp=drive_link
         const fileIdMatch = link.match(/\/d\/([a-zA-Z0-9_-]+)/);
         if (!fileIdMatch) {
           console.warn("Could not extract file ID from:", link);
           return null;
         }
 
-        const fileId = fileIdMatch[1];
-        // Use thumbnail API as primary method (most reliable for public files)
+        const fileId = fileIdMatch[1]
+
+        // Build the 4-URL fallback chain (tried in order on <img> error)
         return {
           fileId,
           primary: `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`,
           fallback1: `https://lh3.googleusercontent.com/d/${fileId}=w1000`,
           fallback2: `https://drive.google.com/uc?export=download&id=${fileId}`,
           fallback3: `https://drive.google.com/uc?export=view&id=${fileId}`,
-        };
+        }
       })
       .filter(Boolean);
   }, [selectedCinema]);
@@ -89,10 +104,11 @@ const CinemaInfo = () => {
 
       {imageUrls.length > 0 && (
         <div className="relative mb-2 z-0">
-          {/* Image container */}
+          {/* Image gallery with fallback chain on error */}
           <div className="relative w-full aspect-square object-contain">
             {imageUrls.map((urlObj, index) => {
-              let attemptCount = 0;
+              // Track how many fallback attempts have been made for this image
+              let attemptCount = 0
               const tryNextUrl = (e) => {
                 attemptCount++;
                 if (attemptCount === 1 && urlObj.fallback1) {
@@ -123,48 +139,7 @@ const CinemaInfo = () => {
             })}
 
             {/* Navigation arrows */}
-            {/* {imageUrls.length > 1 && (
-              <>
-                <button
-                  onClick={prevImage}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 md:hover:bg-black/70 text-white rounded-full p-2 z-10 transition-all"
-                  aria-label="Previous image"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 19l-7-7 7-7"
-                    />
-                  </svg>
-                </button>
-                <button
-                  onClick={nextImage}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 md:hover:bg-black/70 text-white rounded-full p-2 z-10 transition-all"
-                  aria-label="Next image"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </button>
-              </>
-            )} */}
+           
           </div>
 
           {/* Dots indicator */}

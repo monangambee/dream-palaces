@@ -1,3 +1,18 @@
+/**
+ * Screening Page – Custom Vimeo Player
+ *
+ * Dynamic route: /screening/[film] where [film] is a URL slug derived
+ * from the video's Vimeo title.
+ *
+ * Features:
+ *  - Custom play/pause, seek bar, and fullscreen controls (Vimeo's
+ *    native controls are hidden).
+ *  - Fullscreen uses the Vimeo SDK's player.requestFullscreen() first,
+ *    falling back to the DOM Fullscreen API for broader support.
+ *  - Auto-hides controls after 3 s of inactivity during playback.
+ *  - Automatically enables the first English subtitle track on load.
+ *  - Collapsible "About Film" and "Archive" sections below the player.
+ */
 "use client"
 
 import { useParams } from "next/navigation"
@@ -5,8 +20,9 @@ import { useEffect, useState, useRef, useCallback, useMemo } from "react"
 import ImagesExport from "../../components/Films"
 import Vimeo from "@u-wave/react-vimeo"
 
-const HIDE_CONTROLS_DELAY = 3000
+const HIDE_CONTROLS_DELAY = 3000 // ms before controls auto-hide
 
+// Cross-browser fullscreen helpers (DOM API fallback)
 const getFullscreenElement = () =>
   document.fullscreenElement || document.webkitFullscreenElement
 
@@ -48,7 +64,8 @@ export default function ScreeningPage() {
     )
   }, [])
 
-   useEffect(() => {
+  // Find the matching video by comparing slugified titles
+  useEffect(() => {
     const loadAsset = async () => {
       try {
         const response = await fetch("/api/vimeo-assets")
@@ -82,6 +99,7 @@ export default function ScreeningPage() {
     loadAsset()
   }, [filmSlug])
 
+  // Auto-enable English subtitles once the player is ready
   useEffect(() => {
     if (videoReady && player) {
       player
@@ -111,6 +129,7 @@ export default function ScreeningPage() {
     }, HIDE_CONTROLS_DELAY)
   }, [])
 
+  /** Bind Vimeo player events: play, pause, buffer, time, fullscreen */
   const handlePlayerReady = useCallback((playerInstance) => {
     setPlayer(playerInstance)
     playerInstance.on("play", () => {
@@ -142,6 +161,7 @@ export default function ScreeningPage() {
     })
   }, [scheduleHideControls])
 
+  /** Seek to a position based on click/touch location on the progress bar */
   const handleSeek = useCallback(
     async (e) => {
       if (!player || !duration) return
@@ -164,8 +184,15 @@ export default function ScreeningPage() {
     [player, duration],
   )
 
+  /**
+   * Enter native fullscreen.
+   * Mobile: use Vimeo SDK for the best native experience.
+   * Desktop: fullscreen the container div so our custom controls
+   * overlay stays visible (the Vimeo SDK would fullscreen the
+   * iframe alone, hiding everything outside it).
+   */
   const requestNativeFullscreen = useCallback(async () => {
-    if (player?.requestFullscreen) {
+    if (isMobile && player?.requestFullscreen) {
       await player.requestFullscreen()
       return
     }
@@ -173,10 +200,11 @@ export default function ScreeningPage() {
     if (videoContainerRef.current) {
       await requestFullscreen(videoContainerRef.current)
     }
-  }, [player])
+  }, [player, isMobile])
 
+  /** Exit native fullscreen — mirror the enter strategy */
   const exitNativeFullscreen = useCallback(async () => {
-    if (player?.exitFullscreen) {
+    if (isMobile && player?.exitFullscreen) {
       await player.exitFullscreen()
       return
     }
@@ -184,8 +212,13 @@ export default function ScreeningPage() {
     if (getFullscreenElement()) {
       await exitFullscreen()
     }
-  }, [player])
+  }, [player, isMobile])
 
+  /**
+   * Play/Pause toggle.
+   * On desktop, auto-enters fullscreen when playback starts.
+   * Exiting play also exits fullscreen.
+   */
   const handlePlayPause = useCallback(async () => {
     if (!player) return
 
@@ -223,6 +256,7 @@ export default function ScreeningPage() {
     requestNativeFullscreen,
   ])
 
+  /** Toggle fullscreen state and schedule control auto-hide on mobile */
   const handleFullscreen = useCallback(async () => {
     if (!videoContainerRef.current) return
 
@@ -248,6 +282,7 @@ export default function ScreeningPage() {
     scheduleHideControls,
   ])
 
+  /** Mobile: tap to toggle controls visibility while playing */
   const handleVideoTap = useCallback(() => {
     if (!isMobile) return
 
@@ -259,6 +294,7 @@ export default function ScreeningPage() {
     }
   }, [isMobile, isFullscreen, isPlaying, scheduleHideControls])
 
+  // Sync fullscreen state with browser events and auto-hide on mouse move
   useEffect(() => {
     const handleFullscreenChange = () => {
       const nowFullscreen = !!getFullscreenElement()

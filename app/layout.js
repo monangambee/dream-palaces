@@ -1,6 +1,15 @@
-import "../styles/globals.css";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+/**
+ * Root Layout
+ *
+ * Loads custom fonts (Avenir, Frontage, Marquee Moon, Neon, Basis)
+ * and wraps every page with the shared <Header> and <Footer>.
+ *
+ * At build/request time it resolves the first film slug from Vimeo
+ * so the "Screening Room" nav link always points to the latest film.
+ */
+import "../styles/globals.css"
+import Header from "./components/Header"
+import Footer from "./components/Footer"
 
 export const metadata = {
   title: "Dream Palaces",

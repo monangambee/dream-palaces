@@ -1,3 +1,12 @@
+/**
+ * GET /api/vimeo-assets
+ *
+ * Returns every video in the Dream Palaces Vimeo folder (ID 27904211).
+ * Each video's description may embed custom metadata below a
+ * `---METADATA---` delimiter (JSON with year, filmmaker, country).
+ *
+ * No-cache headers ensure the screening page always shows the latest films.
+ */
 import { Vimeo } from 'vimeo'
 
 const client = new Vimeo(
@@ -5,7 +14,7 @@ const client = new Vimeo(
   process.env.VIMEO_CLIENT_SECRET,
   process.env.VIMEO_ACCESS_TOKEN
 )
-  const DREAM_PALACES_FOLDER_ID ='27904211'
+const DREAM_PALACES_FOLDER_ID = '27904211'
 
 
 export async function GET() {
@@ -35,11 +44,12 @@ export async function GET() {
 
           const assets = body.data.map(video => {
             const videoId = video.uri.split('/').pop()
-            
-            // Extract custom metadata from description
+
+            // Parse optional custom metadata embedded in the description
+            // Format: human description\n---METADATA---\n{"year":"2024",…}
             let customMetadata = {}
             let cleanDescription = video.description || ''
-            
+
             if (cleanDescription.includes('---METADATA---')) {
               const parts = cleanDescription.split('---METADATA---')
               cleanDescription = parts[0].trim()
@@ -57,7 +67,7 @@ export async function GET() {
               status: 'ready',
               createdAt: video.created_time,
               duration: video.duration,
-              aspectRatio: video.pictures?.sizes?.[0]?.width / video.pictures?.sizes?.[0]?.height || 16/9,
+              aspectRatio: video.pictures?.sizes?.[0]?.width / video.pictures?.sizes?.[0]?.height || 16 / 9,
               title: video.name || 'Untitled',
               description: cleanDescription,
               year: customMetadata.year || '',
