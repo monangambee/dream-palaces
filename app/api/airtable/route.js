@@ -1,18 +1,24 @@
-import { fetchAirtableDataProgressive } from '../../utils/data';
-import { AIRTABLE_CONFIG } from '../../config/airtable';
+/**
+ * GET /api/airtable
+ *
+ * Client-side fallback for fetching cinema records when the server-side
+ * prop isn't available (e.g. the constellation page's localStorage miss).
+ * Returns the full dataset with a 1-hour CDN cache (stale-while-revalidate).
+ */
+import { fetchAirtableDataProgressive } from '../../utils/data'
+import { AIRTABLE_CONFIG } from '../../config/airtable'
 
 export async function GET() {
-  // Set cache headers for better performance
   const headers = {
     'Cache-Control': 's-maxage=3600, stale-while-revalidate',
     'Content-Type': 'application/json',
-  };
-  
+  }
+
   try {
     const data = await fetchAirtableDataProgressive(
       AIRTABLE_CONFIG.defaultTable
-    );
-    
+    )
+
     return new Response(JSON.stringify({
       success: true,
       data,
@@ -21,10 +27,10 @@ export async function GET() {
     }), {
       status: 200,
       headers
-    });
+    })
   } catch (error) {
-    console.error('API Error:', error);
-    
+    console.error('API Error:', error)
+
     return new Response(JSON.stringify({
       success: false,
       error: error.message
@@ -33,7 +39,7 @@ export async function GET() {
       headers: {
         'Content-Type': 'application/json',
       }
-    });
+    })
   }
 }
 

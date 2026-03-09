@@ -1,3 +1,10 @@
+/**
+ * Next.js Configuration
+ *
+ * - GLSL shader support via raw-loader (both webpack and Turbopack)
+ * - Image optimisation remote patterns for Mux, Airtable, Google Drive, Vimeo CDN
+ * - Strict mode disabled to avoid double-mount issues with Three.js
+ */
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,

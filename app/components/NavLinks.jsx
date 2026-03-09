@@ -1,3 +1,14 @@
+/**
+ * NavLinks – Context-Aware Footer Navigation
+ *
+ * Renders a different set of navigation links depending on the current
+ * route so the user always sees relevant destinations.
+ *
+ * On the home page it shows social-media icons instead of text links.
+ * `firstFilmSlug` is passed from the root layout (resolved server-side
+ * via Vimeo API) so the "Screening Room" link always points to the
+ * first available film.
+ */
 'use client'
 
 import Link from 'next/link'
@@ -7,6 +18,7 @@ import { usePathname } from 'next/navigation'
 export default function NavLinks({ firstFilmSlug }) {
   const pathname = usePathname()
 
+  /** Return the link set (or 'icons') for the current route */
   const getNavLinks = () => {
     // Home page - show social icons
     if (pathname === '/') {

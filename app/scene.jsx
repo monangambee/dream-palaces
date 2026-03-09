@@ -1,26 +1,47 @@
+/**
+ * Scene – Three.js Particle System
+ *
+ * Renders every cinema record as a GPU-driven particle inside an R3F
+ * <Canvas>. The particle cloud is the heart of the "Constellation" view.
+ *
+ * Key behaviours:
+ *  - Each particle's position is deterministically seeded from its record
+ *    ID so that the same cinema always lands in the same spot.
+ *  - "Featured" cinemas are rendered in gold at 2× scale.
+ *  - Filters trigger a GSAP animation (uPosition uniform) that visually
+ *    disperses and re-gathers particles.
+ *  - Clicking a particle sets selectedCinema in the Zustand store,
+ *    which opens the CinemaInfo detail panel.
+ *  - Camera zooms in when filters are active, zooms out when cleared.
+ */
 import React, {
   useRef,
   useMemo,
   useEffect,
   useState,
   useCallback,
-} from "react";
-import { useFrame, useLoader, useThree } from "@react-three/fiber";
-import { OrbitControls, Stars } from "@react-three/drei";
-import * as THREE from "three";
-import fragment from "./shaders/fragment.glsl";
-import vertex from "./shaders/vertex.glsl";
-import lineFragment from "./shaders/lineFragment.glsl";
-import { analyzeAirtableData } from "./utils/d3Analysis";
-import { useStore } from "./utils/useStore";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
+} from "react"
+import { useFrame, useLoader, useThree } from "@react-three/fiber"
+import { OrbitControls, Stars } from "@react-three/drei"
+import * as THREE from "three"
+import fragment from "./shaders/fragment.glsl"
+import vertex from "./shaders/vertex.glsl"
+import lineFragment from "./shaders/lineFragment.glsl"
+import { analyzeAirtableData } from "./utils/d3Analysis"
+import { useStore } from "./utils/useStore"
+import { gsap } from "gsap"
+import { useGSAP } from "@gsap/react"
 
 
 gsap.registerPlugin(useGSAP);
 
 
 
+/**
+ * CustomGeometryParticles
+ * Renders the particle cloud for the given dataset slice.
+ * Each particle maps 1:1 to a cinema record.
+ */
 const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
 
   const particleTexture = useLoader(THREE.TextureLoader, "/particle/star_04.png");
@@ -30,17 +51,19 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
   const points = useRef();
   const { gl, raycaster, camera } = useThree();
   
+  // Configure raycaster so particle clicks register reliably
   useEffect(() => {
-    raycaster.near = 0;
-    raycaster.far = 1000;
-    raycaster.params.Points.threshold = 15;
-    gl.setClearColor('#000000', 1);
-    gl.toneMapping = THREE.ACESFilmicToneMapping;
-    gl.outputColorSpace = THREE.SRGBColorSpace;
-  }, [gl, raycaster]);
+    raycaster.near = 0
+    raycaster.far = 1000
+    raycaster.params.Points.threshold = 15
+    gl.setClearColor('#000000', 1)
+    gl.toneMapping = THREE.ACESFilmicToneMapping
+    gl.outputColorSpace = THREE.SRGBColorSpace
+  }, [gl, raycaster])
 
   const { filters, setSelectedCinema, setAnimateParticles, data } = useStore();
 
+  /** GSAP tween that "pulses" particles via the uPosition shader uniform */
   const animateParticles = useCallback(() => {
     gsap.fromTo(
       points.current.material.uniforms.uPosition,
@@ -58,6 +81,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
   }, [setAnimateParticles]);
 
 
+  /** When a particle is clicked, look up its record and select it */
   const handleClick = (e) => {
     e.stopPropagation();
     if (typeof e.index !== 'number' || e.index < 0) return;
@@ -72,6 +96,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
   };
 
 
+  // Shader uniforms shared by points and line materials
   const uniforms = useMemo(() => {
     const dpr = typeof window !== 'undefined' ? window.devicePixelRatio : 1;
     return {
@@ -85,6 +110,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
     };
   }, [particleTexture, goldenTexture]);
 
+  // Adaptive cloud radius: scales with the number of visible particles
   const radius = useMemo(() => {
     if (!data || data.length === 0 || count === 0) return 400;
     
@@ -96,11 +122,17 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
     return minRadius + (maxRadius - minRadius) * ratio;
   }, [data, count]);
 
+  // Set of cinema IDs flagged as "featured" (rendered larger & gold)
   const featuredCinemas = useMemo(
     () => new Set(originalData?.filter(c => c.fields?.featured ?? c.fields?.Featured).map(c => c.id)),
     [originalData]
   );
 
+  /**
+   * Build all per-particle buffer attributes in one pass:
+   * positions, group indices, scales, colours, and featured flags.
+   * Uses a seeded-random function so positions are stable across renders.
+   */
   const { positions, groups, scales, colors, featured } = useMemo(() => {
     const groups = new Float32Array(count);
     const positions = new Float32Array(count * 3);
@@ -152,11 +184,13 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
     return { positions, groups, scales, colors, featured };
   }, [count, groupIndex, originalData, featuredCinemas, radius]);
 
+  // Advance the uTime uniform every frame for shader animations
   useFrame((state) => {
     if (!points.current?.material) return;
     points.current.material.uniforms.uTime.value = state.clock.elapsedTime;
   });
 
+  // Line geometry connecting particles (visible only when filters are active)
   const lineGeometry = useMemo(() => {
     if (!positions || positions.length === 0) return null;
     const geometry = new THREE.BufferGeometry();
@@ -164,6 +198,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
     return geometry;
   }, [positions]);
 
+  // Initial camera zoom-out + first particle animation on mount
   useGSAP(() => {
     
     if (!points.current) return; // don’t animate yet if geometry isn’t ready
@@ -178,21 +213,19 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
     // return null;
   }, [points.current, camera]);
 
-    useEffect(() => {
-    // Trigger camera zoom when filters change
-    if (!camera) return;
-    
-    // Check if any filter is active (not all)
-    const hasActiveFilter = filters && Object.values(filters).some(val => val !== 'all');
-    
-    const targetZ = hasActiveFilter ? 100 : 400; // Zoom in (200) when filtering, zoom out (600) when all
-    
+  // Camera zoom: closer when a filter is active, further when showing all
+  useEffect(() => {
+    if (!camera) return
+
+    const hasActiveFilter = filters && Object.values(filters).some(val => val !== 'all')
+    const targetZ = hasActiveFilter ? 100 : 400
+
     gsap.to(camera.position, {
       z: targetZ,
       duration: 1.5,
       ease: 'power2.inOut'
-    });
-  }, [filters, camera]);
+    })
+  }, [filters, camera])
 
 
   const pointsGeometryRef = useRef();
@@ -264,6 +297,13 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
   );
 };
 
+/**
+ * Scene (default export)
+ *
+ * Entry point rendered inside the R3F <Canvas>.
+ * Feeds filtered data from the Zustand store into
+ * CustomGeometryParticles and configures OrbitControls.
+ */
 export default function Scene({ fullData }) {
   const {
     setData, 
@@ -273,10 +313,11 @@ export default function Scene({ fullData }) {
     setProgress,
   } = useStore();
 
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0)
 
-  const initialFilters = {};
+  const initialFilters = {}
 
+  // On first data load: populate store+filters and mark loading complete
   useEffect(() => {
     if (fullData && fullData.length > 0) {
       setCount(fullData.length);

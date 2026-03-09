@@ -1,15 +1,24 @@
-import { fetchAirtableDataProgressive } from "./utils/data";
-import { AIRTABLE_CONFIG } from "./config/airtable";
-import { getFirstFilmSlug } from "./utils/vimeo";
-import Constellation from "./components/Constellation";
-import Link from "next/link";
-import Image from "next/image";
-import Hero from "./components/Hero";
-import About from "./components/about";
-import { Suspense } from "react";
-
-// Enable static generation with revalidation
-// export const revalidate = 3600; // Revalidate every hour
+/**
+ * Home Page (Server Component)
+ *
+ * Fetches the full cinema dataset server-side and passes it to<Hero>
+ * for the photo carousel. Also resolves the first film slug for the
+ * "Screening Room" experience card.
+ *
+ * Three experience modes are presented as clickable cards:
+ *  - Constellation (3D particle view)
+ *  - Map (external iframe)
+ *  - Screening Room (Vimeo player)
+ */
+import { fetchAirtableDataProgressive } from "./utils/data"
+import { AIRTABLE_CONFIG } from "./config/airtable"
+import { getFirstFilmSlug } from "./utils/vimeo"
+import Constellation from "./components/Constellation"
+import Link from "next/link"
+import Image from "next/image"
+import Hero from "./components/Hero"
+import About from "./components/about"
+import { Suspense } from "react"
 
 export default async function HomePage() {
   // Server-side data fetching
@@ -17,7 +26,7 @@ export default async function HomePage() {
   let error = null;
 
   try {
-    if (process.env.NODE_ENV ==! "development") {
+    if (process.env.NODE_ENV === "development") {
       fullData = [];
     } else {
       fullData = await fetchAirtableDataProgressive(
@@ -32,6 +41,7 @@ export default async function HomePage() {
   const { slug: firstFilmSlug, thumbnail: screeningGif } =
     await getFirstFilmSlug();
 
+  // Experience mode cards shown at the bottom of the home page
   const modes = [
     {
       name: "CONSTELLATION",

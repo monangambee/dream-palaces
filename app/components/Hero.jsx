@@ -1,11 +1,22 @@
-"use client";
+/**
+ * Hero – Cinema Photo Carousel
+ *
+ * Displays three randomly-chosen cinema photographs on the home page.
+ * Images are drawn from a hand-curated static list (not the API) so that
+ * each entry has proper credits and a descriptive label.
+ *
+ * The "Shuffle" button re-randomises the selection.
+ *
+ * NOTE: All filenames use ASCII-only characters to avoid Unicode
+ * normalisation mismatches between macOS (NFC) and Linux (byte-exact).
+ */
+"use client"
 
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import { useStore } from "../utils/useStore";
-import Link from "next/link";
-import { count } from "d3";
-// import motion from "framer-motion";
+import React, { useEffect, useState } from "react"
+import Image from "next/image"
+import { useStore } from "../utils/useStore"
+import Link from "next/link"
+import { count } from "d3"
 
 const Hero = ({ fullData }) => {
   const [allUrls, setAllUrls] = useState([]);
@@ -19,6 +30,8 @@ const Hero = ({ fullData }) => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  // ── Curated cinema photographs ─────────────────────────────
+  // Each entry maps to a file in /public/images.
   const images = [
     {
       name: "Africa Film Society",
@@ -133,40 +146,19 @@ const Hero = ({ fullData }) => {
     //       fullData,
     //       timestamp: Date.now(),
     //     })
-    //   );
-    //   console.log("Cached fresh data");
-    // } else {
-    //   // Use cached data when no fresh data
-    //   try {
-    //     const cached = localStorage.getItem("airtable-cache");
-    //     if (cached) {
-    //       const parsed = JSON.parse(cached);
-    //       dataSource = parsed.fullData || [];
-    //       console.log("Using cached data");
-    //     }
-    //   } catch (error) {
-    //     console.warn("Cache read failed:", error);
-    //   }
-    // }
 
-    // if (!dataSource?.length) return;
+    // Pick 3 random images from the curated list on mount
+    const validImages = images.filter((img) => img.url)
+    setAllUrls(validImages)
 
-    // Process images
-    // const urls = dataSource
-    //   .filter(cinema => cinema.fields?.Images?.length > 0)
-    //   .map(cinema => cinema.fields.Images[0].url)
-    //   .filter(Boolean); // Remove any falsy URLs
-    const validImages = images.filter((img) => img.url);
-    setAllUrls(validImages);
-
-    // Random selection
-    const shuffled = [...validImages].sort(() => 0.5 - Math.random());
-    const selectedImages = shuffled.slice(0, 3);
+    const shuffled = [...validImages].sort(() => 0.5 - Math.random())
+    const selectedImages = shuffled.slice(0, 3)
 
     setImageUrls(selectedImages);
     // console.log('Selected URLs:', selectedUrls.length);
   }, [fullData]);
 
+  /** Re-shuffle: pick a new random set of 3 images */
   const handleShuffle = () => {
     if (allUrls.length === 0) return;
     const shuffled = [...allUrls].sort(() => 0.5 - Math.random());
@@ -174,6 +166,10 @@ const Hero = ({ fullData }) => {
     setImageUrls(selectedImages);
   };
 
+  /**
+   * Deterministic pseudo-random offset per image slot.
+   * Keeps layout stable across re-renders while still looking organic.
+   */
   const getRandomPosition = (index) => {
     const seed = index * 1439;
     const randomOffset = ((seed * 9301 + 49297) % 233280) / 233280;
@@ -265,7 +261,7 @@ const Hero = ({ fullData }) => {
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="w-4 sm:w-8 sm:h-8"
+          className="w-4  sm:w-8 sm:h-8"
         >
           <g id="Media / Shuffle">
             <path

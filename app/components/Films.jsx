@@ -1,3 +1,10 @@
+/**
+ * Films – Screening Archive Grid
+ *
+ * Fetches all videos from /api/vimeo-assets and displays them as a
+ * thumbnail grid. Clicking a film navigates to /screening/<slug>
+ * where the slug is derived from the video title.
+ */
 'use client'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -25,6 +32,7 @@ const ImagesExport = () => {
     loadAssets()
   }, [])
 
+  /** Convert a video title into a URL-friendly slug for routing */
   const handleImageClick = (asset) => {
     const titleSlug = asset.title
       .toLowerCase()

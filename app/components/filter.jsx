@@ -1,6 +1,19 @@
-import React, { useState, useMemo, useEffect } from "react";
+/**
+ * Filter – Collapsible Sidebar
+ *
+ * Provides cascading dropdown filters (Country → City, Condition)
+ * and a year-range slider that determines which cinemas were "active"
+ * during the selected year (creation ≤ year ≤ closure).
+ *
+ * Country → City dependency: selecting a country narrows the city
+ * dropdown to only cities within that country.
+ *
+ * On mobile the sidebar is a full-screen overlay triggered by a
+ * hamburger icon; on desktop it's a slim left panel that can collapse.
+ */
+import React, { useState, useMemo, useEffect } from "react"
 
-import { useStore } from "../utils/useStore";
+import { useStore } from "../utils/useStore"
 
 
 const Filter = ({}) => {
@@ -28,7 +41,7 @@ const Filter = ({}) => {
 
   if (!data) return null;
 
-  // Compute date extent from data for slider
+  // Compute the full year range (min creation → max closure) for the slider
   const dateExtent = useMemo(() => {
     let min = Infinity;
     let max = -Infinity;
@@ -45,7 +58,10 @@ const Filter = ({}) => {
 
   const [selectedYear, setSelectedYear] = useState(dateExtent.max + 1); // Start at "All" (beyond max)
 
-  // console.log(originalData)
+  /**
+   * Handle filter selection or "clear all".
+   * Resets the City filter whenever Country changes to keep them in sync.
+   */
   const handleFilterChange = (field, value) => {
     if (field === "clear") {
       clearFilters();
@@ -62,6 +78,7 @@ const Filter = ({}) => {
     clearSelectedCinema();
   };
 
+  /** Slide the year slider — values above dateExtent.max map to "All" */
   const handleYearChange = (value) => {
     const year = parseInt(value);
     setSelectedYear(year);
@@ -76,7 +93,10 @@ const Filter = ({}) => {
     clearSelectedCinema();
   };
 
-  // Get values for each field with country-city dependency
+  /**
+   * Build the sorted list of unique values for a given field.
+   * When field is "City", only cities within the selected Country are shown.
+   */
   const getFieldValues = (field) => {
     let filteredData = data;
     
@@ -97,8 +117,8 @@ const Filter = ({}) => {
     return Array.from(fields).sort();
   };
 
-  // Determine if city filter should be disabled
-  const isCityDisabled = !filters?.Country || filters.Country === "all";
+  // City dropdown is locked until a country is selected
+  const isCityDisabled = !filters?.Country || filters.Country === "all"
 
   if (!filters) return null;
   const fieldNames = Object.keys(filters).filter(name => name !== 'selectedYear');
