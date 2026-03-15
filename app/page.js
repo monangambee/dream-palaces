@@ -10,12 +10,13 @@
  *  - Map (external iframe)
  *  - Screening Room (Vimeo player)
  */
-import { fetchAirtableDataProgressive } from "./utils/data"
+
+import { fetchData, fetchTextDataForWebsite } from "./utils/data"
 import { AIRTABLE_CONFIG } from "./config/airtable"
 import { getFirstFilmSlug } from "./utils/vimeo"
-import Constellation from "./components/Constellation"
+
 import Link from "next/link"
-import Image from "next/image"
+
 import Hero from "./components/Hero"
 import About from "./components/about"
 import { Suspense } from "react"
@@ -23,16 +24,24 @@ import { Suspense } from "react"
 export default async function HomePage() {
   // Server-side data fetching
   let fullData = [];
+  let websiteTextData = [];
+  let aboutTextData = "";
   let error = null;
 
   try {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV !== "development") {
+    
       fullData = [];
     } else {
-      fullData = await fetchAirtableDataProgressive(
+      fullData = await fetchData(
         AIRTABLE_CONFIG.defaultTable,
-      );
+      )
+  
     }
+
+    websiteTextData = await fetchTextDataForWebsite()
+   aboutTextData = websiteTextData[0]?.fields.Text || {}
+
   } catch (err) {
     console.error("Error fetching Airtable data:", err);
     error = err.message;
@@ -78,7 +87,7 @@ export default async function HomePage() {
           {/* <div className="absolute inset-0 backdrop-blur-sm pointer-events-none"></div> */}
           <div className=" flex flex-col gap-8 absolute inset-0 -z-1 w-screen h-screen top-0 -left-2">
             {/* <HomeScene /> */}
-            <video
+            {/* <video
               autoPlay
               loop
               muted
@@ -87,7 +96,7 @@ export default async function HomePage() {
             >
               <source src="/stars.webm" type="video/webm" />
               Your browser does not support the video tag.
-            </video>
+            </video> */}
           </div>
 
           {/* <section className="w-full h-full flex flex-col lg:flex-row items-center justify-center  relative"> */}
@@ -102,7 +111,7 @@ export default async function HomePage() {
         
 
           <section className="  ">
-                    <About />
+                          <About textData={aboutTextData} />
              </section>
         
 

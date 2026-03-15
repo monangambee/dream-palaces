@@ -32,7 +32,7 @@ export const analyzeAirtableData = (airtableData) => {
     byCreation: d3.group(data, d => d.Creation),
     byClosure: d3.group(data, d => d.Closure),
     byCondition: d3.group(data, d => d.Condition),
-    byState: d3.group(data, d => d.State),
+    byState: d3.group(data, d => d['State / Province']),
     byFeature: d3.group(data, d => d.Feature),
   }
 

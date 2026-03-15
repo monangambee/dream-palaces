@@ -124,7 +124,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
 
   // Set of cinema IDs flagged as "featured" (rendered larger & gold)
   const featuredCinemas = useMemo(
-    () => new Set(originalData?.filter(c => c.fields?.featured ?? c.fields?.Featured).map(c => c.id)),
+    () => new Set(originalData?.filter(c => c.fields?.Feature).map(c => c.id)),
     [originalData]
   );
 
@@ -164,7 +164,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
       const baseScale = Math.pow(Math.random(), 2) * 2.5 + 0.5
 
       if (isFeatured) {
-        scales[i] = baseScale * 2.0;
+        scales[i] = baseScale * 10.0;
         colors.set([1.0, 0.843, 0.0], i * 3);
       } else {
         scales[i] = baseScale;

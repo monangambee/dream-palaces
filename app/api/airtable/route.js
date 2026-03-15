@@ -5,7 +5,7 @@
  * prop isn't available (e.g. the constellation page's localStorage miss).
  * Returns the full dataset with a 1-hour CDN cache (stale-while-revalidate).
  */
-import { fetchAirtableDataProgressive } from '../../utils/data'
+import { fetchData } from '../../utils/data'
 import { AIRTABLE_CONFIG } from '../../config/airtable'
 
 export async function GET() {
@@ -15,10 +15,10 @@ export async function GET() {
   }
 
   try {
-    const data = await fetchAirtableDataProgressive(
+    const data = await fetchData(
       AIRTABLE_CONFIG.defaultTable
     )
-
+ 
     return new Response(JSON.stringify({
       success: true,
       data,

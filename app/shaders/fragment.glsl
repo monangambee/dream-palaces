@@ -14,7 +14,7 @@ void main() {
     // Featured cinemas have scales from 5.0 to 8.8 (Math.max(5.0, baseScale + 1.0))
     // Non-featured cinemas have scales from 0.7 to 7.8 (baseScale)
     // Using threshold of 4.5 to distinguish between them
-  bool isFeatured = vFeatured > 0.5;
+  bool isFeatured = vFeatured == 1.0;
 
     // Select texture based on featured status
   vec4 particleTexture;
@@ -29,6 +29,8 @@ void main() {
   vec2 center = vec2(0.5, 0.5);
   vec2 uv = gl_PointCoord;
   float distanceToCenter = length(uv - 0.5);
+  if(distanceToCenter > 0.5)
+    discard;
   float alpha = 0.05 / distanceToCenter - 0.1;
 
   float strength = distance(gl_PointCoord, vec2(0.5));
@@ -48,20 +50,14 @@ void main() {
 
         // Optional: Add color enhancement for featured cinemas
         // You can uncomment this for extra glow effect
-    strength += pulse * 0.2;
+    // strength += pulse * 0.2;
   }
-
-    // Apply color tint to the particle texture
-    // Featured cinemas will be yellow (vColor = [1.0, 0.84, 0.0])
-    // Regular cinemas will be white (vColor = [1.0, 1.0, 1.0])
-    // vec3 tintedColor = particleTexture.rgb;
-    // gl_FragColor = vec4(particleTexture);
 
   // gl_FragColor = vec4(vec3(strength), 1.0);
     //
   vec3 color = mix(vec3(0.0), vColor, strength);
 
-  gl_FragColor = vec4(vColor, strength);
+  gl_FragColor = vec4(vColor, strength * alpha);
   // gl_FragColor = particleTexture;
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
