@@ -13,9 +13,9 @@
  *
  * The description field is rendered as Markdown via react-markdown.
  */
-import React, { useMemo, useState, useEffect } from "react"
-import { useStore } from "../utils/useStore"
-import ReactMarkdown from "react-markdown"
+import React, { useMemo, useState, useEffect } from "react";
+import { useStore } from "../utils/useStore";
+import ReactMarkdown from "react-markdown";
 
 const CinemaInfo = () => {
   const { selectedCinema, clearSelectedCinema } = useStore();
@@ -23,7 +23,7 @@ const CinemaInfo = () => {
 
   // Build an array of image objects, each with a primary URL + 3 fallbacks
   const imageUrls = useMemo(() => {
-    if (!selectedCinema?.fields?.["Image Links"]) return []
+    if (!selectedCinema?.fields?.["Image Links"]) return [];
 
     return selectedCinema.fields["Image Links"]
       .split(",")
@@ -37,7 +37,7 @@ const CinemaInfo = () => {
           return null;
         }
 
-        const fileId = fileIdMatch[1]
+        const fileId = fileIdMatch[1];
 
         // Build the 4-URL fallback chain (tried in order on <img> error)
         return {
@@ -46,7 +46,7 @@ const CinemaInfo = () => {
           fallback1: `https://lh3.googleusercontent.com/d/${fileId}=w1000`,
           fallback2: `https://drive.google.com/uc?export=download&id=${fileId}`,
           fallback3: `https://drive.google.com/uc?export=view&id=${fileId}`,
-        }
+        };
       })
       .filter(Boolean);
   }, [selectedCinema]);
@@ -57,17 +57,17 @@ const CinemaInfo = () => {
     // console.log(selectedCinema);
   }, [selectedCinema]);
 
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % imageUrls.length);
-  };
 
-  const prevImage = () => {
-    setCurrentImageIndex(
-      (prev) => (prev - 1 + imageUrls.length) % imageUrls.length,
-    );
-  };
 
-  if (!selectedCinema) return null;
+  const imageCredits = useMemo(() => {
+    if (!selectedCinema?.fields?.["Image credits"]) return [];
+    return selectedCinema.fields["Image credits"]
+      .split(/\n/)
+      .map((line) => line.replace(/^\d+\.\s*/, "").trim())
+      .filter(Boolean);
+  }, [selectedCinema]);
+
+    if (!selectedCinema) return null;
 
   return (
     <div
@@ -76,15 +76,14 @@ const CinemaInfo = () => {
       sm:bottom-10 sm:right-5 sm:left-auto sm:max-w-[80vw] sm:min-w-[300px]
       md:max-w-[50vw] md:min-w-[20vw] md:max-h-[80vh]"
     >
-     
       <div className="font-bold sticky text-lg mb-3 top-0 bg-black z-10 py-2 pt-8 pr-12">
-         <button
-        onClick={clearSelectedCinema}
-        className="absolute top-2 right-2 text-gray-400 md:hover:text-white text-3xl p-2 min-w-[44px] min-h-[44px] flex items-center justify-center z-20"
-        aria-label="Close"
-      >
-        ×
-      </button>
+        <button
+          onClick={clearSelectedCinema}
+          className="absolute top-2 right-2 text-gray-400 md:hover:text-white text-3xl p-2 min-w-[44px] min-h-[44px] flex items-center justify-center z-20"
+          aria-label="Close"
+        >
+          ×
+        </button>
         {selectedCinema.fields.Name}
         <div className="text-base font-light mb-2 pt-2">
           {selectedCinema.fields.City}, {selectedCinema.fields.Country}
@@ -105,10 +104,10 @@ const CinemaInfo = () => {
       {imageUrls.length > 0 && (
         <div className="relative mb-2 z-0">
           {/* Image gallery with fallback chain on error */}
-          <div className="relative w-full aspect-square object-contain">
+          <div className="relative w-full aspect-square object-contain group">
             {imageUrls.map((urlObj, index) => {
               // Track how many fallback attempts have been made for this image
-              let attemptCount = 0
+              let attemptCount = 0;
               const tryNextUrl = (e) => {
                 attemptCount++;
                 if (attemptCount === 1 && urlObj.fallback1) {
@@ -138,13 +137,24 @@ const CinemaInfo = () => {
               );
             })}
 
-            {/* Navigation arrows */}
-           
+            {/* image credits */}
+           {imageCredits[currentImageIndex] && (
+  <div className="absolute bottom-0 left-0 right-0 px-2 py-1 text-[10px] sm:text-xs text-white bg-black/60 rounded-b font-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 prose prose-invert prose-sm max-w-none [&_a]:underline [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:ml-2">
+    <ReactMarkdown
+      components={{
+        p: ({ children }) => <p className="mb-0">{children}</p>,
+      }}
+    >
+      {imageCredits[currentImageIndex]}
+    </ReactMarkdown>
+  </div>
+)}
+
           </div>
 
           {/* Dots indicator */}
           {imageUrls.length > 1 && (
-            <div className="flex justify-center items-center gap-2 mt-2 w-full ">
+            <div className="flex justify-center relative items-center gap-2 mt-2 w-full ">
               {imageUrls.map((_, index) => (
                 <button
                   key={index}
@@ -155,14 +165,28 @@ const CinemaInfo = () => {
                   aria-label={`Go to image ${index + 1}`}
                 />
               ))}
-              <p>{selectedCinema.fields["Image Credits"]}</p>
             </div>
           )}
         </div>
       )}
 
-      {/* <audio src={selectedCinema.fields["Sound Links"]}/> */}
-      {/* <p>{selectedCinema.fields["Sound Credits"]}</p> */}
+{selectedCinema.fields['Sound Links'] && (
+  
+     <audio controls className="w-full mt-2 min-h-[54px]" preload="metadata">
+      <source src={`https://pub-76a6487955584bb1b627db345b5850f7.r2.dev/Eyethu%20Interview%20Lerato%20Tshabalala.mp3`} type="audio/mpeg" />
+      Your browser does not support the audio element.
+       </audio>
+  )}
+
+
+      {selectedCinema.fields["Sound Credits"] && (
+              <p className="  px-2 py-1 text-[10px] sm:text-xs text-white bg-black/60 rounded-b">
+                {selectedCinema.fields["Sound Credits"]}
+              </p>
+            )}
+
+      
+
       <div className="text-base font-primary prose prose-invert prose-sm max-w-none [&_a]:underline [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:ml-2">
         <ReactMarkdown
           components={{

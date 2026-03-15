@@ -10,7 +10,7 @@ import { ScrollTrigger } from 'gsap/all'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const About = () => {
+const About = ({ textData }) => {
   const textRef = useRef(null)
   const span1Ref = useRef(null)
   const span2Ref = useRef(null)
@@ -48,13 +48,20 @@ const About = () => {
             priority
           />
         </div> */}
-        <div className='w-full lg:w-1/2 flex h-full justify-start items-center text-center flex-col '>
+        <div className='w-full lg:w-1/2 flex h-full justify-start items-center flex-col '>
           <p 
+          ref={textRef}
+             className='w-full md:w-1/3 lg:w-full h-full flex flex-col text-sm/8 tracking-wide z-20 gap-4 sm:text-lg/7 2xl:text-xl/7 items-start justify-start font-light font-avenir pb-6  '
+          >
+            {textData}
+            
+          </p>
+          {/* <p 
           ref={textRef}
           className='w-full md:w-1/3 lg:w-full h-full flex flex-col text-sm  z-20 gap-4 sm:text-base 2xl:text-xl items-start justify-start font-light font-avenir leading-relaxed'>
    
             Dream Palaces explores the architectural, geographical, and cultural
-            histories of Black cinema spaces across six countries in Africa and
+            histories of Black cinema spaces across six countries in Africa andß
             the diaspora.
 
             <span 
@@ -82,8 +89,8 @@ const About = () => {
               ref={span3Ref}
               className=' text-xs sm:text-sm'>
             
-            </span>
-          </p>
+            </span> */}
+          {/* </p> */}
             <Link
                 href='/about'
                 className='text-primary uppercase md:hover:bg-primary hover:text-black p-3 xl:p-5 font-avenir text-xs lg:text-xs border-[0.5px] border-primary '

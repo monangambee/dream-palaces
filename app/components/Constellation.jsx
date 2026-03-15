@@ -24,21 +24,6 @@ const Scene = dynamic(() => import('../scene'), { ssr: false })
 const Filter = dynamic(() => import('./filter'), { ssr: false })
 const CinemaInfo = dynamic(() => import('./CinemaInfo'), { ssr: false })
 
-// ── localStorage helpers for offline-first data caching ──────
-const CACHE_KEY = 'airtable-cache'
-
-const saveCache = (data) => {
-  localStorage.setItem(CACHE_KEY, JSON.stringify({ fullData: data, timestamp: Date.now() }));
-};
-
-const getCache = () => {
-  try {
-    const cached = localStorage.getItem(CACHE_KEY);
-    return cached ? JSON.parse(cached).fullData : null;
-  } catch {
-    return null;
-  }
-};
 
 export default function Constellation({ fullData }) {
   const { setData } = useStore();
@@ -54,20 +39,13 @@ export default function Constellation({ fullData }) {
         return;
       }
 
-      const cached = getCache();
-      if (cached?.length > 0) {
-        setDataState(cached);
-        setData(cached);
-        return;
-      }
-
       if (!hasFetchedRef.current) {
         hasFetchedRef.current = true;
         try {
           const res = await fetch('/api/airtable');
           const { success, data: apiData } = await res.json();
           if (success && apiData?.length > 0) {
-            saveCache(apiData);
+           
             setDataState(apiData);
             setData(apiData);
           }

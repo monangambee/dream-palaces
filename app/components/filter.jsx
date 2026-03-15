@@ -39,10 +39,11 @@ const Filter = ({}) => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  if (!data) return null;
+ 
 
   // Compute the full year range (min creation → max closure) for the slider
   const dateExtent = useMemo(() => {
+   if (!data) return { min: 1800, max: new Date().getFullYear() }
     let min = Infinity;
     let max = -Infinity;
     data.forEach(record => {

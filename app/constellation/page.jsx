@@ -7,7 +7,7 @@
  * to avoid slow cold-starts from the Render API.
  */
 import Constellation from "../components/Constellation"
-import { fetchAirtableDataProgressive } from "../utils/data"
+import { fetchData } from "../utils/data"
 import { AIRTABLE_CONFIG } from '../config/airtable'
 
 export default async function ConstellationPage() {
@@ -18,7 +18,7 @@ export default async function ConstellationPage() {
     if (process.env.NODE_ENV === 'development') {
       fullData = [];
     } else {
-      fullData = await fetchAirtableDataProgressive(AIRTABLE_CONFIG.defaultTable);
+      fullData = await fetchData(AIRTABLE_CONFIG.defaultTable);
     }
   } catch (err) {
     console.error('Error fetching Airtable data:', err);
