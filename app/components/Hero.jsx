@@ -35,7 +35,7 @@ const Hero = ({ fullData }) => {
   const images = [
     {
       name: "Africa Film Society",
-      url: "/images/Accra Africa Film Society.jpg",
+      url: "/images/Accra-Africa-Film-Society.jpg",
       credit: "Courtesy of Africa Film Society, 2022. ",
       country: "Accra, Ghana",
     },
@@ -47,57 +47,57 @@ const Hero = ({ fullData }) => {
     },
     {
       name: "Awa Cinema",
-      url: "/images/Dakar Awa 2.jpg",
+      url: "/images/Dakar-Awa-2.jpg",
       credit: "© Mamadou Dia, 2016. (Still from Samedi Cinema)",
       country: "Dakar, Senegal",
     },
   
     {
       name: "Eyethu Cinema",
-      url: "/images/Eyethu Johannesburg 4.jpg",
+      url: "/images/EyethuJohannesburg4.jpg",
       credit: "Courtesy of Johannesburg In Your Pocket, 2025. ",
       country: "Johannesburg, South Africa",
     },
     {
       name: "DeLuxe Theatre",
-      url: "/images/Houston DeLuxe.jpg",
+      url: "/images/Houston-DeLuxe.jpg",
       credit: "©️ Hickey-Robertson, N.d. Courtesy of Menil Archives",
       country: "Houston, TX, USA",
     },
     {
       name: "Crenshaw Dairy Mart",
-      url: "/images/Inglewood Crenshaw Dairy Mart.png",
+      url: "/images/Inglewood-Crenshaw-Dairy-Mart.png",
       credit: "",
       country: "Los Angeles, USA",
     },
     {
       name: "King's Cinema",
-      url: "/images/Johannesburg King's 2 (1).jpg",
+      url: "/images/Johannesburg-King-2.jpg",
       credit: "",
       country: "Johannesburg, South Africa",
     },
     {
       name: "Arewa Cinemas",
-      url: "/images/Kaduna Arewa Cinemas.jpg",
+      url: "/images/Kaduna-Arewa-Cinemas.jpg",
       credit: "",
       country: "Kaduna, Nigeria",
     },
     {
       name: "Casino Cinema",
-      url: "/images/Lagos Casino Cinema (2).jpg",
+      url: "/images/Lagos-Casino-Cinema-2.jpg",
       credit: "©  Tajudeen Sowole, 2021",
       country: "Lagos, Nigeria",
     },
     {
       name: "Rex Cinema",
-      url: "/images/Lagos Rex Cinema.jpg",
+      url: "/images/Lagos-Rex-Cinema.jpg",
       credit:
         "© Duckworth, E.H. 1930-1972. Courtesy of Melville J. Herskovits Library of African Studies of Northwestern University Libraries. ",
       country: "Lagos, Nigeria",
     },
     {
       name: "Ciné Burkina",
-      url: "/images/Ouagadougou Burkina.jpg",
+      url: "/images/Ouagadougou-Burkina.jpg",
       credit: "KONATEYaya226, CC0, via Wikimedia Commons",
       country: "Ouagadougou, Burkina Faso",
     },
@@ -109,20 +109,20 @@ const Hero = ({ fullData }) => {
     },
     {
       name: "Anzier Theatre",
-      url: "/images/Seattle WA Anzier.jpg",
+      url: "/images/Seattle-WA-Anzier.jpg",
       credit:
         "Birdland, 2203 E Madison Street, Seattle, ca. 1955. Image courtesy of UW Special Collections. ",
       country: "Seattle, USA",
     },
     {
       name: "80 Drive-In | Lincoln Theater",
-      url: "/images/Tuskegee Drive-In USA.jpg",
+      url: "/images/Tuskegee-Drive-In-USA.jpg",
       credit: "© Glen Wills, Forgotten Alabama, 2024",
       country: "Tuskegee, USA",
     },
     {
       name: "DeLuxe Theatre",
-      url: "/images/USA TX DeLuxe 3.jpg",
+      url: "/images/USA-TX-DeLuxe-3.jpg",
       credit: "©️ Hickey-Robertson, N.d. Courtesy of Menil Archives. ",
       country: "Houston, TX, USA",
     },
