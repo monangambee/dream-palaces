@@ -51,7 +51,10 @@ export default function ScreeningPage() {
   const [videoReady, setVideoReady] = useState(false)
   const [isBuffering, setIsBuffering] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-    const [isLatestFilm, setIsLatestFilm] = useState(false)
+  const [isLatestFilm, setIsLatestFilm] = useState(false)
+  const [captionsEnabled, setCaptionsEnabled] = useState(true)
+  const [textTracks, setTextTracks] = useState([])
+  const [activeTrack, setActiveTrack] = useState(null)
 
   const videoContainerRef = useRef(null)
   const timeoutRef = useRef(null)
@@ -106,13 +109,29 @@ export default function ScreeningPage() {
         .getTextTracks?.()
         .then((tracks) => {
           if (!tracks || tracks.length === 0) return
+          setTextTracks(tracks)
           const track =
             tracks.find((item) => item.language === "en") || tracks[0]
+          setActiveTrack(track)
           return player.enableTextTrack(track.language, track.kind)
         })
+        .then(() => setCaptionsEnabled(true))
         .catch((err) => console.log("Subtitle auto-enable:", err))
     }
   }, [videoReady, player])
+
+  const handleCaptionToggle = useCallback(async () => {
+    if (!player || textTracks.length === 0) return
+
+    if (captionsEnabled) {
+      await player.disableTextTrack()
+      setCaptionsEnabled(false)
+    } else {
+      const track = activeTrack || textTracks[0]
+      await player.enableTextTrack(track.language, track.kind)
+      setCaptionsEnabled(true)
+    }
+  }, [player, captionsEnabled, activeTrack, textTracks])
 
   const formatTime = useCallback((seconds) => {
     if (!seconds || isNaN(seconds)) return "0:00"
@@ -174,6 +193,7 @@ export default function ScreeningPage() {
       const newTime = percent * duration
       isSeekingRef.current = true
       setCurrentTime(newTime)
+      setIsBuffering(true)
       try {
         await player.setCurrentTime(newTime)
       } catch (error) {
@@ -481,40 +501,56 @@ export default function ScreeningPage() {
               <div className="text-[#C4B0EC] text-xs sm:text-sm font-avenir">
                 {formatTime(currentTime)} / {formatTime(duration)}
               </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleFullscreen()
-                }}
-                className="rounded p-1 sm:p-2 pointer-events-auto"
-                aria-label={
-                  isFullscreen ? "Exit fullscreen" : "Enter fullscreen"
-                }
-              >
-                {isFullscreen ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="20px"
-                    viewBox="0 -960 960 960"
-                    width="20px"
-                    fill="#C4B0EC"
-                    className="sm:w-6 sm:h-6"
+              <div className="flex items-center gap-1">
+                {textTracks.length > 0 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleCaptionToggle()
+                    }}
+                    className={`rounded p-1 sm:p-2 pointer-events-auto text-xs sm:text-sm font-bold tracking-wider transition-colors duration-200 ${
+                      captionsEnabled ? "text-[#C4B0EC]" : "text-white/40"
+                    }`}
+                    aria-label={captionsEnabled ? "Disable captions" : "Enable captions"}
                   >
-                    <path d="M240-120v-120H120v-80h200v200h-80Zm400 0v-200h200v80H720v120h-80ZM120-640v-80h120v-120h80v200H120Zm520 0v-200h80v120h120v80H640Z" />
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="20px"
-                    viewBox="0 -960 960 960"
-                    width="20px"
-                    fill="#C4B0EC"
-                    className="sm:w-6 sm:h-6"
-                  >
-                    <path d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z" />
-                  </svg>
+                    CC
+                  </button>
                 )}
-              </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleFullscreen()
+                  }}
+                  className="rounded p-1 sm:p-2 pointer-events-auto"
+                  aria-label={
+                    isFullscreen ? "Exit fullscreen" : "Enter fullscreen"
+                  }
+                >
+                  {isFullscreen ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="20px"
+                      viewBox="0 -960 960 960"
+                      width="20px"
+                      fill="#C4B0EC"
+                      className="sm:w-6 sm:h-6"
+                    >
+                      <path d="M240-120v-120H120v-80h200v200h-80Zm400 0v-200h200v80H720v120h-80ZM120-640v-80h120v-120h80v200H120Zm520 0v-200h80v120h120v80H640Z" />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="20px"
+                      viewBox="0 -960 960 960"
+                      width="20px"
+                      fill="#C4B0EC"
+                      className="sm:w-6 sm:h-6"
+                    >
+                      <path d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
