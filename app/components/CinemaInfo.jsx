@@ -42,8 +42,8 @@ const CinemaInfo = () => {
         // Build the 4-URL fallback chain (tried in order on <img> error)
         return {
           fileId,
-          primary: `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`,
-          fallback1: `https://lh3.googleusercontent.com/d/${fileId}=w1000`,
+          primary: `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000`,
+          fallback1: `https://lh3.googleusercontent.com/d/${fileId}=w2000`,
           fallback2: `https://drive.google.com/uc?export=download&id=${fileId}`,
           fallback3: `https://drive.google.com/uc?export=view&id=${fileId}`,
         };
@@ -57,8 +57,6 @@ const CinemaInfo = () => {
     // console.log(selectedCinema);
   }, [selectedCinema]);
 
-
-
   const imageCredits = useMemo(() => {
     if (!selectedCinema?.fields?.["Image credits"]) return [];
     return selectedCinema.fields["Image credits"]
@@ -67,7 +65,7 @@ const CinemaInfo = () => {
       .filter(Boolean);
   }, [selectedCinema]);
 
-    if (!selectedCinema) return null;
+  if (!selectedCinema) return null;
 
   return (
     <div
@@ -125,6 +123,7 @@ const CinemaInfo = () => {
                 <img
                   key={`${urlObj.fileId}-${index}`}
                   src={urlObj.primary}
+                  quality={100}
                   alt={`${selectedCinema.fields.Name} - Image ${index + 1}`}
                   className={`absolute inset-0 w-full h-full object-cover rounded transition-opacity duration-300 ${
                     index === currentImageIndex ? "opacity-100" : "opacity-0"
@@ -138,18 +137,17 @@ const CinemaInfo = () => {
             })}
 
             {/* image credits */}
-           {imageCredits[currentImageIndex] && (
-  <div className="absolute bottom-0 left-0 right-0 px-2 py-1 text-[10px] sm:text-xs text-white bg-black/60 rounded-b font-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 prose prose-invert prose-sm max-w-none [&_a]:underline [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:ml-2">
-    <ReactMarkdown
-      components={{
-        p: ({ children }) => <p className="mb-0">{children}</p>,
-      }}
-    >
-      {imageCredits[currentImageIndex]}
-    </ReactMarkdown>
-  </div>
-)}
-
+            {imageCredits[currentImageIndex] && (
+              <div className="absolute bottom-0 left-0 right-0 px-2 py-1 text-[10px] sm:text-xs text-white bg-black/60 rounded-b font-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 prose prose-invert prose-sm max-w-none [&_a]:underline [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:ml-2">
+                <ReactMarkdown
+                  components={{
+                    p: ({ children }) => <p className="mb-0">{children}</p>,
+                  }}
+                >
+                  {imageCredits[currentImageIndex]}
+                </ReactMarkdown>
+              </div>
+            )}
           </div>
 
           {/* Dots indicator */}
@@ -170,22 +168,26 @@ const CinemaInfo = () => {
         </div>
       )}
 
-{selectedCinema.fields['Sound Links'] && (
-  
-     <audio controls className="w-full mt-2 min-h-[54px]" preload="metadata">
-      <source src={`https://pub-76a6487955584bb1b627db345b5850f7.r2.dev/Eyethu%20Interview%20Lerato%20Tshabalala.mp3`} type="audio/mpeg" />
-      Your browser does not support the audio element.
-       </audio>
-  )}
-
+      {selectedCinema.fields["Sound Links"] && (
+        <audio
+          controls
+          controlsList="nodownload noplaybackrate"
+          className="w-full mt-2 min-h-[54px] invert  border border-black/50"
+          preload="metadata"
+        >
+          <source
+            src={`https://pub-76a6487955584bb1b627db345b5850f7.r2.dev/Eyethu%20Interview%20Lerato%20Tshabalala.mp3`}
+            type="audio/mpeg"
+          />
+          Your browser does not support the audio element.
+        </audio>
+      )}
 
       {selectedCinema.fields["Sound Credits"] && (
-              <p className="  px-2 py-1 text-[10px] sm:text-xs text-white bg-black/60 rounded-b">
-                {selectedCinema.fields["Sound Credits"]}
-              </p>
-            )}
-
-      
+        <p className="  px-2 py-1 text-[10px] sm:text-xs text-white bg-black/60 rounded-b">
+          {selectedCinema.fields["Sound Credits"]}
+        </p>
+      )}
 
       <div className="text-base font-primary prose prose-invert prose-sm max-w-none [&_a]:underline [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:ml-2">
         <ReactMarkdown

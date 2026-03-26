@@ -29,6 +29,24 @@ body.fullscreen {
   overflow: hidden;
 }
 
+/* Remove audio player rounding */
+audio::-webkit-media-controls-panel {
+  border-radius: 0;
+  background: transparent;
+}
+
+audio::-webkit-media-controls-enclosure {
+  border-radius: 0;
+  background: transparent;
+}
+
+/* Hide volume controls */
+audio::-webkit-media-controls-volume-slider,
+audio::-webkit-media-controls-mute-button {
+  display: none;
+}
+
+
 /* Ensure proper fullscreen behavior on mobile landscape */
 @supports (height: 100dvh) {
   /* Use dynamic viewport height for better mobile support */

@@ -134,7 +134,7 @@ export default async function HomePage() {
                     {mode.name}
                   </p>
                   {mode.image && (
-                    <div className="absolute right-20 top-1/2 -translate-y-1/2 w-[150px] xl:w-[180px] 2xl:w-[300px] opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20">
+                    <div className="absolute right-20 top-1/2 -translate-y-1/2 w-[150px] xl:w-[250px] 2xl:w-[300px] opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20">
                       <img
                         src={mode.image}
                         alt={mode.name}
