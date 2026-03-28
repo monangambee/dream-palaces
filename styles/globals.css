@@ -91,9 +91,9 @@ select, option {
     width: 100vw;
     height: 100vh;
   } 
-  .vimeo iframe {
+/* .vimeo:not(.vimeo-player) iframe {
   visibility: hidden;
-}
+} */
 
 
 
