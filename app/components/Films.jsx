@@ -5,64 +5,66 @@
  * thumbnail grid. Clicking a film navigates to /screening/<slug>
  * where the slug is derived from the video title.
  */
-'use client'
-import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+"use client";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const ImagesExport = () => {
-  const router = useRouter()
-  const [vimeoAssets, setVimeoAssets] = useState([])
+  const router = useRouter();
+  const [vimeoAssets, setVimeoAssets] = useState([]);
 
   useEffect(() => {
     const loadAssets = async () => {
       try {
-        const response = await fetch('/api/vimeo-assets')
-        const data = await response.json()
-        
+        const response = await fetch("/api/vimeo-assets");
+        const data = await response.json();
+
         if (data.success) {
-          setVimeoAssets(data.assets)
+          setVimeoAssets(data.assets);
         } else {
-          console.error('Failed to load assets:', data.error)
+          console.error("Failed to load assets:", data.error);
         }
       } catch (error) {
-        console.error('Error loading assets:', error)
+        console.error("Error loading assets:", error);
       }
-    }
-    
-    loadAssets()
-  }, [])
+    };
+
+    loadAssets();
+  }, []);
 
   /** Convert a video title into a URL-friendly slug for routing */
   const handleImageClick = (asset) => {
     const titleSlug = asset.title
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '')
-    router.push(`/screening/${titleSlug}`)
-  }
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    router.push(`/screening/${titleSlug}`);
+  };
 
   if (!vimeoAssets || vimeoAssets.length === 0) {
-    return <p className="text-sm text-gray-400">Loading films...</p>
+    return <p className="text-sm text-gray-400">Loading films...</p>;
   }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-col gap-4">
       {vimeoAssets.map((asset) => (
-        <div 
+        <div
           key={asset.id}
           onClick={() => handleImageClick(asset)}
-          className="group cursor-pointer flex flex-col lg:flex-row items-center justify-start gap-4 sm:gap-8  md:hover:border-[#C4B0EC]  active:border-[#C4B0EC] transition-colors p-3 sm:p-2 min-h-[40px] w-full"
+          className="group cursor-pointer flex flex-col lg:flex-row items-center justify-start gap-4 sm:gap-8  md:hover:border-[#C4B0EC]  active:border-[#C4B0EC] transition-colors  min-h-[40px] w-full"
         >
-          <img 
+          <img
             src={asset.thumbnail}
             alt={asset.title}
             className="w-full sm:w-[150px] xl:w-[200px] aspect-square  object-cover grayscale md:group-hover:grayscale-0 border border-primary hover:border-[#C4B0EC] group-active:grayscale-0 transition-all"
           />
-          <p className="text-xs sm:text-xs mt-2 sm:mt-0 text-start font-frontage break-words whitespace-normal w-full sm:w-auto">{asset.title}</p>
+          <p className="text-xs sm:text-xs mt-2 sm:mt-0 text-start font-frontage break-words whitespace-normal w-full sm:w-auto">
+            {asset.title}
+          </p>
         </div>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default ImagesExport
+export default ImagesExport;
