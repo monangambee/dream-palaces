@@ -11,15 +11,15 @@
  *  - Screening Room (Vimeo player)
  */
 
-import { fetchData, fetchTextDataForWebsite } from "./utils/data"
-import { AIRTABLE_CONFIG } from "./config/airtable"
-import { getFirstFilmSlug } from "./utils/vimeo"
+import { fetchData, fetchTextDataForWebsite } from "./utils/data";
+import { AIRTABLE_CONFIG } from "./config/airtable";
+import { getFirstFilmSlug } from "./utils/vimeo";
 
-import Link from "next/link"
+import Link from "next/link";
 
-import Hero from "./components/Hero"
-import About from "./components/about"
-import { Suspense } from "react"
+import Hero from "./components/Hero";
+import About from "./components/about";
+import { Suspense } from "react";
 
 export default async function HomePage() {
   // Server-side data fetching
@@ -30,18 +30,13 @@ export default async function HomePage() {
 
   try {
     if (process.env.NODE_ENV !== "development") {
-    
       fullData = [];
     } else {
-      fullData = await fetchData(
-        AIRTABLE_CONFIG.defaultTable,
-      )
-  
+      fullData = await fetchData(AIRTABLE_CONFIG.defaultTable);
     }
 
-    websiteTextData = await fetchTextDataForWebsite()
-   aboutTextData = websiteTextData[0]?.fields.Text || {}
-
+    websiteTextData = await fetchTextDataForWebsite();
+    aboutTextData = websiteTextData[0]?.fields.Text || {};
   } catch (err) {
     console.error("Error fetching Airtable data:", err);
     error = err.message;
@@ -100,30 +95,23 @@ export default async function HomePage() {
           </div>
 
           {/* <section className="w-full h-full flex flex-col lg:flex-row items-center justify-center  relative"> */}
-            <Hero fullData={fullData} />
+          <Hero fullData={fullData} />
 
-            {/* <h1 className="text-[5rem] font-sansation border-b-[0.5px]">
+          {/* <h1 className="text-[5rem] font-sansation border-b-[0.5px]">
           {" "}
           WELCOME TO DREAM PALACES
         </h1> */}
 
-           
-        
-
           <section className="  ">
-                          <About textData={aboutTextData} />
-             </section>
-        
-
+            <About textData={aboutTextData} />
+          </section>
         </section>
 
         <div className="w-[100%] h-full bg-background font-avenir flex  flex-col md:px-16 xl:px-24 items-center justify-center pb-8">
-       
-
           <div className="flex flex-col gap-4 sm:gap-8 w-[100%]  items-between justify-start px-4 xl:px-32 pb-8">
-               <p className=" text-primary z-10 pb-2  text-center uppercase font-avenir text-xs 2xl:text-sm sm:text-sm">
-            [ Choose your experience ]
-          </p>
+            <p className=" text-primary z-10 pb-2  text-center uppercase font-avenir text-xs 2xl:text-sm sm:text-sm">
+              [ Choose your experience ]
+            </p>
             {modes.map((mode, index) => (
               <Link key={index} href={mode.link}>
                 <div
@@ -134,7 +122,7 @@ export default async function HomePage() {
                     {mode.name}
                   </p>
                   {mode.image && (
-                    <div className="absolute right-20 top-1/2 -translate-y-1/2 w-[150px] xl:w-[250px] 2xl:w-[300px] opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20">
+                    <div className="absolute right-20 top-1/2 -translate-y-1/2 w-[250px] xl:w-[280px] 2xl:w-[300px] opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-100">
                       <img
                         src={mode.image}
                         alt={mode.name}

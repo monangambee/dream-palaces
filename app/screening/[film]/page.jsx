@@ -567,7 +567,7 @@ export default function ScreeningPage() {
 
       {/* Film Info Section */}
       <div className="w-full sm:w-[80%] lg:w-[50%] px-5 md:px-8 pb-4 pt-6 sm:pt-4 font-avenir">
-        <h1 className="pb-4 sm:pb-8 font-frontage text-lg sm:text-xl md:text-2xl">{`${currentAsset.title}`}</h1>
+        <h1 className="pb-4 sm:pb-8 font-frontage -ml-1 text-lg sm:text-xl md:text-2xl">{`${currentAsset.title}`}</h1>
         <button
           onClick={() => setShowReadMore(!showReadMore)}
           className="group text-primary font-bold uppercase text-sm sm:text-base hover:text-[#C4B0EC] ease-in-out duration-500 transition-colors flex items-center gap-2"
