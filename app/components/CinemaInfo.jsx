@@ -169,24 +169,10 @@ const CinemaInfo = () => {
       )}
 
       {selectedCinema.fields["Sound Links"] && (
-        <audio
-          controls
-          controlsList="nodownload noplaybackrate"
-          className="w-full mt-2 min-h-[54px] invert  border border-black/50"
-          preload="metadata"
-        >
-          <source
-            src={`https://pub-76a6487955584bb1b627db345b5850f7.r2.dev/Eyethu%20Interview%20Lerato%20Tshabalala.mp3`}
-            type="audio/mpeg"
-          />
-          Your browser does not support the audio element.
-        </audio>
-      )}
-
-      {selectedCinema.fields["Sound Credits"] && (
-        <p className="  px-2 py-1 text-[10px] sm:text-xs text-white bg-black/60 rounded-b">
-          {selectedCinema.fields["Sound Credits"]}
-        </p>
+        <CustomAudioPlayer
+          src={`https://pub-76a6487955584bb1b627db345b5850f7.r2.dev/Eyethu%20Interview%20Lerato%20Tshabalala.mp3`}
+          credits={selectedCinema.fields["Sound Credits"]}
+        />
       )}
 
       <div className="text-base font-primary prose prose-invert prose-sm max-w-none [&_a]:underline [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:ml-2">
@@ -213,6 +199,125 @@ const CinemaInfo = () => {
             </div>
           </>
         )}
+    </div>
+  );
+};
+
+const CustomAudioPlayer = ({ src, credits }) => {
+  const audioRef = React.useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const togglePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const handleSeek = (e) => {
+    if (audioRef.current) {
+      const newTime = (e.target.value / 100) * duration;
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
+
+  const formatTime = (timeInSeconds) => {
+    if (isNaN(timeInSeconds)) return "0:00";
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = Math.floor(timeInSeconds % 60);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
+  const currentPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  return (
+    <div className="flex flex-col items-center justify-center mt-4 mb-2 w-full">
+      <div className="flex flex-col w-full max-w-[85%] bg-black  px-4 py-3 gap-2">
+        <div className="flex items-center gap-3 border min-h-10 border-[#FFD700]">
+          <button
+            onClick={togglePlayPause}
+            className="text-[#FFD700] hover:opacity-80 transition-opacity focus:outline-none flex-shrink-0"
+            aria-label={isPlaying ? "Pause" : "Play"}
+          >
+            {isPlaying ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            )}
+          </button>
+
+          <div className="flex items-center gap-2 flex-grow text-xs font-mono text-[#FFD700]">
+            <span className="min-w-[32px] text-right">
+              {formatTime(currentTime)}
+            </span>
+            <div className="relative flex-grow h-[4px] bg-black border-[0.5px] border-[#FFD700] rounded-sm overflow-hidden flex items-center group">
+              <div
+                className="absolute left-0 h-full bg-[#FFD700] pointer-events-none"
+                style={{ width: `${currentPercent}%` }}
+              ></div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={currentPercent}
+                onChange={handleSeek}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+            </div>
+            <span className="min-w-[32px]">{formatTime(duration)}</span>
+          </div>
+        </div>
+
+        {credits && (
+          <p className="text-[10px] sm:text-xs text-[#FFD700] text-center mt-1 font-primary">
+            {credits}
+          </p>
+        )}
+
+        <audio
+          ref={audioRef}
+          src={src}
+          onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={handleLoadedMetadata}
+          onEnded={() => setIsPlaying(false)}
+          className="hidden"
+        />
+      </div>
     </div>
   );
 };
