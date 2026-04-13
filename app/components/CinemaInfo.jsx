@@ -170,7 +170,7 @@ const CinemaInfo = () => {
 
       {selectedCinema.fields["Sound Links"] && (
         <CustomAudioPlayer
-          src={`https://pub-76a6487955584bb1b627db345b5850f7.r2.dev/Eyethu%20Interview%20Lerato%20Tshabalala.mp3`}
+          src={selectedCinema.fields["Sound Links"]}
           credits={selectedCinema.fields["Sound Credits"]}
         />
       )}
