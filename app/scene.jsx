@@ -20,22 +20,19 @@ import React, {
   useEffect,
   useState,
   useCallback,
-} from "react"
-import { useFrame, useLoader, useThree } from "@react-three/fiber"
-import { OrbitControls, Stars } from "@react-three/drei"
-import * as THREE from "three"
-import fragment from "./shaders/fragment.glsl"
-import vertex from "./shaders/vertex.glsl"
-import lineFragment from "./shaders/lineFragment.glsl"
-import { analyzeAirtableData } from "./utils/d3Analysis"
-import { useStore } from "./utils/useStore"
-import { gsap } from "gsap"
-import { useGSAP } from "@gsap/react"
-
+} from "react";
+import { useFrame, useLoader, useThree } from "@react-three/fiber";
+import { OrbitControls, Stars } from "@react-three/drei";
+import * as THREE from "three";
+import fragment from "./shaders/fragment.glsl";
+import vertex from "./shaders/vertex.glsl";
+import lineFragment from "./shaders/lineFragment.glsl";
+import { analyzeAirtableData } from "./utils/d3Analysis";
+import { useStore } from "./utils/useStore";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP);
-
-
 
 /**
  * CustomGeometryParticles
@@ -43,23 +40,27 @@ gsap.registerPlugin(useGSAP);
  * Each particle maps 1:1 to a cinema record.
  */
 const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
+  const particleTexture = useLoader(
+    THREE.TextureLoader,
+    "/particle/star_04.png",
+  );
+  const goldenTexture = useLoader(
+    THREE.TextureLoader,
+    "/particle/starGolden.png",
+  );
 
-  const particleTexture = useLoader(THREE.TextureLoader, "/particle/star_04.png");
-  const goldenTexture = useLoader(THREE.TextureLoader, "/particle/starGolden.png");
-
-  
   const points = useRef();
   const { gl, raycaster, camera } = useThree();
-  
+
   // Configure raycaster so particle clicks register reliably
   useEffect(() => {
-    raycaster.near = 0
-    raycaster.far = 1000
-    raycaster.params.Points.threshold = 15
-    gl.setClearColor('#000000', 1)
-    gl.toneMapping = THREE.ACESFilmicToneMapping
-    gl.outputColorSpace = THREE.SRGBColorSpace
-  }, [gl, raycaster])
+    raycaster.near = 0;
+    raycaster.far = 1000;
+    raycaster.params.Points.threshold = 15;
+    gl.setClearColor("#000000", 1);
+    gl.toneMapping = THREE.ACESFilmicToneMapping;
+    gl.outputColorSpace = THREE.SRGBColorSpace;
+  }, [gl, raycaster]);
 
   const { filters, setSelectedCinema, setAnimateParticles, data } = useStore();
 
@@ -71,8 +72,8 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
       {
         value: 10.0, // Reduced from 20.0 to prevent particles from overlapping
         duration: 3,
-        ease:"sine.inOut",
-      }
+        ease: "sine.inOut",
+      },
     );
   }, []);
 
@@ -80,12 +81,11 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
     setAnimateParticles(animateParticles);
   }, [setAnimateParticles]);
 
-
   /** When a particle is clicked, look up its record and select it */
   const handleClick = (e) => {
     e.stopPropagation();
-    if (typeof e.index !== 'number' || e.index < 0) return;
-    
+    if (typeof e.index !== "number" || e.index < 0) return;
+
     const pointIndex = e.index;
     if (pointIndex < originalData.length) {
       const cinema = originalData[pointIndex];
@@ -95,37 +95,39 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
     }
   };
 
-
   // Shader uniforms shared by points and line materials
   const uniforms = useMemo(() => {
-    const dpr = typeof window !== 'undefined' ? window.devicePixelRatio : 1;
+    const dpr = typeof window !== "undefined" ? window.devicePixelRatio : 1;
     return {
       uTime: { value: 0.0 },
       uSize: { value: 30.0 * gl.getPixelRatio() },
       uPosition: { value: 0.0 },
-      uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+      uResolution: {
+        value: new THREE.Vector2(window.innerWidth, window.innerHeight),
+      },
       uDevicePixelRatio: { value: gl.getPixelRatio() },
       uTexture: { value: particleTexture },
-      uGoldenTexture: { value: goldenTexture }
+      uGoldenTexture: { value: goldenTexture },
     };
   }, [particleTexture, goldenTexture]);
 
   // Adaptive cloud radius: scales with the number of visible particles
   const radius = useMemo(() => {
     if (!data || data.length === 0 || count === 0) return 400;
-    
+
     const totalCount = data.length;
     const ratio = count / totalCount;
     const minRadius = 100;
     const maxRadius = Math.max(200, Math.sqrt(count) * 15);
-    
+
     return minRadius + (maxRadius - minRadius) * ratio;
   }, [data, count]);
 
   // Set of cinema IDs flagged as "featured" (rendered larger & gold)
   const featuredCinemas = useMemo(
-    () => new Set(originalData?.filter(c => c.fields?.Feature).map(c => c.id)),
-    [originalData]
+    () =>
+      new Set(originalData?.filter((c) => c.fields?.Feature).map((c) => c.id)),
+    [originalData],
   );
 
   /**
@@ -161,10 +163,10 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
 
       // const baseScale = Math.random() * 1.0 + 0.5;
 
-      const baseScale = Math.pow(Math.random(), 2) * 2.5 + 0.5
+      const baseScale = Math.pow(Math.random(), 2) * 2.5 + 0.5;
 
       if (isFeatured) {
-        scales[i] = baseScale * 10.0;
+        scales[i] = baseScale * 3.0;
         colors.set([1.0, 0.843, 0.0], i * 3);
       } else {
         scales[i] = baseScale;
@@ -176,7 +178,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
 
       const x = distance * Math.cos(angle);
       const y = distance * Math.sin(angle) + 10;
-      const z = 0
+      const z = 0;
 
       positions.set([x, y, z], i * 3);
     }
@@ -200,13 +202,12 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
 
   // Initial camera zoom-out + first particle animation on mount
   useGSAP(() => {
-    
     if (!points.current) return; // don’t animate yet if geometry isn’t ready
 
     gsap.fromTo(
       camera.position,
       { z: 100 },
-      { z: 400, duration: 2, ease: "power2.out" }
+      { z: 400, duration: 2, ease: "power2.out" },
     );
 
     animateParticles();
@@ -215,18 +216,18 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
 
   // Camera zoom: closer when a filter is active, further when showing all
   useEffect(() => {
-    if (!camera) return
+    if (!camera) return;
 
-    const hasActiveFilter = filters && Object.values(filters).some(val => val !== 'all')
-    const targetZ = hasActiveFilter ? 100 : 400
+    const hasActiveFilter =
+      filters && Object.values(filters).some((val) => val !== "all");
+    const targetZ = hasActiveFilter ? 100 : 400;
 
     gsap.to(camera.position, {
       z: targetZ,
       duration: 1.5,
-      ease: 'power2.inOut'
-    })
-  }, [filters, camera])
-
+      ease: "power2.inOut",
+    });
+  }, [filters, camera]);
 
   const pointsGeometryRef = useRef();
 
@@ -250,8 +251,8 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
       <points
         ref={points}
         onPointerDown={handleClick}
-        onPointerOver={() => document.body.style.cursor = 'pointer'}
-        onPointerOut={() => document.body.style.cursor = 'default'}
+        onPointerOver={() => (document.body.style.cursor = "pointer")}
+        onPointerOut={() => (document.body.style.cursor = "default")}
       >
         <bufferGeometry key={positions.length}>
           <bufferAttribute
@@ -272,7 +273,7 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
             array={scales}
             itemSize={1}
           />
-             <bufferAttribute
+          <bufferAttribute
             attach="attributes-aFeatured"
             count={featured.length}
             array={featured}
@@ -305,17 +306,12 @@ const CustomGeometryParticles = ({ count, originalData, groupIndex }) => {
  * CustomGeometryParticles and configures OrbitControls.
  */
 export default function Scene({ fullData }) {
-  const {
-    setData, 
-    setFilters,
-    filteredData,
-    setLoading,
-    setProgress,
-  } = useStore();
+  const { setData, setFilters, filteredData, setLoading, setProgress } =
+    useStore();
 
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
-  const initialFilters = {}
+  const initialFilters = {};
 
   // On first data load: populate store+filters and mark loading complete
   useEffect(() => {
@@ -348,9 +344,15 @@ export default function Scene({ fullData }) {
         />
       )}
 
-      <Stars radius={500} depth={10} count={1000} factor={5} saturation={1} fade speed={1} />
-
-
+      <Stars
+        radius={500}
+        depth={10}
+        count={1000}
+        factor={5}
+        saturation={1}
+        fade
+        speed={1}
+      />
 
       <OrbitControls
         enableRotate={false}
@@ -360,7 +362,7 @@ export default function Scene({ fullData }) {
         mouseButtons={{
           LEFT: THREE.MOUSE.PAN,
           MIDDLE: THREE.MOUSE.DOLLY,
-          RIGHT: THREE.MOUSE.ROTATE
+          RIGHT: THREE.MOUSE.ROTATE,
         }}
       />
     </>

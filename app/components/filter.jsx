@@ -11,18 +11,17 @@
  * On mobile the sidebar is a full-screen overlay triggered by a
  * hamburger icon; on desktop it's a slim left panel that can collapse.
  */
-import React, { useState, useMemo, useEffect } from "react"
+import React, { useState, useMemo, useEffect } from "react";
 
-import { useStore } from "../utils/useStore"
-
+import { useStore } from "../utils/useStore";
 
 const Filter = ({}) => {
   const { data, filters, clearFilters, updateFilters } = useStore();
-  
+
   // Check if mobile on initial load
   const [isMobile, setIsMobile] = useState(false);
   const [isOpen, setIsOpen] = useState(false); // Start closed by default
-  
+
   // Detect mobile screen size
   useEffect(() => {
     const checkMobile = () => {
@@ -35,18 +34,16 @@ const Filter = ({}) => {
     };
 
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
-
- 
 
   // Compute the full year range (min creation → max closure) for the slider
   const dateExtent = useMemo(() => {
-   if (!data) return { min: 1800, max: new Date().getFullYear() }
+    if (!data) return { min: 1800, max: new Date().getFullYear() };
     let min = Infinity;
     let max = -Infinity;
-    data.forEach(record => {
+    data.forEach((record) => {
       const creation = parseInt(record.fields?.Creation);
       const closure = parseInt(record.fields?.Closure);
       if (!isNaN(creation)) min = Math.min(min, creation);
@@ -85,9 +82,9 @@ const Filter = ({}) => {
     setSelectedYear(year);
     // If year is beyond the max, treat as "All"
     if (year > dateExtent.max) {
-      updateFilters('selectedYear', 'all');
+      updateFilters("selectedYear", "all");
     } else {
-      updateFilters('selectedYear', year);
+      updateFilters("selectedYear", year);
     }
     // Close cinema info when year filter changes
     const { clearSelectedCinema } = useStore.getState();
@@ -100,14 +97,14 @@ const Filter = ({}) => {
    */
   const getFieldValues = (field) => {
     let filteredData = data;
-    
+
     // If getting cities and a country is selected, filter by that country first
     if (field === "City" && filters?.Country && filters.Country !== "all") {
-      filteredData = data.filter(record => 
-        record.fields.Country === filters.Country
+      filteredData = data.filter(
+        (record) => record.fields.Country === filters.Country,
       );
     }
-    
+
     const fields = new Set();
     filteredData.forEach((record) => {
       if (record.fields[field]) {
@@ -119,10 +116,12 @@ const Filter = ({}) => {
   };
 
   // City dropdown is locked until a country is selected
-  const isCityDisabled = !filters?.Country || filters.Country === "all"
+  const isCityDisabled = !filters?.Country || filters.Country === "all";
 
   if (!filters) return null;
-  const fieldNames = Object.keys(filters).filter(name => name !== 'selectedYear');
+  const fieldNames = Object.keys(filters).filter(
+    (name) => name !== "selectedYear",
+  );
 
   const toggleFilter = () => {
     setIsOpen(!isOpen);
@@ -131,14 +130,18 @@ const Filter = ({}) => {
   return (
     <div
       className={`flex flex-col font-avenir gap-4 max-w-[300px] ${
-        isOpen 
-          ? isMobile ? "w-full h-full" : "w-1/5 max-w-[300px]" 
-          : isMobile ? "w-14" : "w-16"
+        isOpen
+          ? isMobile
+            ? "w-full h-full"
+            : "w-1/5 max-w-[300px]"
+          : isMobile
+            ? "w-14"
+            : "w-16"
       } h-screen font-avenir border-primary border-r-[0.5px] justify-start overflow-y-auto overflow-x-hidden items-center bg-background z-50 p-4 transition-all duration-300 ease-in-out ${
-        isMobile && isOpen 
-          ? "fixed inset-0 z-50" 
-          : isMobile 
-            ? "fixed left-0 top-0 h-auto py-2" 
+        isMobile && isOpen
+          ? "fixed inset-0 z-50"
+          : isMobile
+            ? "fixed left-0 top-0 h-auto py-2"
             : "absolute left-0 top-0"
       }`}
     >
@@ -151,20 +154,23 @@ const Filter = ({}) => {
         title={isOpen ? "Close Filter" : "Open Filter"}
         aria-label={isOpen ? "Close Filter" : "Open Filter"}
       >
-        {isOpen ? (isMobile ? "✕" : "◀") : (isMobile ? "☰" : "▶")}
+        {isOpen ? (isMobile ? "✕" : "◀") : isMobile ? "☰" : "▶"}
       </button>
 
       {isOpen && (
         <>
           <p className="text-yellow-400 text-xs text-center pb-8 pt-4">
-            Pan around and zoom in and out to explore then click on a cinema to view details.
+            Pan around and zoom in and out to explore then click on a cinema to
+            view details.
           </p>
-          <h2 className="text-primary text-xs text-center pb-4">Filter cinemas</h2>
-          
+          <h2 className="text-primary text-xs text-center pb-4">
+            Filter cinemas
+          </h2>
+
           {/* Year slider */}
           <div className="mb-4 w-full">
             <div className="text-primary text-xs mb-1 text-center">
-              Year: {selectedYear > dateExtent.max ? 'All' : selectedYear}
+              Year: {selectedYear > dateExtent.max ? "All" : selectedYear}
             </div>
             <input
               type="range"
@@ -172,7 +178,7 @@ const Filter = ({}) => {
               max={dateExtent.max + 1}
               value={selectedYear}
               onChange={(e) => handleYearChange(e.target.value)}
-              className="w-full h-2  rounded-lg appearance-none cursor-pointer slider-black"
+              className="w-full h-2  rounded-lg appearance-none cursor-pointer bg-black border-constellationAccent slider-black "
             />
           </div>
           <div className="flex flex-col w-full h-full">
@@ -194,13 +200,14 @@ const Filter = ({}) => {
                   value={filters[field] || "all"}
                   onChange={(e) => handleFilterChange(field, e.target.value)}
                   disabled={field === "City" && isCityDisabled}
-                  hidden={field === "Feature" || field === "Creation" || field === "Closure"}
+                  hidden={
+                    field === "Feature" ||
+                    field === "Creation" ||
+                    field === "Closure"
+                  }
                 >
                   <option value="all">
-                    {field === "City" && isCityDisabled 
-                      ? "City" 
-                      : field
-                    }
+                    {field === "City" && isCityDisabled ? "City" : field}
                   </option>
                   {getFieldValues(field).map((value) => (
                     <option key={value} value={value}>
@@ -211,8 +218,6 @@ const Filter = ({}) => {
               </div>
             ))}
           </div>
-
-        
 
           <button
             className=" mt-4 bg-black hover:bg-primary hover:text-black bg-opacity-50 border-primary border-[0.5px] transition-all duration-200 ease-in-out text-primary text-xs px-8 py-4  pointer"

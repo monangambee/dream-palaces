@@ -9,36 +9,30 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-open-sans)', 'sans-serif'],
-        mono: ['var(--font-roboto-mono)', 'monospace'],
-        montez: ['var(--font-montez)', 'cursive'],
-        jura: ['var(--font-jura)', 'sans-serif'],
-        clash: ['var(--font-clash)', 'sans-serif'],
-        frontage3D: ['var(--font-frontage3D)', 'sans-serif'],
-        basis: ['var(--font-basis)', 'sans-serif'],
-        marqueeMoon: ['var(--font-marqueMoon)', 'sans-serif'],
-        neon: ['var(--font-neon)', 'sans-serif'],
-        frontage: ['var(--font-frontage)', 'sans-serif'],
-        primary:['var(--font-jura)', 'sans-serif'],
-        avenir: ['var(--font-avenir)', 'sans-serif'],
+        sans: ["var(--font-open-sans)", "sans-serif"],
+        mono: ["var(--font-roboto-mono)", "monospace"],
+        montez: ["var(--font-montez)", "cursive"],
+        jura: ["var(--font-jura)", "sans-serif"],
+        clash: ["var(--font-clash)", "sans-serif"],
+        frontage3D: ["var(--font-frontage3D)", "sans-serif"],
+        basis: ["var(--font-basis)", "sans-serif"],
+        marqueeMoon: ["var(--font-marqueMoon)", "sans-serif"],
+        neon: ["var(--font-neon)", "sans-serif"],
+        frontage: ["var(--font-frontage)", "sans-serif"],
+        primary: ["var(--font-jura)", "sans-serif"],
+        avenir: ["var(--font-avenir)", "sans-serif"],
       },
       colors: {
-        primary: '#FDF9ED', //primary color
-        secondary: '#F3FFB6', // secondary color
-        accent: '#ffffff', // accent color
-        background: '#000000ff', // background color
-        // background: '#1B2021', // background color
-
-        homeAccent: '#ffffff',
-        movieAccent: '#c4b0ec',
-
-
-        foreground: '#F3F4F6', // foreground color
+        primary: "#FDF9ED", //primary color
+        secondary: "#F3FFB6", // secondary color
+        accent: "#ffffff", // accent color
+        background: "#000000ff", // background color
+        constellationAccent: "#FFD700",
+        homeAccent: "#ffffff",
+        movieAccent: "#c4b0ec",
+        foreground: "#F3F4F6", // foreground color
       },
-  
-      
     },
   },
   plugins: [],
-}
-
+};
