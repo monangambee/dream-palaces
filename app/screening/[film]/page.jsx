@@ -19,6 +19,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import ImagesExport from "../../components/Films";
 import Vimeo from "@u-wave/react-vimeo";
+import { fetchTextDataForWebsite } from "../../utils/data";
 
 const HIDE_CONTROLS_DELAY = 3000; // ms before controls auto-hide
 
@@ -55,6 +56,7 @@ export default function ScreeningPage() {
   const [captionsEnabled, setCaptionsEnabled] = useState(true);
   const [textTracks, setTextTracks] = useState([]);
   const [activeTrack, setActiveTrack] = useState(null);
+  const [customGif, setCustomGif] = useState("");
 
   const videoContainerRef = useRef(null);
   const timeoutRef = useRef(null);
@@ -69,6 +71,10 @@ export default function ScreeningPage() {
   useEffect(() => {
     const loadAsset = async () => {
       try {
+        const textData = await fetchTextDataForWebsite();
+        const gif = textData[0]?.fields?.ScreeningGif || "";
+        setCustomGif(gif);
+
         const response = await fetch("/api/vimeo-assets");
         const data = await response.json();
 
@@ -436,7 +442,7 @@ export default function ScreeningPage() {
                 currentAsset.thumbnail && (
                   <img
                     src={
-                      "https://videoapi-muybridge.vimeocdn.com/animated-thumbnails/image/1d8f168a-b823-4d54-96db-c437ec81aa53.gif?ClientID=sulu&Date=1772467095&Signature=aeece7e2e99bb38a6e18e7e8e655946ccbd14dab"
+                      customGif || "https://videoapi-muybridge.vimeocdn.com/animated-thumbnails/image/1d8f168a-b823-4d54-96db-c437ec81aa53.gif?ClientID=sulu&Date=1772467095&Signature=aeece7e2e99bb38a6e18e7e8e655946ccbd14dab"
                     }
                     alt={currentAsset.title}
                     className="absolute inset-0 w-full h-full object-cover pointer-events-none hidden md:block"

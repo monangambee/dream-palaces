@@ -26,6 +26,7 @@ export default async function HomePage() {
   let fullData = [];
   let websiteTextData = [];
   let aboutTextData = "";
+  let gif = "";
   let error = null;
 
   try {
@@ -37,6 +38,7 @@ export default async function HomePage() {
 
     websiteTextData = await fetchTextDataForWebsite();
     aboutTextData = websiteTextData[0]?.fields.Text || {};
+    gif = websiteTextData[0]?.fields.ScreeningGif || "";
   } catch (err) {
     console.error("Error fetching Airtable data:", err);
     error = err.message;
@@ -61,14 +63,14 @@ export default async function HomePage() {
         "Navigate a map showcasing the geographical distribution of cinemas across Africa and the diaspora. Zoom in to discover detailed information about each location.",
       link: "/map",
       image: "/map.webp",
-      accentColor: "#007bff", //blue
+      accentColor: "#007bff",
     },
     {
       name: "SCREENING ROOM",
       description:
         "Use your mobile device to experience movies from a virtual screening room.",
       link: `/screening/${firstFilmSlug || ""}`,
-      image: screeningGif,
+      image: gif || screeningGif,
       accentColor: "#C4B0EC",
     },
   ];
@@ -77,30 +79,9 @@ export default async function HomePage() {
     <Suspense>
       <main className="w-screen flex flex-col items-center gap-16 relative bg-background overflow-hidden  ">
         <section className="lg:w-[100%] w-full h-full flex text-primary flex-col gap-16 justify-start items-center bg-background relative bg-contain sm:p-4 sm:pt-2">
-          {/* Add this gradient overlay */}
-          {/* <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black opacity-100 pointer-events-none"></div> */}
-          {/* <div className="absolute inset-0 backdrop-blur-sm pointer-events-none"></div> */}
-          <div className=" flex flex-col gap-8 absolute inset-0 -z-1 w-screen h-screen top-0 -left-2">
-            {/* <HomeScene /> */}
-            {/* <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover"
-            >
-              <source src="/stars.webm" type="video/webm" />
-              Your browser does not support the video tag.
-            </video> */}
-          </div>
+          <div className=" flex flex-col gap-8 absolute inset-0 -z-1 w-screen h-screen top-0 -left-2"></div>
 
-          {/* <section className="w-full h-full flex flex-col lg:flex-row items-center justify-center  relative"> */}
           <Hero fullData={fullData} />
-
-          {/* <h1 className="text-[5rem] font-sansation border-b-[0.5px]">
-          {" "}
-          WELCOME TO DREAM PALACES
-        </h1> */}
 
           <section className="  ">
             <About textData={aboutTextData} />
