@@ -32,11 +32,11 @@ const fetchRecords = async () => {
 }
 
 const fetchAirtableRecords = async (tableName) => {
-  const apiKey = process.env.AIRTABLE_API_KEY
-  const baseId =  process.env.AIRTABLE_BASE_ID
+  const apiKey = process.env.AIRTABLE_API_KEY || process.env.NEXT_PUBLIC_AIRTABLE_API_KEY
+  const baseId =  process.env.AIRTABLE_BASE_ID || process.env.NEXT_PUBLIC_AIRTABLE_BASE_ID
 
   if (!apiKey || !baseId) {
-    throw new Error('Missing Airtable credentials. Set VITE_AIRTABLE_API_KEY and VITE_AIRTABLE_BASE_ID')
+    throw new Error('Missing Airtable credentials. Ensure NEXT_PUBLIC_AIRTABLE_API_KEY and NEXT_PUBLIC_AIRTABLE_BASE_ID are set in .env.local')
   }
 
   const params = new URLSearchParams({ pageSize: '100' })
