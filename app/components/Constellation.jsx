@@ -9,26 +9,27 @@
  * Once data is available, it's pushed into the Zustand store and
  * rendered through <Scene /> as a particle cloud.
  */
-'use client'
+"use client";
 
-import { Canvas } from "@react-three/fiber"
-import dynamic from 'next/dynamic'
-import { useEffect, useState, useRef } from 'react'
-import { AdaptiveDpr, Bvh } from "@react-three/drei"
-import { useStore } from "../utils/useStore"
+import { Canvas } from "@react-three/fiber";
+import dynamic from "next/dynamic";
+import { useEffect, useState, useRef } from "react";
+import { AdaptiveDpr, Bvh } from "@react-three/drei";
+import { useStore } from "../utils/useStore";
+import { parseCinemaSlugFromUrl } from "../utils/url";
 
-import { Bloom, EffectComposer } from '@react-three/postprocessing'
+import { Bloom, EffectComposer } from "@react-three/postprocessing";
 
 // Dynamically imported so Three.js never runs during SSR
-const Scene = dynamic(() => import('../scene'), { ssr: false })
-const Filter = dynamic(() => import('./filter'), { ssr: false })
-const CinemaInfo = dynamic(() => import('./CinemaInfo'), { ssr: false })
-
+const Scene = dynamic(() => import("../scene"), { ssr: false });
+const Filter = dynamic(() => import("./filter"), { ssr: false });
+const CinemaInfo = dynamic(() => import("./CinemaInfo"), { ssr: false });
 
 export default function Constellation({ fullData }) {
-  const { setData } = useStore();
+  const { setData, setSelectedCinema } = useStore();
   const [data, setDataState] = useState(null);
   const hasFetchedRef = useRef(false);
+  const hasAppliedUrlCinemaRef = useRef(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -42,15 +43,14 @@ export default function Constellation({ fullData }) {
       if (!hasFetchedRef.current) {
         hasFetchedRef.current = true;
         try {
-          const res = await fetch('/api/airtable');
+          const res = await fetch("/api/airtable");
           const { success, data: apiData } = await res.json();
           if (success && apiData?.length > 0) {
-           
             setDataState(apiData);
             setData(apiData);
           }
         } catch (error) {
-          console.error('Failed to fetch data:', error);
+          console.error("Failed to fetch data:", error);
         }
       }
     };
@@ -58,26 +58,39 @@ export default function Constellation({ fullData }) {
     loadData();
   }, [fullData, setData]);
 
+  // Deep-link: preselect a cinema from ?cinema=<slug> once data is loaded
+  useEffect(() => {
+    if (hasAppliedUrlCinemaRef.current) return;
+
+    const activeData = data || fullData;
+    if (!activeData?.length) return;
+    hasAppliedUrlCinemaRef.current = true;
+
+    const slug = parseCinemaSlugFromUrl();
+    if (!slug) return;
+
+    const match = activeData.find((record) => record.fields?.Slug === slug);
+    if (match) setSelectedCinema(match);
+  }, [data, fullData, setSelectedCinema]);
+
   return (
     <div className="w-full h-screen min-h-screen flex flex-row relative">
       <Filter />
-      <Canvas 
-        className="canvas w-full h-full z-10" 
+      <Canvas
+        className="canvas w-full h-full z-10"
         camera={{ position: [0, 0, 100], fov: 75 }}
         dpr={[1, 2]}
         performance={{ min: 0.5 }}
         frameloop="always"
       >
-     
         <AdaptiveDpr pixelated />
         <Bvh firstHitOnly>
           <Scene fullData={data || fullData} useApiForFullData={false} />
         </Bvh>
 
-         <EffectComposer>  
-        <Bloom luminanceThreshold={1.1} mipmapBlur/>
-
-      </EffectComposer>
+        <EffectComposer>
+          <Bloom luminanceThreshold={1.1} mipmapBlur />
+        </EffectComposer>
       </Canvas>
       <CinemaInfo />
     </div>

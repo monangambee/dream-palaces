@@ -16,10 +16,12 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useStore } from "../utils/useStore";
 import ReactMarkdown from "react-markdown";
+import { buildCinemaShareUrl } from "../utils/url";
 
 const CinemaInfo = () => {
   const { selectedCinema, clearSelectedCinema } = useStore();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [copied, setCopied] = useState(false);
 
   // Build an array of image objects, each with a primary URL + 3 fallbacks
   const imageUrls = useMemo(() => {
@@ -54,8 +56,22 @@ const CinemaInfo = () => {
   // Reset image index when cinema changes
   useEffect(() => {
     setCurrentImageIndex(0);
+    setCopied(false);
     // console.log(selectedCinema);
   }, [selectedCinema]);
+
+  const handleShare = async () => {
+    const slug = selectedCinema?.fields?.Slug;
+    if (!slug) return;
+
+    try {
+      await navigator.clipboard.writeText(buildCinemaShareUrl(slug));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch (error) {
+      console.error("Failed to copy share URL:", error);
+    }
+  };
 
   const imageCredits = useMemo(() => {
     if (!selectedCinema?.fields?.["Image credits"]) return [];
@@ -74,7 +90,7 @@ const CinemaInfo = () => {
       sm:bottom-10 sm:right-5 sm:left-auto sm:max-w-[80vw] sm:min-w-[300px]
       md:max-w-[50vw] md:min-w-[20vw] md:max-h-[80vh]"
     >
-      <div className="font-bold sticky text-lg mb-3 top-0 bg-black z-10 py-2 pt-8 pr-12">
+      <div className="font-bold sticky text-lg mb-3 top-0 bg-black z-10 py-2 pt-8 pr-20">
         <button
           onClick={clearSelectedCinema}
           className="absolute top-2 right-2 text-gray-400 md:hover:text-white text-3xl p-2 min-w-[44px] min-h-[44px] flex items-center justify-center z-20"
@@ -82,6 +98,43 @@ const CinemaInfo = () => {
         >
           ×
         </button>
+        {selectedCinema.fields.Slug && (
+          <button
+            onClick={handleShare}
+            className="absolute top-2 right-14 text-gray-400 md:hover:text-white p-2 min-w-[44px] min-h-[44px] flex items-center justify-center z-20"
+            aria-label="Copy share link"
+          >
+            {copied ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+              </svg>
+            )}
+          </button>
+        )}
         {selectedCinema.fields.Name}
         <div className="text-base font-light mb-2 pt-2">
           {selectedCinema.fields.City}, {selectedCinema.fields.Country}
